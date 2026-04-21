@@ -1,0 +1,5 @@
+.git
+.github
+.wrangler
+wrangler.jsonc
+worker.js

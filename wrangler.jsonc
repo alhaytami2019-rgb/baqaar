@@ -1,5 +1,16 @@
 {
 	"name": "baqaar",
 	"compatibility_date": "2025-06-05",
-	"assets": { "directory": "." }
+	"main": "worker.js",
+	"assets": {
+		"directory": ".",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "baqaar-db",
+			"database_id": "e269735a-5925-4a8a-8783-bfc2600184b0"
+		}
+	]
 }

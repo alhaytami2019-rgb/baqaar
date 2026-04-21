@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StoreHub — Your Digital Storefront</title>
+    <title>Baqaar — Your Digital Storefront</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,361 +20,220 @@
         }
     </script>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .view {
-            display: none;
-        }
-
-        .view.active {
-            display: block;
-        }
-
-        .toggle {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            background: #d1d5db;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.25s;
-            flex-shrink: 0;
-        }
-
-        .toggle.on {
-            background: #6366f1;
-        }
-
-        .toggle::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform 0.25s;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-        }
-
-        .toggle.on::after {
-            transform: translateX(20px);
-        }
-
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 0;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: transparent;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #111827;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 9999;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-            padding: 16px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.15s;
-            color: #6b7280;
-            font-size: 14px;
-            font-weight: 500;
-            user-select: none;
-        }
-
-        .nav-item:hover {
-            background: #f3f4f6;
-            color: #111827;
-        }
-
-        .nav-item.active {
-            background: #eef2ff;
-            color: #6366f1;
-        }
-
-        .product-card {
-            transition: box-shadow 0.2s;
-        }
-
-        .product-card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-        }
-
-        .bento-card {
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .bento-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-        }
-
-        .upload-zone {
-            border: 2px dashed #d1d5db;
-            border-radius: 12px;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .upload-zone:hover {
-            border-color: #6366f1;
-            background: #eef2ff;
-        }
-
-        .save-bar {
-            position: sticky;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid #e5e7eb;
-            padding: 16px 0;
-            z-index: 10;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-up {
-            animation: fadeUp 0.3s ease-out forwards;
-        }
-
-        .grid-opt {
-            width: 56px;
-            height: 56px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            display: grid;
-            gap: 3px;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .grid-opt:hover {
-            border-color: #a5b4fc;
-        }
-
-        .grid-opt.active {
-            border-color: #6366f1;
-            background: #eef2ff;
-        }
-
-        .grid-opt span {
-            background: #d1d5db;
-            border-radius: 2px;
-        }
-
-        .grid-opt.active span {
-            background: #6366f1;
-        }
-
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .toggle { position: relative; width: 44px; height: 24px; background: #d1d5db; border-radius: 12px; cursor: pointer; transition: background 0.25s; flex-shrink: 0; }
+        .toggle.on { background: #6366f1; }
+        .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: transform 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+        .toggle.on::after { transform: translateX(20px); }
+        ::-webkit-scrollbar { width: 5px; height: 0; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: transparent; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #111827; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 9999; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 10px; cursor: pointer; transition: all 0.15s; color: #6b7280; font-size: 14px; font-weight: 500; user-select: none; }
+        .nav-item:hover { background: #f3f4f6; color: #111827; }
+        .nav-item.active { background: #eef2ff; color: #6366f1; }
+        .product-card { transition: box-shadow 0.2s; }
+        .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .bento-card { transition: all 0.2s; cursor: pointer; }
+        .bento-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .upload-zone { border: 2px dashed #d1d5db; border-radius: 12px; transition: all 0.2s; cursor: pointer; }
+        .upload-zone:hover { border-color: #6366f1; background: #eef2ff; }
+        .save-bar { position: sticky; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-top: 1px solid #e5e7eb; padding: 16px 0; z-index: 10; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp 0.3s ease-out forwards; }
+        .grid-opt { width: 56px; height: 56px; border: 2px solid #e5e7eb; border-radius: 10px; display: grid; gap: 3px; padding: 8px; cursor: pointer; transition: all 0.15s; }
+        .grid-opt:hover { border-color: #a5b4fc; }
+        .grid-opt.active { border-color: #6366f1; background: #eef2ff; }
+        .grid-opt span { background: #d1d5db; border-radius: 2px; }
+        .grid-opt.active span { background: #6366f1; }
         @media (max-width: 768px) {
-            .sidebar {
-                display: none !important;
-            }
-
-            .mobile-nav {
-                display: flex !important;
-            }
-
-            .main-wrap {
-                margin-left: 0 !important;
-                padding-bottom: 80px !important;
-            }
-
-            .store-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
+            .sidebar { display: none !important; }
+            .mobile-nav { display: flex !important; }
+            .main-wrap { margin-left: 0 !important; padding-bottom: 80px !important; }
+            .store-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
-
         @media (min-width: 769px) {
-            .mobile-nav {
-                display: none !important;
-            }
-
-            .mobile-settings-section {
-                display: none !important;
-            }
+            .mobile-nav { display: none !important; }
+            .mobile-settings-section { display: none !important; }
         }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .store-card-img { aspect-ratio: 1/1; object-fit: cover; width: 100%; border-radius: 10px; }
+        .store-cat-tabs { -ms-overflow-style: none; scrollbar-width: none; overflow-x: auto; flex-wrap: nowrap; }
+        .store-cat-tabs::-webkit-scrollbar { display: none; }
+        .social-bento-store { transition: all 0.2s; cursor: pointer; }
+        .social-bento-store:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .store-item { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); border-radius: 12px; padding: 8px; }
+        .store-grid > :nth-child(n+3) { margin-top: -1px; border-top: 1px solid #f0f0f0; padding-top: 9px; }
+        .modal-img { aspect-ratio: 4/3; object-fit: cover; width: 100%; border-radius: 1rem 1rem 0 0; }
 
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .store-card-img {
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .store-cat-tabs {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-        }
-
-        .store-cat-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .social-bento-store {
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .social-bento-store:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-        }
-
-        .store-item {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            border-radius: 12px;
-            padding: 8px;
-        }
-
-        .store-grid> :nth-child(n+3) {
-            margin-top: -1px;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 9px;
-        }
-
-        .modal-img {
-            aspect-ratio: 4/3;
-            object-fit: cover;
-            width: 100%;
-            border-radius: 1rem 1rem 0 0;
-        }
+        /* Onboarding */
+        #onboardingOverlay { position: fixed; inset: 0; background: #fff; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+        #onboardingOverlay.hidden { display: none; }
+        .ob-step { display: none; }
+        .ob-step.active { display: block; }
+        .username-status { display: none; }
+        .username-status.show { display: flex; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spin { animation: spin 0.8s linear infinite; }
+        #appLoader { position: fixed; inset: 0; background: #fff; z-index: 999; display: flex; align-items: center; justify-content: center; }
+        #appLoader.hidden { display: none; }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-900 min-h-screen">
 
-    <div id="toast" class="toast"><span class="iconify" data-icon="lucide:check-circle" data-width="16"></span><span
-            id="toastMsg">Saved</span></div>
+    <!-- APP LOADER -->
+    <div id="appLoader">
+        <div class="flex flex-col items-center gap-3">
+            <div class="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
+                <span class="iconify text-white" data-icon="lucide:store" data-width="20"></span>
+            </div>
+            <div class="w-5 h-5 border-2 border-accent border-t-transparent rounded-full spin"></div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING OVERLAY -->
+    <div id="onboardingOverlay" class="hidden">
+        <div class="w-full max-w-md">
+
+            <!-- Step 1: Create store -->
+            <div id="ob-step1" class="ob-step active">
+                <div class="text-center mb-8">
+                    <div class="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="iconify text-white" data-icon="lucide:store" data-width="26"></span>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-1">Create your store</h1>
+                    <p class="text-gray-500 text-sm">Set up your Baqaar storefront in seconds.</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Username <span class="text-gray-400 font-normal">(your store link)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">@</span>
+                            <input id="obUsername" type="text" placeholder="yourstore"
+                                class="w-full pl-8 pr-10 py-3 border border-gray-200 rounded-xl text-sm"
+                                maxlength="30" autocomplete="off" spellcheck="false">
+                            <div id="obUsernameStatus" class="username-status absolute right-3 top-1/2 -translate-y-1/2 items-center">
+                                <span id="obUsernameIcon"></span>
+                            </div>
+                        </div>
+                        <p id="obUsernameHint" class="text-xs text-gray-400 mt-1.5">Letters, numbers, underscores. 3–30 chars.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Display Name</label>
+                        <input id="obDisplayName" type="text" placeholder="e.g. Sarah's Boutique"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">WhatsApp Number <span class="text-gray-400 font-normal">(optional)</span></label>
+                        <div class="flex items-center gap-2">
+                            <span class="iconify text-wa flex-shrink-0" data-icon="mdi:whatsapp" data-width="20"></span>
+                            <input id="obWhatsapp" type="tel" placeholder="+1 555 000 0000"
+                                class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm">
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1.5">Customers will use this to order from your store.</p>
+                    </div>
+                    <button id="obCreateBtn"
+                        class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors mt-2 flex items-center justify-center gap-2">
+                        <span class="iconify" data-icon="lucide:sparkles" data-width="16"></span>
+                        Create My Store
+                    </button>
+                    <p id="obCreateError" class="text-xs text-red-500 text-center hidden"></p>
+                </div>
+            </div>
+
+            <!-- Step 2: You're live -->
+            <div id="ob-step2" class="ob-step">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="iconify text-green-500" data-icon="lucide:check-circle-2" data-width="32"></span>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-1">You're live! 🎉</h1>
+                    <p class="text-gray-500 text-sm">Your storefront is ready. Share it with the world.</p>
+                </div>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
+                    <p class="text-xs text-gray-500 font-medium mb-1.5">Your store link</p>
+                    <div class="flex items-center gap-2">
+                        <p id="obStoreUrl" class="text-sm font-semibold text-accent flex-1 truncate"></p>
+                        <button id="obCopyBtn"
+                            class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-medium hover:bg-gray-100 transition-colors flex items-center gap-1.5">
+                            <span class="iconify" data-icon="lucide:copy" data-width="12"></span>Copy
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center gap-3 p-3 bg-accent-light rounded-xl">
+                        <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="iconify text-white" data-icon="lucide:package" data-width="14"></span>
+                        </div>
+                        <p class="text-sm text-gray-700">Add your products and set prices</p>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-accent-light rounded-xl">
+                        <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="iconify text-white" data-icon="lucide:share-2" data-width="14"></span>
+                        </div>
+                        <p class="text-sm text-gray-700">Share your link so customers can order via WhatsApp</p>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-accent-light rounded-xl">
+                        <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="iconify text-white" data-icon="lucide:receipt-text" data-width="14"></span>
+                        </div>
+                        <p class="text-sm text-gray-700">Track orders and manage your store from here</p>
+                    </div>
+                </div>
+                <button id="obStartBtn"
+                    class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
+                    Start Adding Products
+                    <span class="iconify" data-icon="lucide:arrow-right" data-width="16"></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><span class="iconify" data-icon="lucide:check-circle" data-width="16"></span><span id="toastMsg">Saved</span></div>
 
     <aside class="sidebar fixed left-0 top-0 bottom-0 w-60 bg-white border-r border-gray-200 flex flex-col z-50">
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-accent rounded-lg flex items-center justify-center"><span
-                        class="iconify text-white" data-icon="lucide:store" data-width="18"></span></div>
+                <div class="w-9 h-9 bg-accent rounded-lg flex items-center justify-center"><span class="iconify text-white" data-icon="lucide:store" data-width="18"></span></div>
                 <div>
-                    <div class="font-semibold text-sm">StoreHub</div>
+                    <div class="font-semibold text-sm">Baqaar</div>
                     <div class="text-xs text-gray-400">Digital Storefront</div>
                 </div>
             </div>
         </div>
         <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
-            <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package"
-                    data-width="18"></span>Products</div>
-            <div class="nav-item" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text"
-                    data-width="18"></span>Orders</div>
-            <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:eye"
-                    data-width="18"></span>Storefront</div>
-            <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link"
-                    data-width="18"></span>Links</div>
-            <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle"
-                    data-width="18"></span>Profile</div>
-            <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings"
-                    data-width="18"></span>Settings</div>
+            <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="18"></span>Products</div>
+            <div class="nav-item" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="18"></span>Orders</div>
+            <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="18"></span>Storefront</div>
+            <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span>Links</div>
+            <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span>Profile</div>
+            <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span>Settings</div>
         </nav>
         <div class="p-4 border-t border-gray-100">
             <div class="flex items-center gap-3">
-                <img id="sidebarAvatar" src="https://picsum.photos/seed/storehub-avatar/80/80"
-                    class="w-9 h-9 rounded-full object-cover" alt="">
+                <img id="sidebarAvatar" src="https://picsum.photos/seed/baqaar-avatar/80/80" class="w-9 h-9 rounded-full object-cover" alt="">
                 <div class="min-w-0">
-                    <div id="sidebarName" class="text-sm font-medium truncate">Sarah's Store</div>
-                    <div id="sidebarUsername" class="text-xs text-gray-400 truncate">@sarahsstore</div>
+                    <div id="sidebarName" class="text-sm font-medium truncate">My Store</div>
+                    <div id="sidebarUsername" class="text-xs text-gray-400 truncate">@username</div>
                 </div>
             </div>
         </div>
     </aside>
 
-    <nav
-        class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 justify-around items-center py-2 px-1">
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer"
-            data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package"
-                data-width="20"></span><span class="text-[10px] font-medium">Products</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400"
-            data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="20"></span><span
-                class="text-[10px] font-medium">Orders</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400"
-            data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="20"></span><span
-                class="text-[10px] font-medium">Store</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400"
-            data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span
-                class="text-[10px] font-medium">Links</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400"
-            data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span
-                class="text-[10px] font-medium">Profile</span></div>
+    <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 justify-around items-center py-2 px-1">
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium">Products</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="20"></span><span class="text-[10px] font-medium">Orders</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="20"></span><span class="text-[10px] font-medium">Store</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium">Links</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium">Profile</span></div>
     </nav>
 
     <main class="main-wrap ml-60 min-h-screen">
@@ -385,53 +244,30 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
                         <h1 class="text-2xl font-semibold">Products</h1>
-                        <p class="text-sm text-gray-500 mt-1">Manage what you sell. Add, edit, or toggle availability.
-                        </p>
+                        <p class="text-sm text-gray-500 mt-1">Manage what you sell. Add, edit, or toggle availability.</p>
                     </div>
-                    <button id="addProductBtn"
-                        class="inline-flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-accent-dark transition-colors"><span
-                            class="iconify" data-icon="lucide:plus" data-width="16"></span>Add Product</button>
+                    <button id="addProductBtn" class="inline-flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-accent-dark transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span>Add Product</button>
                 </div>
                 <div class="grid grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white rounded-xl p-4 border border-gray-200">
-                        <div class="text-xs text-gray-500 font-medium mb-1">Total Products</div>
-                        <div id="statTotal" class="text-2xl font-semibold">0</div>
-                    </div>
-                    <div class="bg-white rounded-xl p-4 border border-gray-200">
-                        <div class="text-xs text-gray-500 font-medium mb-1">Available</div>
-                        <div id="statAvailable" class="text-2xl font-semibold text-green-600">0</div>
-                    </div>
-                    <div class="bg-white rounded-xl p-4 border border-gray-200">
-                        <div class="text-xs text-gray-500 font-medium mb-1">Unavailable</div>
-                        <div id="statUnavailable" class="text-2xl font-semibold text-gray-400">0</div>
-                    </div>
+                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1">Total Products</div><div id="statTotal" class="text-2xl font-semibold">0</div></div>
+                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1">Available</div><div id="statAvailable" class="text-2xl font-semibold text-green-600">0</div></div>
+                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1">Unavailable</div><div id="statUnavailable" class="text-2xl font-semibold text-gray-400">0</div></div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3 mb-6">
-                    <div class="relative flex-1"><span
-                            class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                            data-icon="lucide:search" data-width="16"></span><input id="productSearch" type="text"
-                            placeholder="Search products…"
-                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm"></div>
-                    <label
-                        class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer bg-white border border-gray-200 rounded-xl px-4 py-2.5">
-                        <div id="toggleShowUnavailable" class="toggle"
-                            onclick="this.classList.toggle('on'); renderProducts()"></div>Show unavailable
+                    <div class="relative flex-1"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="productSearch" type="text" placeholder="Search products…" class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm"></div>
+                    <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer bg-white border border-gray-200 rounded-xl px-4 py-2.5">
+                        <div id="toggleShowUnavailable" class="toggle" onclick="this.classList.toggle('on'); renderProducts()"></div>Show unavailable
                     </label>
                 </div>
                 <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                <div id="noProducts" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3"
-                        data-icon="lucide:package-open" data-width="40"></span>
-                    <p class="text-sm">No products yet. Add your first one above.</p>
-                </div>
+                <div id="noProducts" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3" data-icon="lucide:package-open" data-width="40"></span><p class="text-sm">No products yet. Add your first one above.</p></div>
             </div>
         </div>
 
         <!-- ADD/EDIT PRODUCT -->
         <div id="view-add-product" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
-                <button id="backToProductsBtn"
-                    class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"><span
-                        class="iconify" data-icon="lucide:arrow-left" data-width="16"></span>Back to Products</button>
+                <button id="backToProductsBtn" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"><span class="iconify" data-icon="lucide:arrow-left" data-width="16"></span>Back to Products</button>
                 <h1 id="formTitle" class="text-2xl font-semibold mb-1">Add a Product</h1>
                 <p class="text-sm text-gray-500 mb-8">Fill in the details below. You can always edit later.</p>
                 <form id="productForm" class="space-y-6">
@@ -440,52 +276,21 @@
                         <label class="block text-sm font-medium mb-2">Product Image</label>
                         <div id="uploadZone" class="upload-zone p-8 text-center">
                             <img id="imgPreview" src="" class="hidden mx-auto max-h-40 rounded-lg mb-3 object-cover">
-                            <div id="imgPlaceholder"><span class="iconify mx-auto text-gray-300 mb-2"
-                                    data-icon="lucide:image-plus" data-width="32"></span>
-                                <p class="text-sm text-gray-500">Click to upload an image</p>
-                                <p class="text-xs text-gray-400 mt-1">JPG, PNG up to 5MB</p>
-                            </div>
+                            <div id="imgPlaceholder"><span class="iconify mx-auto text-gray-300 mb-2" data-icon="lucide:image-plus" data-width="32"></span><p class="text-sm text-gray-500">Click to upload an image</p><p class="text-xs text-gray-400 mt-1">JPG, PNG up to 500KB</p></div>
                         </div>
                         <input id="imgInput" type="file" accept="image/*" class="hidden">
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Product Name</label><input id="pName" type="text"
-                            placeholder="e.g. Classic White Tee"
-                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div>
+                    <div><label class="block text-sm font-medium mb-2">Product Name</label><input id="pName" type="text" placeholder="e.g. Classic White Tee" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-2">Price</label>
-                            <div class="relative"><span
-                                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span><input
-                                    id="pPrice" type="number" step="0.01" placeholder="0.00"
-                                    class="w-full pl-7 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm" required>
-                            </div>
-                        </div>
-                        <div><label class="block text-sm font-medium mb-2">Category</label><select id="pCategory"
-                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white">
-                                <option value="Apparel">Apparel</option>
-                                <option value="Accessories">Accessories</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Home">Home</option>
-                                <option value="Beauty">Beauty</option>
-                                <option value="Other">Other</option>
-                            </select></div>
+                        <div><label class="block text-sm font-medium mb-2">Price</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span><input id="pPrice" type="number" step="0.01" placeholder="0.00" class="w-full pl-7 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div></div>
+                        <div><label class="block text-sm font-medium mb-2">Category</label><select id="pCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="Apparel">Apparel</option><option value="Accessories">Accessories</option><option value="Electronics">Electronics</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Other">Other</option></select></div>
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Description</label><textarea id="pDesc" rows="3"
-                            placeholder="A short description of your product…"
-                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea>
-                    </div>
+                    <div><label class="block text-sm font-medium mb-2">Description</label><textarea id="pDesc" rows="3" placeholder="A short description of your product…" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-2">Stock Quantity</label><input id="pStock"
-                                type="number" placeholder="0"
-                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                        <div class="flex items-end"><label class="flex items-center gap-3 cursor-pointer pb-1">
-                                <div id="pAvailable" class="toggle on" onclick="this.classList.toggle('on')"></div><span
-                                    class="text-sm text-gray-700">Available</span>
-                            </label></div>
+                        <div><label class="block text-sm font-medium mb-2">Stock Quantity</label><input id="pStock" type="number" placeholder="0" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                        <div class="flex items-end"><label class="flex items-center gap-3 cursor-pointer pb-1"><div id="pAvailable" class="toggle on" onclick="this.classList.toggle('on')"></div><span class="text-sm text-gray-700">Available</span></label></div>
                     </div>
-                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit"
-                            class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span
-                                class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save"
-                                data-width="16"></span><span id="formSaveText">Save Product</span></button></div>
+                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span id="formSaveText">Save Product</span></button></div>
                 </form>
             </div>
         </div>
@@ -496,20 +301,13 @@
                 <h1 class="text-2xl font-semibold mb-1">Orders</h1>
                 <p class="text-sm text-gray-500 mt-1 mb-6">Every order that comes through your store, in one place.</p>
                 <div class="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6 w-fit">
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium bg-white shadow-sm text-gray-900"
-                        data-filter="all">All</button>
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500"
-                        data-filter="pending">Pending</button>
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500"
-                        data-filter="confirmed">Confirmed</button>
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500"
-                        data-filter="delivered">Delivered</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium bg-white shadow-sm text-gray-900" data-filter="all">All</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="pending">Pending</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="confirmed">Confirmed</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="delivered">Delivered</button>
                 </div>
                 <div id="ordersList" class="space-y-3"></div>
-                <div id="noOrders" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3"
-                        data-icon="lucide:inbox" data-width="40"></span>
-                    <p class="text-sm">No orders yet. Share your storefront to get started.</p>
-                </div>
+                <div id="noOrders" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3" data-icon="lucide:inbox" data-width="40"></span><p class="text-sm">No orders yet. Share your storefront to get started.</p></div>
             </div>
         </div>
 
@@ -519,53 +317,23 @@
                 <div class="bg-white px-5 pt-8 pb-5">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center gap-4">
-                            <img id="storeAvatar" src="https://picsum.photos/seed/storehub-avatar/80/80"
-                                class="w-16 h-16 rounded-full object-cover" alt="">
+                            <img id="storeAvatar" src="https://picsum.photos/seed/baqaar-avatar/80/80" class="w-16 h-16 rounded-full object-cover" alt="">
                             <div>
-                                <h2 id="storeName" class="font-semibold text-lg leading-tight">Sarah's Store</h2>
-                                <p id="storeUsername" class="text-sm text-gray-400 mt-0.5">@sarahsstore</p>
+                                <h2 id="storeName" class="font-semibold text-lg leading-tight">My Store</h2>
+                                <p id="storeUsername" class="text-sm text-gray-400 mt-0.5">@username</p>
                             </div>
                         </div>
-                        <a id="storeContactBtn" href="https://wa.me/15551234567" target="_blank"
-                            class="flex items-center gap-2 bg-wa text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:brightness-110 transition-all flex-shrink-0 shadow-sm"><span
-                                class="iconify" data-icon="mdi:whatsapp" data-width="20"></span><span
-                                class="hidden sm:inline">Contact</span></a>
+                        <a id="storeContactBtn" href="#" target="_blank" class="flex items-center gap-2 bg-wa text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:brightness-110 transition-all flex-shrink-0 shadow-sm"><span class="iconify" data-icon="mdi:whatsapp" data-width="20"></span><span class="hidden sm:inline">Contact</span></a>
                     </div>
-                    <p id="storeBio" class="text-sm text-gray-600 leading-relaxed">Curated fashion for the modern woman.
-                        Quality pieces that last.</p>
+                    <p id="storeBio" class="text-sm text-gray-600 leading-relaxed"></p>
                 </div>
                 <div id="storeSocials" class="bg-white px-5 pb-4"></div>
                 <div class="bg-white px-5 pb-4 border-b border-gray-100">
-                    <div class="relative"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                            data-icon="lucide:search" data-width="16"></span><input id="storeSearch" type="text"
-                            placeholder="Search store…"
-                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm"
-                            oninput="renderStorefront()"></div>
+                    <div class="relative"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="storeSearch" type="text" placeholder="Search store…" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" oninput="renderStorefront()"></div>
                 </div>
-                <div class="store-cat-tabs flex gap-2 px-5 py-3 bg-gray-50" id="storeTabs">
-                    <button
-                        class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium bg-gray-900 text-white whitespace-nowrap"
-                        data-cat="all">All</button>
-                    <button
-                        class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 whitespace-nowrap"
-                        data-cat="Apparel">Apparel</button>
-                    <button
-                        class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 whitespace-nowrap"
-                        data-cat="Accessories">Accessories</button>
-                    <button
-                        class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 whitespace-nowrap"
-                        data-cat="Electronics">Electronics</button>
-                    <button
-                        class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 whitespace-nowrap"
-                        data-cat="Home">Home</button>
-                    <button
-                        class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 whitespace-nowrap"
-                        data-cat="Beauty">Beauty</button>
-                </div>
+                <div class="store-cat-tabs flex gap-2 px-5 py-3 bg-gray-50" id="storeTabs"></div>
                 <div id="storeGrid" class="store-grid px-5 pb-8 grid grid-cols-2 gap-3"></div>
-                <div id="noStoreProducts" class="hidden px-5 pb-8 text-center py-12 text-gray-400">
-                    <p class="text-sm">No products available right now.</p>
-                </div>
+                <div id="noStoreProducts" class="hidden px-5 pb-8 text-center py-12 text-gray-400"><p class="text-sm">No products available right now.</p></div>
             </div>
         </div>
 
@@ -573,29 +341,15 @@
         <div id="view-links" class="view">
             <div class="p-6 md:p-8 max-w-3xl">
                 <h1 class="text-2xl font-semibold mb-1">Links</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-6">Your social hubs, all in one place. Customers can find you
-                    everywhere.</p>
-                <div id="linksOnboarding"
-                    class="bg-accent-light border border-indigo-200 rounded-xl p-5 mb-6 flex items-start gap-4">
-                    <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span class="iconify text-white" data-icon="lucide:sparkles" data-width="18"></span>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-sm mb-1">Get discovered more easily</h3>
-                        <p class="text-sm text-gray-600 leading-relaxed">Add your social media links below. They'll
-                            appear on your storefront so customers can connect with you beyond the store.</p>
-                    </div>
-                    <button id="dismissOnboarding" class="text-gray-400 hover:text-gray-600 flex-shrink-0 mt-0.5"><span
-                            class="iconify" data-icon="lucide:x" data-width="16"></span></button>
+                <p class="text-sm text-gray-500 mt-1 mb-6">Your social hubs, all in one place.</p>
+                <div id="linksOnboarding" class="bg-accent-light border border-indigo-200 rounded-xl p-5 mb-6 flex items-start gap-4">
+                    <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"><span class="iconify text-white" data-icon="lucide:sparkles" data-width="18"></span></div>
+                    <div><h3 class="font-semibold text-sm mb-1">Get discovered more easily</h3><p class="text-sm text-gray-600 leading-relaxed">Add your social media links below. They'll appear on your storefront so customers can connect with you beyond the store.</p></div>
+                    <button id="dismissOnboarding" class="text-gray-400 hover:text-gray-600 flex-shrink-0 mt-0.5"><span class="iconify" data-icon="lucide:x" data-width="16"></span></button>
                 </div>
                 <div id="linksGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6"></div>
-                <button id="addLinkBtn"
-                    class="w-full border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span
-                        class="iconify" data-icon="lucide:plus" data-width="16"></span>Add a Link</button>
-                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn"
-                        class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span
-                            class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save
-                        Links</button></div>
+                <button id="addLinkBtn" class="w-full border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span>Add a Link</button>
+                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Links</button></div>
             </div>
         </div>
 
@@ -603,90 +357,35 @@
         <div id="view-profile" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
                 <h1 class="text-2xl font-semibold mb-1">Profile</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-8">How you appear to your customers. Keep it fresh.</p>
+                <p class="text-sm text-gray-500 mt-1 mb-8">How you appear to your customers.</p>
                 <form id="profileForm" class="space-y-6">
                     <div class="flex items-center gap-5">
-                        <div class="relative"><img id="profileAvatar"
-                                src="https://picsum.photos/seed/storehub-avatar/200/200"
-                                class="w-20 h-20 rounded-full object-cover" alt=""><button type="button" id="avatarBtn"
-                                class="absolute -bottom-1 -right-1 w-7 h-7 bg-accent rounded-full flex items-center justify-center text-white shadow-lg"><span
-                                    class="iconify" data-icon="lucide:camera" data-width="13"></span></button><input
-                                id="avatarInput" type="file" accept="image/*" class="hidden"></div>
-                        <div>
-                            <p class="text-sm font-medium">Profile Photo</p>
-                            <p class="text-xs text-gray-400 mt-0.5">Square image works best</p>
-                        </div>
+                        <div class="relative"><img id="profileAvatar" src="https://picsum.photos/seed/baqaar-avatar/200/200" class="w-20 h-20 rounded-full object-cover" alt=""><button type="button" id="avatarBtn" class="absolute -bottom-1 -right-1 w-7 h-7 bg-accent rounded-full flex items-center justify-center text-white shadow-lg"><span class="iconify" data-icon="lucide:camera" data-width="13"></span></button><input id="avatarInput" type="file" accept="image/*" class="hidden"></div>
+                        <div><p class="text-sm font-medium">Profile Photo</p><p class="text-xs text-gray-400 mt-0.5">Square image works best</p></div>
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Display Name</label><input id="profName"
-                            type="text" value="Sarah's Store"
-                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-2">Display Name</label><input id="profName" type="text" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
                     <div><label class="block text-sm font-medium mb-2">Username</label>
-                        <div class="relative"><span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span><input
-                                id="profUsername" type="text" value="sarahsstore"
-                                class="w-full pl-8 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                        <p class="text-xs text-gray-400 mt-1.5">storehub.co/<span
-                                id="usernamePreview">sarahsstore</span></p>
+                        <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span><input id="profUsername" type="text" class="w-full pl-8 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                        <p class="text-xs text-gray-400 mt-1.5">baqaar.alhaytami2019.workers.dev/@<span id="usernamePreview">username</span></p>
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Bio</label><textarea id="profBio" rows="3"
-                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none">Curated fashion for the modern woman. Quality pieces that last.</textarea>
-                        <p class="text-xs text-gray-400 mt-1.5 text-right"><span id="bioCount">0</span>/150</p>
-                    </div>
-                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit"
-                            class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span
-                                class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save"
-                                data-width="16"></span>Save Profile</button></div>
+                    <div><label class="block text-sm font-medium mb-2">Bio</label><textarea id="profBio" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea><p class="text-xs text-gray-400 mt-1.5 text-right"><span id="bioCount">0</span>/150</p></div>
+                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Profile</button></div>
                 </form>
                 <div class="mobile-settings-section mt-10">
-                    <div class="border-t border-gray-200 pt-8 mb-6">
-                        <h2 class="text-xl font-semibold mb-1">Settings</h2>
-                        <p class="text-sm text-gray-500 mt-1">Fine-tune your store.</p>
-                    </div>
+                    <div class="border-t border-gray-200 pt-8 mb-6"><h2 class="text-xl font-semibold mb-1">Settings</h2><p class="text-sm text-gray-500 mt-1">Fine-tune your store.</p></div>
                     <form id="mobileSettingsForm" class="space-y-6">
                         <div><label class="block text-sm font-medium mb-3">Storefront Grid Layout</label>
                             <div class="flex gap-3">
-                                <div class="grid-opt mobile-grid-opt" data-cols="2">
-                                    <span></span><span></span><span></span><span></span>
-                                </div>
-                                <div class="grid-opt mobile-grid-opt active" data-cols="3">
-                                    <span></span><span></span><span></span><span></span><span></span><span></span>
-                                </div>
-                                <div class="grid-opt mobile-grid-opt" data-cols="4">
-                                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                                </div>
+                                <div class="grid-opt mobile-grid-opt" data-cols="2"><span></span><span></span><span></span><span></span></div>
+                                <div class="grid-opt mobile-grid-opt active" data-cols="3"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div class="grid-opt mobile-grid-opt" data-cols="4"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4">
-                            <div>
-                                <p class="text-sm font-medium">Socials as bento cards</p>
-                            </div>
-                            <div id="mobSetSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div><label class="block text-sm font-medium mb-2">WhatsApp Number</label>
-                            <div class="flex items-center gap-2"><span class="iconify text-wa" data-icon="mdi:whatsapp"
-                                    data-width="20"></span><input id="mobSetWhatsapp" type="tel"
-                                    value="+1 (555) 123-4567"
-                                    class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                        </div>
-                        <div><label class="block text-sm font-medium mb-2">Currency</label><select id="mobSetCurrency"
-                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white">
-                                <option value="USD" selected>USD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="GBP">GBP</option>
-                                <option value="NGN">NGN</option>
-                                <option value="KES">KES</option>
-                                <option value="GHS">GHS</option>
-                            </select></div>
-                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4">
-                            <div>
-                                <p class="text-sm font-medium">Show unavailable</p>
-                            </div>
-                            <div id="mobSetShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit"
-                                class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span
-                                    class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save"
-                                    data-width="16"></span>Save Settings</button></div>
+                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Socials as bento cards</p></div><div id="mobSetSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                        <div><label class="block text-sm font-medium mb-2">WhatsApp Number</label><div class="flex items-center gap-2"><span class="iconify text-wa" data-icon="mdi:whatsapp" data-width="20"></span><input id="mobSetWhatsapp" type="tel" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div></div>
+                        <div><label class="block text-sm font-medium mb-2">Currency</label><select id="mobSetCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="NGN">NGN</option><option value="KES">KES</option><option value="GHS">GHS</option></select></div>
+                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Show unavailable</p></div><div id="mobSetShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                        <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Settings</button></div>
                     </form>
                 </div>
             </div>
@@ -696,57 +395,21 @@
         <div id="view-settings" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
                 <h1 class="text-2xl font-semibold mb-1">Settings</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-8">Fine-tune your store. Changes apply instantly.</p>
+                <p class="text-sm text-gray-500 mt-1 mb-8">Fine-tune your store.</p>
                 <form id="settingsForm" class="space-y-8">
                     <div><label class="block text-sm font-medium mb-3">Storefront Grid Layout</label>
                         <div class="flex gap-3">
-                            <div class="grid-opt desktop-grid-opt" data-cols="2">
-                                <span></span><span></span><span></span><span></span>
-                            </div>
-                            <div class="grid-opt desktop-grid-opt active" data-cols="3">
-                                <span></span><span></span><span></span><span></span><span></span><span></span>
-                            </div>
-                            <div class="grid-opt desktop-grid-opt" data-cols="4">
-                                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                            </div>
+                            <div class="grid-opt desktop-grid-opt" data-cols="2"><span></span><span></span><span></span><span></span></div>
+                            <div class="grid-opt desktop-grid-opt active" data-cols="3"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                            <div class="grid-opt desktop-grid-opt" data-cols="4"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
                         </div>
                         <p class="text-xs text-gray-400 mt-2">How products are arranged on your storefront</p>
                     </div>
-                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4">
-                        <div>
-                            <p class="text-sm font-medium">Show socials as bento cards</p>
-                            <p class="text-xs text-gray-400 mt-0.5">Display your social links as cards instead of small
-                                icons</p>
-                        </div>
-                        <div id="setSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div>
-                    </div>
-                    <div><label class="block text-sm font-medium mb-2">WhatsApp Number</label>
-                        <div class="flex items-center gap-2"><span class="iconify text-wa" data-icon="mdi:whatsapp"
-                                data-width="20"></span><input id="setWhatsapp" type="tel" value="+1 (555) 123-4567"
-                                class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                        <p class="text-xs text-gray-400 mt-1.5">Used for the contact button on your storefront</p>
-                    </div>
-                    <div><label class="block text-sm font-medium mb-2">Currency</label><select id="setCurrency"
-                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white">
-                            <option value="USD" selected>USD — US Dollar ($)</option>
-                            <option value="EUR">EUR — Euro (€)</option>
-                            <option value="GBP">GBP — British Pound (£)</option>
-                            <option value="NGN">NGN — Nigerian Naira (₦)</option>
-                            <option value="KES">KES — Kenyan Shilling (KSh)</option>
-                            <option value="GHS">GHS — Ghanaian Cedi (₵)</option>
-                        </select></div>
-                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4">
-                        <div>
-                            <p class="text-sm font-medium">Show unavailable products</p>
-                            <p class="text-xs text-gray-400 mt-0.5">Visitors will see out-of-stock items marked as
-                                unavailable</p>
-                        </div>
-                        <div id="setShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div>
-                    </div>
-                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit"
-                            class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span
-                                class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save"
-                                data-width="16"></span>Save Settings</button></div>
+                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Show socials as bento cards</p><p class="text-xs text-gray-400 mt-0.5">Display your social links as cards instead of small icons</p></div><div id="setSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                    <div><label class="block text-sm font-medium mb-2">WhatsApp Number</label><div class="flex items-center gap-2"><span class="iconify text-wa" data-icon="mdi:whatsapp" data-width="20"></span><input id="setWhatsapp" type="tel" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div><p class="text-xs text-gray-400 mt-1.5">Used for the contact button on your storefront</p></div>
+                    <div><label class="block text-sm font-medium mb-2">Currency</label><select id="setCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD — US Dollar ($)</option><option value="EUR">EUR — Euro (€)</option><option value="GBP">GBP — British Pound (£)</option><option value="NGN">NGN — Nigerian Naira (₦)</option><option value="KES">KES — Kenyan Shilling (KSh)</option><option value="GHS">GHS — Ghanaian Cedi (₵)</option></select></div>
+                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Show unavailable products</p><p class="text-xs text-gray-400 mt-0.5">Visitors will see out-of-stock items marked as unavailable</p></div><div id="setShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Settings</button></div>
                 </form>
             </div>
         </div>
@@ -758,9 +421,7 @@
         <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
             <div class="relative">
                 <img id="modalImg" src="" class="modal-img" alt="">
-                <button id="closeModalBtn"
-                    class="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors"><span
-                        class="iconify" data-icon="lucide:x" data-width="16"></span></button>
+                <button id="closeModalBtn" class="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors"><span class="iconify" data-icon="lucide:x" data-width="16"></span></button>
                 <div id="modalBadge" class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium"></div>
             </div>
             <div class="p-5">
@@ -777,25 +438,9 @@
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
             <h3 class="font-semibold text-lg mb-4">Add a Link</h3>
             <div class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2">Platform</label><select id="linkPlatform"
-                        class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white">
-                        <option value="instagram">Instagram</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="twitter">Twitter / X</option>
-                        <option value="youtube">YouTube</option>
-                        <option value="facebook">Facebook</option>
-                        <option value="linkedin">LinkedIn</option>
-                        <option value="website">Website</option>
-                        <option value="other">Other</option>
-                    </select></div>
-                <div><label class="block text-sm font-medium mb-2">URL or Handle</label><input id="linkUrl" type="text"
-                        placeholder="https://… or @handle"
-                        class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                <div class="flex gap-3"><button id="cancelLinkBtn" type="button"
-                        class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors">Cancel</button><button
-                        id="confirmLinkBtn" type="button"
-                        class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors">Add</button>
-                </div>
+                <div><label class="block text-sm font-medium mb-2">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
+                <div><label class="block text-sm font-medium mb-2">URL or Handle</label><input id="linkUrl" type="text" placeholder="https://… or @handle" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                <div class="flex gap-3"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors">Add</button></div>
             </div>
         </div>
     </div>
@@ -803,46 +448,20 @@
     <!-- DELETE MODAL -->
     <div id="deleteModal" class="modal-overlay">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl text-center">
-            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><span
-                    class="iconify text-red-500" data-icon="lucide:trash-2" data-width="20"></span></div>
+            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="iconify text-red-500" data-icon="lucide:trash-2" data-width="20"></span></div>
             <h3 class="font-semibold text-lg mb-2">Delete this product?</h3>
             <p class="text-sm text-gray-500 mb-6">This action can't be undone.</p>
-            <div class="flex gap-3"><button id="cancelDeleteBtn"
-                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors">Cancel</button><button
-                    id="confirmDeleteBtn"
-                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors">Delete</button>
-            </div>
+            <div class="flex gap-3"><button id="cancelDeleteBtn" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors">Cancel</button><button id="confirmDeleteBtn" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors">Delete</button></div>
         </div>
     </div>
 
-
     <script>
-        var products = [
-            { id: 1, name: 'Classic White Tee', price: 29.99, desc: 'Premium cotton crew neck. Relaxed fit, washed for softness. Goes with everything.', category: 'Apparel', img: 'https://picsum.photos/seed/tee-white/600/600', available: true, stock: 24 },
-            { id: 2, name: 'Leather Crossbody Bag', price: 89.00, desc: 'Hand-stitched genuine leather with adjustable strap. Fits your phone, wallet, and essentials.', category: 'Accessories', img: 'https://picsum.photos/seed/bag-leather/600/600', available: true, stock: 8 },
-            { id: 3, name: 'Wireless Earbuds Pro', price: 59.99, desc: 'Active noise cancellation, 30hr battery, IPX5 water resistant. Comes with charging case.', category: 'Electronics', img: 'https://picsum.photos/seed/earbuds-pro/600/600', available: true, stock: 15 },
-            { id: 4, name: 'Minimalist Watch', price: 120.00, desc: 'Japanese quartz movement, sapphire crystal glass, genuine leather strap. 40mm case.', category: 'Accessories', img: 'https://picsum.photos/seed/watch-min/600/600', available: false, stock: 0 },
-            { id: 5, name: 'Linen Button-Down', price: 45.00, desc: 'Lightweight breathable linen. Perfect for warm days. Relaxed fit, mother of pearl buttons.', category: 'Apparel', img: 'https://picsum.photos/seed/linen-shirt/600/600', available: true, stock: 12 },
-            { id: 6, name: 'Scented Candle Set', price: 34.00, desc: 'Set of 3 hand-poured soy candles. Scents: Lavender, Vanilla, Cedarwood. 45hr burn time each.', category: 'Home', img: 'https://picsum.photos/seed/candle-set/600/600', available: true, stock: 20 },
-        ];
-
-        var orders = [
-            { id: 'ORD-001', customer: 'Amara Johnson', items: ['Classic White Tee'], total: 29.99, status: 'confirmed', date: 'Jan 15, 2025', phone: '+1 555-0101' },
-            { id: 'ORD-002', customer: 'David Kim', items: ['Leather Crossbody Bag', 'Classic White Tee'], total: 118.99, status: 'pending', date: 'Jan 16, 2025', phone: '+1 555-0202' },
-            { id: 'ORD-003', customer: 'Fatima Ali', items: ['Wireless Earbuds Pro'], total: 59.99, status: 'delivered', date: 'Jan 12, 2025', phone: '+1 555-0303' },
-            { id: 'ORD-004', customer: 'Lucas Torres', items: ['Scented Candle Set'], total: 34.00, status: 'delivered', date: 'Jan 10, 2025', phone: '+1 555-0404' },
-            { id: 'ORD-005', customer: 'Sophie Muller', items: ['Linen Button-Down', 'Minimalist Watch'], total: 165.00, status: 'pending', date: 'Jan 17, 2025', phone: '+1 555-0505' },
-        ];
-
-        var links = [
-            { platform: 'instagram', url: 'https://instagram.com/sarahsstore' },
-            { platform: 'tiktok', url: 'https://tiktok.com/@sarahsstore' },
-            { platform: 'twitter', url: 'https://x.com/sarahsstore' },
-        ];
-
-        var profile = { name: "Sarah's Store", username: 'sarahsstore', bio: 'Curated fashion for the modern woman. Quality pieces that last.', avatar: 'https://picsum.photos/seed/storehub-avatar/200/200' };
-        var settings = { gridCols: 2, whatsapp: '+1 (555) 123-4567', currency: 'USD', showUnavailable: false, socialBento: false };
-        var nextId = 7, storeCat = 'all', orderFilter = 'all', deleteTargetId = null, modalContext = 'store';
+        // ===== STATE =====
+        var userId = localStorage.getItem('baqaar_uid') || null;
+        var products = [], orders = [], links = [];
+        var profile = { name: 'My Store', username: 'username', bio: '', avatar: 'https://picsum.photos/seed/baqaar-avatar/200/200' };
+        var settings = { gridCols: 2, whatsapp: '', currency: 'USD', showUnavailable: false, socialBento: false };
+        var storeCat = 'all', orderFilter = 'all', deleteTargetId = null, modalContext = 'store';
         var onboardingDismissed = false;
 
         var platformMeta = {
@@ -855,51 +474,147 @@
             website: { icon: 'lucide:globe', color: '#6366f1', label: 'Website' },
             other: { icon: 'lucide:link', color: '#6b7280', label: 'Other' }
         };
-
         var currencySymbols = { USD: '$', EUR: '€', GBP: '£', NGN: '₦', KES: 'KSh', GHS: '₵' };
 
-        // ===== PERSISTENCE =====
-        function saveData() {
-            try {
-                localStorage.setItem('baqaar_products', JSON.stringify(products));
-                localStorage.setItem('baqaar_orders', JSON.stringify(orders));
-                localStorage.setItem('baqaar_links', JSON.stringify(links));
-                localStorage.setItem('baqaar_profile', JSON.stringify(profile));
-                localStorage.setItem('baqaar_settings', JSON.stringify(settings));
-                localStorage.setItem('baqaar_nextId', String(nextId));
-                localStorage.setItem('baqaar_onboarding_dismissed', onboardingDismissed ? '1' : '0');
-            } catch (e) {}
+        // ===== API =====
+        async function api(method, path, body) {
+            var opts = { method: method, headers: { 'Content-Type': 'application/json', 'X-User-Id': userId || '' } };
+            if (body !== undefined) opts.body = JSON.stringify(body);
+            var res = await fetch('/api' + path, opts);
+            var data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Request failed');
+            return data;
         }
 
-        function loadData() {
+        // ===== INIT =====
+        async function initApp() {
+            if (!userId) { showOnboarding(); return; }
             try {
-                var p = localStorage.getItem('baqaar_products');
-                if (p) products = JSON.parse(p);
-                var o = localStorage.getItem('baqaar_orders');
-                if (o) orders = JSON.parse(o);
-                var l = localStorage.getItem('baqaar_links');
-                if (l) links = JSON.parse(l);
-                var pr = localStorage.getItem('baqaar_profile');
-                if (pr) profile = JSON.parse(pr);
-                var s = localStorage.getItem('baqaar_settings');
-                if (s) settings = JSON.parse(s);
-                var ni = localStorage.getItem('baqaar_nextId');
-                if (ni) nextId = parseInt(ni);
-                var od = localStorage.getItem('baqaar_onboarding_dismissed');
-                if (od === '1') onboardingDismissed = true;
-            } catch (e) {}
+                var userData = await api('GET', '/me');
+                var u = userData.user;
+                profile = { name: u.display_name, username: u.username, bio: u.bio || '', avatar: u.avatar_url || 'https://picsum.photos/seed/baqaar-avatar/200/200' };
+                settings = { gridCols: u.grid_cols || 2, whatsapp: u.whatsapp || '', currency: u.currency || 'USD', showUnavailable: !!u.show_unavailable, socialBento: !!u.social_bento };
+                onboardingDismissed = !!u.onboarding_done;
+
+                var results = await Promise.all([api('GET', '/products'), api('GET', '/orders'), api('GET', '/links')]);
+                products = results[0].products.map(function(p) {
+                    return { id: p.id, name: p.name, price: p.price, category: p.category, desc: p.description, stock: p.stock, available: !!p.available, img: p.image_url || ('https://picsum.photos/seed/prod-' + p.id + '/600/600') };
+                });
+                orders = results[1].orders.map(function(o) {
+                    return { id: o.id, customer: o.customer_name, phone: o.customer_phone, items: o.items, total: o.total, status: o.status, date: new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
+                });
+                links = results[2].links.map(function(l) { return { platform: l.platform, url: l.url }; });
+
+                hideLoader();
+                syncSettingsUI();
+                syncProfileForm();
+                if (settings.showUnavailable) document.getElementById('toggleShowUnavailable').classList.add('on');
+                if (onboardingDismissed) document.getElementById('linksOnboarding').style.display = 'none';
+                renderProducts();
+                renderOrders();
+                renderLinks();
+            } catch (e) {
+                localStorage.removeItem('baqaar_uid');
+                userId = null;
+                hideLoader();
+                showOnboarding();
+            }
         }
+
+        function hideLoader() { document.getElementById('appLoader').classList.add('hidden'); }
+        function showOnboarding() { hideLoader(); document.getElementById('onboardingOverlay').classList.remove('hidden'); }
+
+        // ===== ONBOARDING =====
+        var obUsernameTimer = null;
+        var obUsernameValid = false;
+
+        document.getElementById('obUsername').addEventListener('input', function() {
+            var val = this.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+            this.value = val;
+            obUsernameValid = false;
+            var statusEl = document.getElementById('obUsernameStatus');
+            var iconEl = document.getElementById('obUsernameIcon');
+            var hintEl = document.getElementById('obUsernameHint');
+            statusEl.classList.remove('show');
+            clearTimeout(obUsernameTimer);
+            if (val.length < 3) { hintEl.textContent = 'Letters, numbers, underscores. 3–30 chars.'; hintEl.className = 'text-xs text-gray-400 mt-1.5'; return; }
+            iconEl.innerHTML = '<div class="w-4 h-4 border-2 border-gray-300 border-t-accent rounded-full spin"></div>';
+            statusEl.classList.add('show');
+            obUsernameTimer = setTimeout(async function() {
+                try {
+                    var data = await fetch('/api/users/check?username=' + encodeURIComponent(val)).then(function(r) { return r.json(); });
+                    if (data.available) {
+                        iconEl.innerHTML = '<span class="iconify text-green-500" data-icon="lucide:check-circle" data-width="16"></span>';
+                        hintEl.textContent = '@' + val + ' is available';
+                        hintEl.className = 'text-xs text-green-600 mt-1.5';
+                        obUsernameValid = true;
+                    } else {
+                        iconEl.innerHTML = '<span class="iconify text-red-400" data-icon="lucide:x-circle" data-width="16"></span>';
+                        hintEl.textContent = data.reason === 'invalid' ? 'Invalid username format.' : '@' + val + ' is already taken.';
+                        hintEl.className = 'text-xs text-red-500 mt-1.5';
+                        obUsernameValid = false;
+                    }
+                    if (window.Iconify) Iconify.scan();
+                } catch(e) {}
+            }, 500);
+        });
+
+        document.getElementById('obCreateBtn').addEventListener('click', async function() {
+            var username = document.getElementById('obUsername').value.trim();
+            var displayName = document.getElementById('obDisplayName').value.trim();
+            var whatsapp = document.getElementById('obWhatsapp').value.trim();
+            var errorEl = document.getElementById('obCreateError');
+            errorEl.classList.add('hidden');
+
+            if (!username) { errorEl.textContent = 'Please enter a username.'; errorEl.classList.remove('hidden'); return; }
+            if (!obUsernameValid) { errorEl.textContent = 'Please choose a valid, available username.'; errorEl.classList.remove('hidden'); return; }
+            if (!displayName) { errorEl.textContent = 'Please enter a display name.'; errorEl.classList.remove('hidden'); return; }
+
+            this.disabled = true;
+            this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
+            try {
+                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp }) }).then(function(r) { return r.json(); });
+                if (data.error) throw new Error(data.error);
+                userId = data.user.id;
+                localStorage.setItem('baqaar_uid', userId);
+                profile = { name: data.user.display_name, username: data.user.username, bio: '', avatar: 'https://picsum.photos/seed/baqaar-avatar/200/200' };
+                settings.whatsapp = whatsapp;
+                document.getElementById('obStoreUrl').textContent = window.location.host + '/@' + username;
+                document.getElementById('ob-step1').classList.remove('active');
+                document.getElementById('ob-step2').classList.add('active');
+            } catch(e) {
+                errorEl.textContent = e.message || 'Something went wrong. Please try again.';
+                errorEl.classList.remove('hidden');
+                this.disabled = false;
+                this.innerHTML = '<span class="iconify" data-icon="lucide:sparkles" data-width="16"></span> Create My Store';
+            }
+        });
+
+        document.getElementById('obCopyBtn').addEventListener('click', function() {
+            var url = 'https://' + window.location.host + '/@' + profile.username;
+            navigator.clipboard.writeText(url).then(function() { toast('Link copied!'); });
+        });
+
+        document.getElementById('obStartBtn').addEventListener('click', function() {
+            document.getElementById('onboardingOverlay').classList.add('hidden');
+            syncSettingsUI();
+            syncProfileForm();
+            renderProducts();
+            renderOrders();
+            renderLinks();
+            showView('products');
+        });
 
         // ===== HELPERS =====
         function toast(msg) {
             var t = document.getElementById('toast');
             document.getElementById('toastMsg').textContent = msg;
             t.classList.add('show');
-            setTimeout(function () { t.classList.remove('show'); }, 2500);
+            setTimeout(function() { t.classList.remove('show'); }, 2500);
         }
 
         function escAttr(s) {
-            return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 
         function formatPrice(price) {
@@ -915,19 +630,11 @@
 
         // ===== NAV =====
         function showView(name) {
-            var views = document.querySelectorAll('.view');
-            for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
+            document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
             var el = document.getElementById('view-' + name);
-            if (el) {
-                el.classList.add('active');
-                el.classList.add('fade-up');
-                setTimeout(function () { el.classList.remove('fade-up'); }, 300);
-            }
-            var navItems = document.querySelectorAll('.nav-item');
-            for (var i = 0; i < navItems.length; i++) navItems[i].classList.toggle('active', navItems[i].dataset.view === name);
-            var mobileItems = document.querySelectorAll('.nav-item-m');
-            for (var i = 0; i < mobileItems.length; i++) mobileItems[i].style.color = mobileItems[i].dataset.view === name ? '#6366f1' : '#9ca3af';
-
+            if (el) { el.classList.add('active'); el.classList.add('fade-up'); setTimeout(function() { el.classList.remove('fade-up'); }, 300); }
+            document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.toggle('active', i.dataset.view === name); });
+            document.querySelectorAll('.nav-item-m').forEach(function(i) { i.style.color = i.dataset.view === name ? '#6366f1' : '#9ca3af'; });
             if (name === 'products') renderProducts();
             if (name === 'orders') renderOrders();
             if (name === 'storefront') renderStorefront();
@@ -937,27 +644,18 @@
             if (name === 'settings') syncSettingsUI();
         }
 
-        // Sidebar nav
-        var sideNavItems = document.querySelectorAll('.nav-item');
-        for (var i = 0; i < sideNavItems.length; i++) {
-            sideNavItems[i].addEventListener('click', function () { showView(this.dataset.view); });
-        }
-        // Mobile nav
-        var mobNavItems = document.querySelectorAll('.nav-item-m');
-        for (var i = 0; i < mobNavItems.length; i++) {
-            mobNavItems[i].addEventListener('click', function () { showView(this.dataset.view); });
-        }
+        document.querySelectorAll('.nav-item').forEach(function(el) { el.addEventListener('click', function() { showView(this.dataset.view); }); });
+        document.querySelectorAll('.nav-item-m').forEach(function(el) { el.addEventListener('click', function() { showView(this.dataset.view); }); });
 
-        // ===== SYNC UI FROM DATA =====
+        // ===== SYNC UI =====
         function syncSettingsUI() {
             document.getElementById('setWhatsapp').value = settings.whatsapp;
             document.getElementById('setCurrency').value = settings.currency;
             var showUnavEl = document.getElementById('setShowUnavailable');
-            if (settings.showUnavailable) showUnavEl.classList.add('on'); else showUnavEl.classList.remove('on');
+            settings.showUnavailable ? showUnavEl.classList.add('on') : showUnavEl.classList.remove('on');
             var socialBentoEl = document.getElementById('setSocialBento');
-            if (settings.socialBento) socialBentoEl.classList.add('on'); else socialBentoEl.classList.remove('on');
-            var deskGrids = document.querySelectorAll('.desktop-grid-opt');
-            for (var i = 0; i < deskGrids.length; i++) deskGrids[i].classList.toggle('active', parseInt(deskGrids[i].dataset.cols) === settings.gridCols);
+            settings.socialBento ? socialBentoEl.classList.add('on') : socialBentoEl.classList.remove('on');
+            document.querySelectorAll('.desktop-grid-opt').forEach(function(g) { g.classList.toggle('active', parseInt(g.dataset.cols) === settings.gridCols); });
         }
 
         function syncProfileForm() {
@@ -972,27 +670,27 @@
             document.getElementById('sidebarUsername').textContent = '@' + profile.username;
         }
 
-        // ===== ADD PRODUCT BUTTON =====
-        document.getElementById('addProductBtn').addEventListener('click', function () {
-            showView('add-product');
-        });
+        function syncMobileSettings() {
+            document.getElementById('mobSetWhatsapp').value = settings.whatsapp;
+            document.getElementById('mobSetCurrency').value = settings.currency;
+            var mobBento = document.getElementById('mobSetSocialBento');
+            var mobUnavail = document.getElementById('mobSetShowUnavailable');
+            settings.showUnavailable ? mobUnavail.classList.add('on') : mobUnavail.classList.remove('on');
+            settings.socialBento ? mobBento.classList.add('on') : mobBento.classList.remove('on');
+            document.querySelectorAll('.mobile-grid-opt').forEach(function(g) { g.classList.toggle('active', parseInt(g.dataset.cols) === settings.gridCols); });
+        }
 
-        // ===== BACK BUTTON =====
-        document.getElementById('backToProductsBtn').addEventListener('click', function () {
-            showView('products');
-        });
+        // ===== ADD PRODUCT =====
+        document.getElementById('addProductBtn').addEventListener('click', function() { showView('add-product'); });
+        document.getElementById('backToProductsBtn').addEventListener('click', function() { showView('products'); });
 
-        // ===== IMAGE UPLOAD =====
-        document.getElementById('uploadZone').addEventListener('click', function () {
-            document.getElementById('imgInput').click();
-        });
-
-        document.getElementById('imgInput').addEventListener('change', function (e) {
+        document.getElementById('uploadZone').addEventListener('click', function() { document.getElementById('imgInput').click(); });
+        document.getElementById('imgInput').addEventListener('change', function(e) {
             var file = e.target.files[0];
             if (!file) return;
-            if (file.size > 5 * 1024 * 1024) { toast('Image must be under 5MB'); this.value = ''; return; }
+            if (file.size > 500 * 1024) { toast('Image must be under 500KB'); this.value = ''; return; }
             var reader = new FileReader();
-            reader.onload = function (ev) {
+            reader.onload = function(ev) {
                 document.getElementById('imgPreview').src = ev.target.result;
                 document.getElementById('imgPreview').classList.remove('hidden');
                 document.getElementById('imgPlaceholder').classList.add('hidden');
@@ -1000,8 +698,7 @@
             reader.readAsDataURL(file);
         });
 
-        // ===== PRODUCT FORM =====
-        document.getElementById('productForm').addEventListener('submit', function (e) {
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             var editId = document.getElementById('editProductId').value;
             var imgSrc = document.getElementById('imgPreview').src;
@@ -1009,22 +706,25 @@
                 name: document.getElementById('pName').value.trim(),
                 price: parseFloat(document.getElementById('pPrice').value) || 0,
                 category: document.getElementById('pCategory').value,
-                desc: document.getElementById('pDesc').value.trim(),
+                description: document.getElementById('pDesc').value.trim(),
                 stock: parseInt(document.getElementById('pStock').value) || 0,
                 available: document.getElementById('pAvailable').classList.contains('on'),
-                img: imgSrc && imgSrc !== window.location.href ? imgSrc : 'https://picsum.photos/seed/prod-' + Date.now() + '/600/600'
+                image_url: (imgSrc && imgSrc !== window.location.href) ? imgSrc : ''
             };
             if (!data.name) return;
-            if (editId) {
-                var idx = products.findIndex(function (x) { return x.id === parseInt(editId); });
-                if (idx > -1) { products[idx] = Object.assign({}, products[idx], data); toast('Product updated'); }
-            } else {
-                data.id = nextId++;
-                products.push(data);
-                toast('Product added');
-            }
-            saveData();
-            showView('products');
+            try {
+                if (editId) {
+                    var res = await api('PUT', '/products/' + editId, data);
+                    var idx = products.findIndex(function(x) { return x.id === parseInt(editId); });
+                    if (idx > -1) products[idx] = { id: parseInt(editId), name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || ('https://picsum.photos/seed/prod-' + editId + '/600/600') };
+                    toast('Product updated');
+                } else {
+                    var res = await api('POST', '/products', data);
+                    products.unshift({ id: res.product.id, name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || ('https://picsum.photos/seed/prod-' + res.product.id + '/600/600') });
+                    toast('Product added');
+                }
+                showView('products');
+            } catch(e) { toast('Error: ' + e.message); }
         });
 
         function resetProductForm() {
@@ -1044,7 +744,7 @@
         }
 
         function editProduct(id) {
-            var p = products.find(function (x) { return x.id === id; });
+            var p = products.find(function(x) { return x.id === id; });
             if (!p) return;
             showView('add-product');
             document.getElementById('formTitle').textContent = 'Edit Product';
@@ -1055,8 +755,7 @@
             document.getElementById('pCategory').value = p.category;
             document.getElementById('pDesc').value = p.desc;
             document.getElementById('pStock').value = p.stock;
-            if (p.available) document.getElementById('pAvailable').classList.add('on');
-            else document.getElementById('pAvailable').classList.remove('on');
+            p.available ? document.getElementById('pAvailable').classList.add('on') : document.getElementById('pAvailable').classList.remove('on');
             if (p.img) {
                 document.getElementById('imgPreview').src = p.img;
                 document.getElementById('imgPreview').classList.remove('hidden');
@@ -1064,22 +763,20 @@
             }
         }
 
-        // ===== PRODUCTS RENDER =====
+        // ===== RENDER PRODUCTS =====
         function renderProducts() {
             var q = (document.getElementById('productSearch').value || '').toLowerCase();
             var showUnavail = document.getElementById('toggleShowUnavailable').classList.contains('on');
-            var filtered = products.filter(function (p) {
-                var match = p.name.toLowerCase().indexOf(q) > -1 || p.category.toLowerCase().indexOf(q) > -1;
+            var filtered = products.filter(function(p) {
                 if (!showUnavail && !p.available) return false;
-                return match;
+                return p.name.toLowerCase().indexOf(q) > -1 || p.category.toLowerCase().indexOf(q) > -1;
             });
             var grid = document.getElementById('productGrid');
-            var empty = document.getElementById('noProducts');
             document.getElementById('statTotal').textContent = products.length;
-            document.getElementById('statAvailable').textContent = products.filter(function (p) { return p.available; }).length;
-            document.getElementById('statUnavailable').textContent = products.filter(function (p) { return !p.available; }).length;
-            if (!filtered.length) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
-            empty.classList.add('hidden');
+            document.getElementById('statAvailable').textContent = products.filter(function(p) { return p.available; }).length;
+            document.getElementById('statUnavailable').textContent = products.filter(function(p) { return !p.available; }).length;
+            if (!filtered.length) { grid.innerHTML = ''; document.getElementById('noProducts').classList.remove('hidden'); return; }
+            document.getElementById('noProducts').classList.add('hidden');
             var html = '';
             for (var i = 0; i < filtered.length; i++) {
                 var p = filtered[i];
@@ -1087,62 +784,63 @@
                 html += '<div class="relative cursor-pointer" data-open-product="' + p.id + '">';
                 html += '<img src="' + escAttr(p.img) + '" class="w-full aspect-square object-cover" alt="' + escAttr(p.name) + '">';
                 if (!p.available) html += '<div class="absolute inset-0 bg-white/60 flex items-center justify-center"><span class="text-xs font-medium text-gray-500 bg-white px-3 py-1 rounded-full">Unavailable</span></div>';
-                html += '</div>';
-                html += '<div class="p-3"><div class="flex items-start justify-between gap-2">';
+                html += '</div><div class="p-3"><div class="flex items-start justify-between gap-2">';
                 html += '<div class="min-w-0 cursor-pointer" data-open-product="' + p.id + '"><p class="text-sm font-medium truncate">' + escAttr(p.name) + '</p><p class="text-sm text-accent font-semibold mt-0.5">' + escAttr(formatPrice(p.price)) + '</p></div>';
                 html += '<div class="flex items-center gap-1 flex-shrink-0">';
-                html += '<button class="edit-prod-btn w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-accent transition-colors" data-edit-id="' + p.id + '" title="Edit"><span class="iconify" data-icon="lucide:pencil" data-width="14"></span></button>';
-                html += '<button class="del-prod-btn w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors" data-del-id="' + p.id + '" title="Delete"><span class="iconify" data-icon="lucide:trash-2" data-width="14"></span></button>';
-                html += '</div></div>';
-                html += '<div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">';
+                html += '<button class="edit-prod-btn w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-accent transition-colors" data-edit-id="' + p.id + '"><span class="iconify" data-icon="lucide:pencil" data-width="14"></span></button>';
+                html += '<button class="del-prod-btn w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors" data-del-id="' + p.id + '"><span class="iconify" data-icon="lucide:trash-2" data-width="14"></span></button>';
+                html += '</div></div><div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">';
                 html += '<span class="text-xs text-gray-400">' + escAttr(p.category) + '</span>';
                 html += '<div class="toggle ' + (p.available ? 'on' : '') + '" data-toggle-id="' + p.id + '"></div>';
                 html += '</div></div></div>';
             }
             grid.innerHTML = html;
 
-            var openEls = grid.querySelectorAll('[data-open-product]');
-            for (var i = 0; i < openEls.length; i++) {
-                openEls[i].addEventListener('click', function () { openProductModal(parseInt(this.dataset.openProduct), 'admin'); });
-            }
-            var editEls = grid.querySelectorAll('.edit-prod-btn');
-            for (var i = 0; i < editEls.length; i++) {
-                editEls[i].addEventListener('click', function (e) { e.stopPropagation(); editProduct(parseInt(this.dataset.editId)); });
-            }
-            var delEls = grid.querySelectorAll('.del-prod-btn');
-            for (var i = 0; i < delEls.length; i++) {
-                delEls[i].addEventListener('click', function (e) { e.stopPropagation(); confirmDelete(parseInt(this.dataset.delId)); });
-            }
-            var togEls = grid.querySelectorAll('[data-toggle-id]');
-            for (var i = 0; i < togEls.length; i++) {
-                togEls[i].addEventListener('click', function (e) {
+            grid.querySelectorAll('[data-open-product]').forEach(function(el) {
+                el.addEventListener('click', function() { openProductModal(parseInt(this.dataset.openProduct), 'admin'); });
+            });
+            grid.querySelectorAll('.edit-prod-btn').forEach(function(el) {
+                el.addEventListener('click', function(e) { e.stopPropagation(); editProduct(parseInt(this.dataset.editId)); });
+            });
+            grid.querySelectorAll('.del-prod-btn').forEach(function(el) {
+                el.addEventListener('click', function(e) { e.stopPropagation(); confirmDelete(parseInt(this.dataset.delId)); });
+            });
+            grid.querySelectorAll('[data-toggle-id]').forEach(function(el) {
+                el.addEventListener('click', async function(e) {
                     e.stopPropagation();
                     var id = parseInt(this.dataset.toggleId);
-                    var p = products.find(function (x) { return x.id === id; });
-                    if (p) { p.available = !p.available; this.classList.toggle('on'); saveData(); renderProducts(); toast(p.available ? 'Marked as available' : 'Marked as unavailable'); }
+                    var p = products.find(function(x) { return x.id === id; });
+                    if (!p) return;
+                    p.available = !p.available;
+                    this.classList.toggle('on');
+                    try {
+                        await api('PUT', '/products/' + id, { name: p.name, price: p.price, category: p.category, description: p.desc, stock: p.stock, available: p.available, image_url: p.img });
+                        toast(p.available ? 'Marked as available' : 'Marked as unavailable');
+                    } catch(e) { p.available = !p.available; renderProducts(); toast('Error saving'); }
                 });
-            }
+            });
         }
 
         document.getElementById('productSearch').addEventListener('input', renderProducts);
 
         // ===== DELETE =====
         function confirmDelete(id) { deleteTargetId = id; document.getElementById('deleteModal').classList.add('active'); }
-        document.getElementById('cancelDeleteBtn').addEventListener('click', function () { document.getElementById('deleteModal').classList.remove('active'); deleteTargetId = null; });
-        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-            if (deleteTargetId !== null) {
-                products = products.filter(function (p) { return p.id !== deleteTargetId; });
+        document.getElementById('cancelDeleteBtn').addEventListener('click', function() { document.getElementById('deleteModal').classList.remove('active'); deleteTargetId = null; });
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            if (deleteTargetId === null) return;
+            try {
+                await api('DELETE', '/products/' + deleteTargetId);
+                products = products.filter(function(p) { return p.id !== deleteTargetId; });
                 document.getElementById('deleteModal').classList.remove('active');
                 deleteTargetId = null;
-                saveData();
                 renderProducts();
                 toast('Product deleted');
-            }
+            } catch(e) { toast('Error deleting'); }
         });
 
         // ===== PRODUCT MODAL =====
         function openProductModal(id, ctx) {
-            var p = products.find(function (x) { return x.id === id; });
+            var p = products.find(function(x) { return x.id === id; });
             if (!p) return;
             modalContext = ctx || 'store';
             document.getElementById('modalImg').src = p.img;
@@ -1157,221 +855,174 @@
                 btnEl.innerHTML = '<a href="' + waLink(p.name, p.price) + '" target="_blank" class="w-full bg-wa text-white py-3.5 rounded-xl font-semibold hover:brightness-110 transition-all flex items-center justify-center gap-2.5 text-[15px]"><span class="iconify" data-icon="mdi:whatsapp" data-width="20"></span>Order on WhatsApp</a>';
             } else {
                 btnEl.innerHTML = '<button class="modal-edit-btn w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"><span class="iconify" data-icon="lucide:pencil" data-width="15"></span>Edit Product</button>';
-                document.querySelector('.modal-edit-btn').addEventListener('click', function () {
-                    document.getElementById('productModal').classList.remove('active');
-                    editProduct(id);
-                });
+                document.querySelector('.modal-edit-btn').addEventListener('click', function() { document.getElementById('productModal').classList.remove('active'); editProduct(id); });
             }
             document.getElementById('productModal').classList.add('active');
         }
 
-        document.getElementById('closeModalBtn').addEventListener('click', function () {
-            document.getElementById('productModal').classList.remove('active');
-        });
-        document.getElementById('productModal').addEventListener('click', function (e) {
-            if (e.target === this) this.classList.remove('active');
-        });
+        document.getElementById('closeModalBtn').addEventListener('click', function() { document.getElementById('productModal').classList.remove('active'); });
+        document.getElementById('productModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
 
         // ===== ORDERS =====
-        function updateOrderStatus(orderId, status) {
-            var o = orders.find(function (x) { return x.id === orderId; });
-            if (o) { o.status = status; saveData(); renderOrders(); toast('Order marked as ' + status); }
+        async function updateOrderStatus(orderId, status) {
+            try {
+                await api('PUT', '/orders/' + orderId, { status: status });
+                var o = orders.find(function(x) { return x.id === orderId; });
+                if (o) o.status = status;
+                renderOrders();
+                toast('Order marked as ' + status);
+            } catch(e) { toast('Error updating order'); }
         }
 
         function renderOrders() {
-            var filtered = orderFilter === 'all' ? orders : orders.filter(function (o) { return o.status === orderFilter; });
+            var filtered = orderFilter === 'all' ? orders : orders.filter(function(o) { return o.status === orderFilter; });
             var list = document.getElementById('ordersList');
-            var empty = document.getElementById('noOrders');
-            if (!filtered.length) { list.innerHTML = ''; empty.classList.remove('hidden'); return; }
-            empty.classList.add('hidden');
+            if (!filtered.length) { list.innerHTML = ''; document.getElementById('noOrders').classList.remove('hidden'); return; }
+            document.getElementById('noOrders').classList.add('hidden');
             var sc = { pending: 'bg-amber-50 text-amber-700', confirmed: 'bg-blue-50 text-blue-700', delivered: 'bg-green-50 text-green-700' };
             var html = '';
             for (var i = 0; i < filtered.length; i++) {
                 var o = filtered[i];
-                var phone = o.phone.replace(/[^0-9]/g, '');
+                var phone = (o.phone || '').replace(/[^0-9]/g, '');
                 html += '<div class="bg-white rounded-xl border border-gray-200 p-4 fade-up">';
                 html += '<div class="flex flex-col sm:flex-row sm:items-center gap-3">';
                 html += '<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-semibold">' + escAttr(o.id) + '</span><span class="px-2 py-0.5 rounded-full text-xs font-medium ' + sc[o.status] + '">' + o.status.charAt(0).toUpperCase() + o.status.slice(1) + '</span></div>';
-                html += '<p class="text-sm text-gray-600">' + escAttr(o.customer) + '</p><p class="text-xs text-gray-400 mt-0.5">' + escAttr(o.items.join(', ')) + '</p></div>';
+                html += '<p class="text-sm text-gray-600">' + escAttr(o.customer) + '</p>';
+                html += '<p class="text-xs text-gray-400 mt-0.5">' + escAttr(Array.isArray(o.items) ? o.items.join(', ') : o.items) + '</p></div>';
                 html += '<div class="flex items-center gap-4 sm:flex-col sm:items-end"><span class="text-sm font-semibold">' + escAttr(formatPrice(o.total)) + '</span><span class="text-xs text-gray-400">' + escAttr(o.date) + '</span>';
-                html += '<a href="https://wa.me/' + phone + '" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-green-600 font-medium hover:underline"><span class="iconify" data-icon="mdi:whatsapp" data-width="14"></span>Message</a></div></div>';
+                if (phone) html += '<a href="https://wa.me/' + phone + '" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-green-600 font-medium hover:underline"><span class="iconify" data-icon="mdi:whatsapp" data-width="14"></span>Message</a>';
+                html += '</div></div>';
                 if (o.status !== 'delivered') {
                     html += '<div class="flex gap-2 mt-3 pt-3 border-t border-gray-100">';
-                    if (o.status === 'pending') {
-                        html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="confirmed">Mark Confirmed</button>';
-                    }
+                    if (o.status === 'pending') html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="confirmed">Mark Confirmed</button>';
                     html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700 hover:bg-green-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="delivered">Mark Delivered</button>';
                     html += '</div>';
                 }
                 html += '</div>';
             }
             list.innerHTML = html;
-
-            var statusBtns = list.querySelectorAll('.order-status-btn');
-            for (var i = 0; i < statusBtns.length; i++) {
-                statusBtns[i].addEventListener('click', function () {
-                    updateOrderStatus(this.dataset.orderId, this.dataset.status);
-                });
-            }
+            list.querySelectorAll('.order-status-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() { updateOrderStatus(this.dataset.orderId, this.dataset.status); });
+            });
         }
 
-        var orderTabs = document.querySelectorAll('.order-tab');
-        for (var i = 0; i < orderTabs.length; i++) {
-            orderTabs[i].addEventListener('click', function () {
-                for (var j = 0; j < orderTabs.length; j++) { orderTabs[j].classList.remove('bg-white', 'shadow-sm', 'text-gray-900'); orderTabs[j].classList.add('text-gray-500'); }
+        document.querySelectorAll('.order-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.order-tab').forEach(function(t) { t.classList.remove('bg-white', 'shadow-sm', 'text-gray-900'); t.classList.add('text-gray-500'); });
                 this.classList.add('bg-white', 'shadow-sm', 'text-gray-900'); this.classList.remove('text-gray-500');
                 orderFilter = this.dataset.filter; renderOrders();
             });
-        }
+        });
 
         // ===== STOREFRONT =====
         function renderStorefront() {
             var q = (document.getElementById('storeSearch').value || '').toLowerCase();
-            var visibleProducts = products.filter(function (p) {
+            var visible = products.filter(function(p) {
                 if (!settings.showUnavailable && !p.available) return false;
                 return (p.name.toLowerCase().indexOf(q) > -1 || p.category.toLowerCase().indexOf(q) > -1) && (storeCat === 'all' || p.category === storeCat);
             });
-
             document.getElementById('storeAvatar').src = profile.avatar;
             document.getElementById('storeName').textContent = profile.name;
             document.getElementById('storeUsername').textContent = '@' + profile.username;
             document.getElementById('storeBio').textContent = profile.bio;
-
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
             var contactBtn = document.getElementById('storeContactBtn');
-            if (contactBtn) contactBtn.href = 'https://wa.me/' + num;
+            if (contactBtn) contactBtn.href = num ? 'https://wa.me/' + num : '#';
 
-            // Dynamic category tabs from actual product data
             var cats = ['all'];
-            for (var i = 0; i < products.length; i++) {
-                if (cats.indexOf(products[i].category) === -1) cats.push(products[i].category);
-            }
+            products.forEach(function(p) { if (cats.indexOf(p.category) === -1) cats.push(p.category); });
             var tabsEl = document.getElementById('storeTabs');
-            var tabsHtml = '';
-            for (var i = 0; i < cats.length; i++) {
-                var isActive = cats[i] === storeCat;
-                var label = cats[i] === 'all' ? 'All' : cats[i];
-                tabsHtml += '<button class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ' + (isActive ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600') + '" data-cat="' + escAttr(cats[i]) + '">' + escAttr(label) + '</button>';
-            }
-            tabsEl.innerHTML = tabsHtml;
-            var catTabEls = tabsEl.querySelectorAll('.store-cat-tab');
-            for (var i = 0; i < catTabEls.length; i++) {
-                catTabEls[i].addEventListener('click', function () {
-                    storeCat = this.dataset.cat; renderStorefront();
-                });
-            }
+            tabsEl.innerHTML = cats.map(function(c) {
+                return '<button class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ' + (c === storeCat ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600') + '" data-cat="' + escAttr(c) + '">' + escAttr(c === 'all' ? 'All' : c) + '</button>';
+            }).join('');
+            tabsEl.querySelectorAll('.store-cat-tab').forEach(function(btn) {
+                btn.addEventListener('click', function() { storeCat = this.dataset.cat; renderStorefront(); });
+            });
 
-            // Socials
             var socialsEl = document.getElementById('storeSocials');
             if (links.length) {
                 if (settings.socialBento) {
-                    var sh = '<div class="grid grid-cols-3 gap-2">';
-                    for (var i = 0; i < links.length; i++) {
-                        var m = platformMeta[links[i].platform] || platformMeta.other;
-                        sh += '<a href="' + escAttr(links[i].url) + '" target="_blank" class="social-bento-store bg-white border border-gray-200 rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2"><div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + m.color + '"></span></div><span class="text-[11px] font-medium text-gray-700 leading-tight">' + m.label + '</span></a>';
-                    }
-                    sh += '</div>';
-                    socialsEl.innerHTML = sh;
+                    socialsEl.innerHTML = '<div class="grid grid-cols-3 gap-2">' + links.map(function(l) {
+                        var m = platformMeta[l.platform] || platformMeta.other;
+                        return '<a href="' + escAttr(l.url) + '" target="_blank" class="social-bento-store bg-white border border-gray-200 rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2"><div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + m.color + '"></span></div><span class="text-[11px] font-medium text-gray-700 leading-tight">' + m.label + '</span></a>';
+                    }).join('') + '</div>';
                 } else {
-                    var sh = '<div class="flex items-center gap-2.5">';
-                    for (var i = 0; i < links.length; i++) {
-                        var m = platformMeta[links[i].platform] || platformMeta.other;
-                        sh += '<a href="' + escAttr(links[i].url) + '" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform" style="background:' + m.color + '15" title="' + m.label + '"><span class="iconify" data-icon="' + m.icon + '" data-width="16" style="color:' + m.color + '"></span></a>';
-                    }
-                    sh += '</div>';
-                    socialsEl.innerHTML = sh;
+                    socialsEl.innerHTML = '<div class="flex items-center gap-2.5">' + links.map(function(l) {
+                        var m = platformMeta[l.platform] || platformMeta.other;
+                        return '<a href="' + escAttr(l.url) + '" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform" style="background:' + m.color + '15" title="' + m.label + '"><span class="iconify" data-icon="' + m.icon + '" data-width="16" style="color:' + m.color + '"></span></a>';
+                    }).join('') + '</div>';
                 }
             } else { socialsEl.innerHTML = ''; }
 
-            // Grid
             var grid = document.getElementById('storeGrid');
-            var empty = document.getElementById('noStoreProducts');
             grid.style.gridTemplateColumns = '';
             if (window.innerWidth >= 769) grid.style.gridTemplateColumns = 'repeat(' + settings.gridCols + ', 1fr)';
-            if (!visibleProducts.length) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
-            empty.classList.add('hidden');
-
-            var html = '';
-            for (var i = 0; i < visibleProducts.length; i++) {
-                var p = visibleProducts[i];
-                html += '<div class="store-item cursor-pointer' + (!p.available ? ' opacity-60' : '') + '" data-store-open="' + p.id + '">';
+            if (!visible.length) { grid.innerHTML = ''; document.getElementById('noStoreProducts').classList.remove('hidden'); return; }
+            document.getElementById('noStoreProducts').classList.add('hidden');
+            grid.innerHTML = visible.map(function(p) {
+                var html = '<div class="store-item cursor-pointer' + (!p.available ? ' opacity-60' : '') + '" data-store-open="' + p.id + '">';
                 html += '<img src="' + escAttr(p.img) + '" class="store-card-img" alt="' + escAttr(p.name) + '">';
-                html += '<div class="mt-2">';
-                html += '<p class="text-[13px] font-medium leading-tight truncate">' + escAttr(p.name) + '</p>';
-                if (!p.available) {
-                    html += '<p class="text-[11px] text-gray-400 mt-0.5">Unavailable</p>';
-                } else {
-                    html += '<p class="text-[13px] font-semibold text-accent mt-0.5">' + escAttr(formatPrice(p.price)) + '</p>';
-                    html += '<a href="' + waLink(p.name, p.price) + '" target="_blank" class="store-wa-link w-full mt-1.5 bg-wa text-white py-[7px] rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 hover:brightness-110 transition-all">';
-                    html += '<span class="iconify" data-icon="mdi:whatsapp" data-width="13"></span>Order This Now</a>';
-                }
+                html += '<div class="mt-2"><p class="text-[13px] font-medium leading-tight truncate">' + escAttr(p.name) + '</p>';
+                if (!p.available) { html += '<p class="text-[11px] text-gray-400 mt-0.5">Unavailable</p>'; }
+                else { html += '<p class="text-[13px] font-semibold text-accent mt-0.5">' + escAttr(formatPrice(p.price)) + '</p><a href="' + waLink(p.name, p.price) + '" target="_blank" class="store-wa-link w-full mt-1.5 bg-wa text-white py-[7px] rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 hover:brightness-110 transition-all"><span class="iconify" data-icon="mdi:whatsapp" data-width="13"></span>Order This Now</a>'; }
                 html += '</div></div>';
-            }
-            grid.innerHTML = html;
-
-            var storeCards = grid.querySelectorAll('[data-store-open]');
-            for (var i = 0; i < storeCards.length; i++) {
-                storeCards[i].addEventListener('click', function (e) {
-                    if (e.target.closest('.store-wa-link')) return;
-                    openProductModal(parseInt(this.dataset.storeOpen), 'store');
-                });
-            }
+                return html;
+            }).join('');
+            grid.querySelectorAll('[data-store-open]').forEach(function(el) {
+                el.addEventListener('click', function(e) { if (e.target.closest('.store-wa-link')) return; openProductModal(parseInt(this.dataset.storeOpen), 'store'); });
+            });
         }
 
-        window.addEventListener('resize', function () { if (document.getElementById('view-storefront').classList.contains('active')) renderStorefront(); });
+        window.addEventListener('resize', function() { if (document.getElementById('view-storefront').classList.contains('active')) renderStorefront(); });
 
         // ===== LINKS =====
         function renderLinks() {
             if (onboardingDismissed) document.getElementById('linksOnboarding').style.display = 'none';
             var grid = document.getElementById('linksGrid');
-            var html = '';
-            for (var i = 0; i < links.length; i++) {
-                var m = platformMeta[links[i].platform] || platformMeta.other;
-                html += '<div class="bento-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col items-center justify-center text-center gap-3 relative group">';
-                html += '<button class="remove-link-btn absolute top-2 right-2 w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>';
-                html += '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>';
-                html += '<div><p class="text-sm font-medium">' + m.label + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(links[i].url.replace(/^https?:\/\//, '')) + '</p></div></div>';
-            }
-            grid.innerHTML = html;
-            var removeBtns = grid.querySelectorAll('.remove-link-btn');
-            for (var i = 0; i < removeBtns.length; i++) {
-                removeBtns[i].addEventListener('click', function (e) {
+            grid.innerHTML = links.map(function(l, i) {
+                var m = platformMeta[l.platform] || platformMeta.other;
+                return '<div class="bento-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col items-center justify-center text-center gap-3 relative group">' +
+                    '<button class="remove-link-btn absolute top-2 right-2 w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>' +
+                    '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>' +
+                    '<div><p class="text-sm font-medium">' + m.label + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p></div></div>';
+            }).join('');
+            grid.querySelectorAll('.remove-link-btn').forEach(function(btn) {
+                btn.addEventListener('click', async function(e) {
                     e.stopPropagation();
                     links.splice(parseInt(this.dataset.linkIdx), 1);
-                    saveData();
-                    renderLinks(); toast('Link removed');
+                    try { await api('PUT', '/links', { links: links }); renderLinks(); toast('Link removed'); } catch(e) { toast('Error removing link'); }
                 });
-            }
+            });
         }
 
-        document.getElementById('addLinkBtn').addEventListener('click', function () { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; });
-        document.getElementById('cancelLinkBtn').addEventListener('click', function () { document.getElementById('linkModal').classList.remove('active'); });
-        document.getElementById('confirmLinkBtn').addEventListener('click', function () {
+        document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; });
+        document.getElementById('cancelLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.remove('active'); });
+        document.getElementById('confirmLinkBtn').addEventListener('click', async function() {
             var url = document.getElementById('linkUrl').value.trim();
             if (!url) return;
             links.push({ platform: document.getElementById('linkPlatform').value, url: url });
             document.getElementById('linkModal').classList.remove('active');
-            saveData();
-            renderLinks(); toast('Link added');
+            try { await api('PUT', '/links', { links: links }); renderLinks(); toast('Link added'); } catch(e) { links.pop(); toast('Error adding link'); }
         });
-        document.getElementById('linkModal').addEventListener('click', function (e) { if (e.target === this) this.classList.remove('active'); });
-        document.getElementById('saveLinksBtn').addEventListener('click', function () { saveData(); toast('Links saved'); });
-        document.getElementById('dismissOnboarding').addEventListener('click', function () {
+        document.getElementById('linkModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+        document.getElementById('saveLinksBtn').addEventListener('click', async function() {
+            try { await api('PUT', '/links', { links: links }); toast('Links saved'); } catch(e) { toast('Error saving links'); }
+        });
+        document.getElementById('dismissOnboarding').addEventListener('click', async function() {
             onboardingDismissed = true;
-            saveData();
             document.getElementById('linksOnboarding').style.display = 'none';
+            try { await api('PUT', '/me/onboarding'); } catch(e) {}
         });
 
         // ===== PROFILE =====
-        document.getElementById('profUsername').addEventListener('input', function () { document.getElementById('usernamePreview').textContent = this.value || 'username'; });
-        document.getElementById('profBio').addEventListener('input', function () { document.getElementById('bioCount').textContent = this.value.length; });
-
-        document.getElementById('avatarBtn').addEventListener('click', function () { document.getElementById('avatarInput').click(); });
-        document.getElementById('avatarInput').addEventListener('change', function (e) {
+        document.getElementById('profUsername').addEventListener('input', function() { document.getElementById('usernamePreview').textContent = this.value || 'username'; });
+        document.getElementById('profBio').addEventListener('input', function() { document.getElementById('bioCount').textContent = this.value.length; });
+        document.getElementById('avatarBtn').addEventListener('click', function() { document.getElementById('avatarInput').click(); });
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
             var file = e.target.files[0]; if (!file) return;
-            if (file.size > 5 * 1024 * 1024) { toast('Image must be under 5MB'); this.value = ''; return; }
+            if (file.size > 500 * 1024) { toast('Image must be under 500KB'); this.value = ''; return; }
             var reader = new FileReader();
-            reader.onload = function (ev) {
+            reader.onload = function(ev) {
                 document.getElementById('profileAvatar').src = ev.target.result;
                 document.getElementById('sidebarAvatar').src = ev.target.result;
                 profile.avatar = ev.target.result;
@@ -1379,76 +1030,53 @@
             reader.readAsDataURL(file);
         });
 
-        document.getElementById('profileForm').addEventListener('submit', function (e) {
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             profile.name = document.getElementById('profName').value.trim();
             profile.username = document.getElementById('profUsername').value.trim();
             profile.bio = document.getElementById('profBio').value.trim();
-            document.getElementById('sidebarName').textContent = profile.name;
-            document.getElementById('sidebarUsername').textContent = '@' + profile.username;
-            saveData();
-            toast('Profile saved');
+            try {
+                await api('PUT', '/me/profile', { display_name: profile.name, username: profile.username, bio: profile.bio, avatar_url: profile.avatar });
+                document.getElementById('sidebarName').textContent = profile.name;
+                document.getElementById('sidebarUsername').textContent = '@' + profile.username;
+                toast('Profile saved');
+            } catch(e) { toast('Error: ' + e.message); }
         });
 
-        // ===== SETTINGS SYNC =====
-        function syncMobileSettings() {
-            document.getElementById('mobSetWhatsapp').value = settings.whatsapp;
-            document.getElementById('mobSetCurrency').value = settings.currency;
-            var mobBento = document.getElementById('mobSetSocialBento');
-            var mobUnavail = document.getElementById('mobSetShowUnavailable');
-            if (settings.showUnavailable) mobUnavail.classList.add('on'); else mobUnavail.classList.remove('on');
-            if (settings.socialBento) mobBento.classList.add('on'); else mobBento.classList.remove('on');
-            var mobGrids = document.querySelectorAll('.mobile-grid-opt');
-            for (var i = 0; i < mobGrids.length; i++) mobGrids[i].classList.toggle('active', parseInt(mobGrids[i].dataset.cols) === settings.gridCols);
-        }
-
-        // Desktop grid opts
-        var deskGridOpts = document.querySelectorAll('.desktop-grid-opt');
-        for (var i = 0; i < deskGridOpts.length; i++) {
-            deskGridOpts[i].addEventListener('click', function () {
+        // ===== SETTINGS =====
+        document.querySelectorAll('.desktop-grid-opt').forEach(function(g) {
+            g.addEventListener('click', function() {
                 settings.gridCols = parseInt(this.dataset.cols);
-                for (var j = 0; j < deskGridOpts.length; j++) deskGridOpts[j].classList.toggle('active', parseInt(deskGridOpts[j].dataset.cols) === settings.gridCols);
+                document.querySelectorAll('.desktop-grid-opt').forEach(function(x) { x.classList.toggle('active', parseInt(x.dataset.cols) === settings.gridCols); });
             });
-        }
-        // Mobile grid opts
-        var mobGridOpts = document.querySelectorAll('.mobile-grid-opt');
-        for (var i = 0; i < mobGridOpts.length; i++) {
-            mobGridOpts[i].addEventListener('click', function () {
+        });
+        document.querySelectorAll('.mobile-grid-opt').forEach(function(g) {
+            g.addEventListener('click', function() {
                 settings.gridCols = parseInt(this.dataset.cols);
-                for (var j = 0; j < mobGridOpts.length; j++) mobGridOpts[j].classList.toggle('active', parseInt(mobGridOpts[j].dataset.cols) === settings.gridCols);
+                document.querySelectorAll('.mobile-grid-opt').forEach(function(x) { x.classList.toggle('active', parseInt(x.dataset.cols) === settings.gridCols); });
             });
-        }
+        });
 
-        document.getElementById('settingsForm').addEventListener('submit', function (e) {
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             settings.whatsapp = document.getElementById('setWhatsapp').value;
             settings.currency = document.getElementById('setCurrency').value;
             settings.showUnavailable = document.getElementById('setShowUnavailable').classList.contains('on');
             settings.socialBento = document.getElementById('setSocialBento').classList.contains('on');
-            saveData();
-            toast('Settings saved');
+            try { await api('PUT', '/me/settings', settings); toast('Settings saved'); } catch(e) { toast('Error saving settings'); }
         });
 
-        document.getElementById('mobileSettingsForm').addEventListener('submit', function (e) {
+        document.getElementById('mobileSettingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             settings.whatsapp = document.getElementById('mobSetWhatsapp').value;
             settings.currency = document.getElementById('mobSetCurrency').value;
             settings.showUnavailable = document.getElementById('mobSetShowUnavailable').classList.contains('on');
             settings.socialBento = document.getElementById('mobSetSocialBento').classList.contains('on');
-            saveData();
-            toast('Settings saved');
+            try { await api('PUT', '/me/settings', settings); toast('Settings saved'); } catch(e) { toast('Error saving settings'); }
         });
 
-        // ===== INIT =====
-        loadData();
-        syncSettingsUI();
-        syncProfileForm();
-        if (settings.showUnavailable) document.getElementById('toggleShowUnavailable').classList.add('on');
-        if (onboardingDismissed) document.getElementById('linksOnboarding').style.display = 'none';
-        renderProducts();
-        renderOrders();
-        renderLinks();
+        // ===== START =====
+        initApp();
     </script>
 </body>
-
 </html>
