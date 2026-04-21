@@ -219,10 +219,10 @@
         </nav>
         <div class="p-4 border-t border-gray-100">
             <div class="flex items-center gap-3">
-                <img id="sidebarAvatar" src="https://picsum.photos/seed/baqaar-avatar/80/80" class="w-9 h-9 rounded-full object-cover" alt="">
+                <img id="sidebarAvatar" src="" class="w-9 h-9 rounded-full object-cover" alt="">
                 <div class="min-w-0">
-                    <div id="sidebarName" class="text-sm font-medium truncate">My Store</div>
-                    <div id="sidebarUsername" class="text-xs text-gray-400 truncate">@username</div>
+                    <div id="sidebarName" class="text-sm font-medium truncate"></div>
+                    <div id="sidebarUsername" class="text-xs text-gray-400 truncate"></div>
                 </div>
             </div>
         </div>
@@ -317,13 +317,13 @@
                 <div class="bg-white px-5 pt-8 pb-5">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center gap-4">
-                            <img id="storeAvatar" src="https://picsum.photos/seed/baqaar-avatar/80/80" class="w-16 h-16 rounded-full object-cover" alt="">
+                            <img id="storeAvatar" src="" class="w-16 h-16 rounded-full object-cover" alt="">
                             <div>
-                                <h2 id="storeName" class="font-semibold text-lg leading-tight">My Store</h2>
-                                <p id="storeUsername" class="text-sm text-gray-400 mt-0.5">@username</p>
+                                <h2 id="storeName" class="font-semibold text-lg leading-tight"></h2>
+                                <p id="storeUsername" class="text-sm text-gray-400 mt-0.5"></p>
                             </div>
                         </div>
-                        <a id="storeContactBtn" href="#" target="_blank" class="flex items-center gap-2 bg-wa text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:brightness-110 transition-all flex-shrink-0 shadow-sm"><span class="iconify" data-icon="mdi:whatsapp" data-width="20"></span><span class="hidden sm:inline">Contact</span></a>
+                        <a id="storeContactBtn" href="#" target="_blank" class="hidden items-center gap-2 bg-wa text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:brightness-110 transition-all flex-shrink-0 shadow-sm"><span class="iconify" data-icon="mdi:whatsapp" data-width="20"></span><span class="hidden sm:inline">Contact</span></a>
                     </div>
                     <p id="storeBio" class="text-sm text-gray-600 leading-relaxed"></p>
                 </div>
@@ -360,7 +360,7 @@
                 <p class="text-sm text-gray-500 mt-1 mb-8">How you appear to your customers.</p>
                 <form id="profileForm" class="space-y-6">
                     <div class="flex items-center gap-5">
-                        <div class="relative"><img id="profileAvatar" src="https://picsum.photos/seed/baqaar-avatar/200/200" class="w-20 h-20 rounded-full object-cover" alt=""><button type="button" id="avatarBtn" class="absolute -bottom-1 -right-1 w-7 h-7 bg-accent rounded-full flex items-center justify-center text-white shadow-lg"><span class="iconify" data-icon="lucide:camera" data-width="13"></span></button><input id="avatarInput" type="file" accept="image/*" class="hidden"></div>
+                        <div class="relative"><img id="profileAvatar" src="" class="w-20 h-20 rounded-full object-cover" alt=""><button type="button" id="avatarBtn" class="absolute -bottom-1 -right-1 w-7 h-7 bg-accent rounded-full flex items-center justify-center text-white shadow-lg"><span class="iconify" data-icon="lucide:camera" data-width="13"></span></button><input id="avatarInput" type="file" accept="image/*" class="hidden"></div>
                         <div><p class="text-sm font-medium">Profile Photo</p><p class="text-xs text-gray-400 mt-0.5">Square image works best</p></div>
                     </div>
                     <div><label class="block text-sm font-medium mb-2">Display Name</label><input id="profName" type="text" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
@@ -457,9 +457,12 @@
 
     <script>
         // ===== STATE =====
+        var AVATAR_BLANK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f3f4f6'/%3E%3Ccircle cx='40' cy='30' r='15' fill='%23d1d5db'/%3E%3Cellipse cx='40' cy='70' rx='24' ry='18' fill='%23d1d5db'/%3E%3C/svg%3E";
+        var PRODUCT_BLANK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f9fafb'/%3E%3Crect x='148' y='152' width='104' height='80' rx='10' fill='%23e5e7eb'/%3E%3Ccircle cx='178' cy='174' r='12' fill='%23d1d5db'/%3E%3Cpolygon points='148%2C232 180%2C196 204%2C214 228%2C194 252%2C232' fill='%23d1d5db'/%3E%3C/svg%3E";
+
         var userId = localStorage.getItem('baqaar_uid') || null;
         var products = [], orders = [], links = [];
-        var profile = { name: 'My Store', username: 'username', bio: '', avatar: 'https://picsum.photos/seed/baqaar-avatar/200/200' };
+        var profile = { name: '', username: '', bio: '', avatar: AVATAR_BLANK };
         var settings = { gridCols: 2, whatsapp: '', currency: 'USD', showUnavailable: false, socialBento: false };
         var storeCat = 'all', orderFilter = 'all', deleteTargetId = null, modalContext = 'store';
         var onboardingDismissed = false;
@@ -492,13 +495,13 @@
             try {
                 var userData = await api('GET', '/me');
                 var u = userData.user;
-                profile = { name: u.display_name, username: u.username, bio: u.bio || '', avatar: u.avatar_url || 'https://picsum.photos/seed/baqaar-avatar/200/200' };
+                profile = { name: u.display_name, username: u.username, bio: u.bio || '', avatar: u.avatar_url || AVATAR_BLANK };
                 settings = { gridCols: u.grid_cols || 2, whatsapp: u.whatsapp || '', currency: u.currency || 'USD', showUnavailable: !!u.show_unavailable, socialBento: !!u.social_bento };
                 onboardingDismissed = !!u.onboarding_done;
 
                 var results = await Promise.all([api('GET', '/products'), api('GET', '/orders'), api('GET', '/links')]);
                 products = results[0].products.map(function(p) {
-                    return { id: p.id, name: p.name, price: p.price, category: p.category, desc: p.description, stock: p.stock, available: !!p.available, img: p.image_url || ('https://picsum.photos/seed/prod-' + p.id + '/600/600') };
+                    return { id: p.id, name: p.name, price: p.price, category: p.category, desc: p.description, stock: p.stock, available: !!p.available, img: p.image_url || PRODUCT_BLANK };
                 });
                 orders = results[1].orders.map(function(o) {
                     return { id: o.id, customer: o.customer_name, phone: o.customer_phone, items: o.items, total: o.total, status: o.status, date: new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
@@ -577,7 +580,7 @@
                 if (data.error) throw new Error(data.error);
                 userId = data.user.id;
                 localStorage.setItem('baqaar_uid', userId);
-                profile = { name: data.user.display_name, username: data.user.username, bio: '', avatar: 'https://picsum.photos/seed/baqaar-avatar/200/200' };
+                profile = { name: data.user.display_name, username: data.user.username, bio: '', avatar: AVATAR_BLANK };
                 settings.whatsapp = whatsapp;
                 document.getElementById('obStoreUrl').textContent = window.location.host + '/@' + username;
                 document.getElementById('ob-step1').classList.remove('active');
@@ -716,11 +719,11 @@
                 if (editId) {
                     var res = await api('PUT', '/products/' + editId, data);
                     var idx = products.findIndex(function(x) { return x.id === parseInt(editId); });
-                    if (idx > -1) products[idx] = { id: parseInt(editId), name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || ('https://picsum.photos/seed/prod-' + editId + '/600/600') };
+                    if (idx > -1) products[idx] = { id: parseInt(editId), name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || PRODUCT_BLANK };
                     toast('Product updated');
                 } else {
                     var res = await api('POST', '/products', data);
-                    products.unshift({ id: res.product.id, name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || ('https://picsum.photos/seed/prod-' + res.product.id + '/600/600') });
+                    products.unshift({ id: res.product.id, name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || PRODUCT_BLANK });
                     toast('Product added');
                 }
                 showView('products');
@@ -927,7 +930,16 @@
             document.getElementById('storeBio').textContent = profile.bio;
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
             var contactBtn = document.getElementById('storeContactBtn');
-            if (contactBtn) contactBtn.href = num ? 'https://wa.me/' + num : '#';
+            if (contactBtn) {
+                if (num) {
+                    contactBtn.href = 'https://wa.me/' + num;
+                    contactBtn.classList.remove('hidden');
+                    contactBtn.classList.add('flex');
+                } else {
+                    contactBtn.classList.add('hidden');
+                    contactBtn.classList.remove('flex');
+                }
+            }
 
             var cats = ['all'];
             products.forEach(function(p) { if (cats.indexOf(p.category) === -1) cats.push(p.category); });
@@ -1015,7 +1027,7 @@
         });
 
         // ===== PROFILE =====
-        document.getElementById('profUsername').addEventListener('input', function() { document.getElementById('usernamePreview').textContent = this.value || 'username'; });
+        document.getElementById('profUsername').addEventListener('input', function() { document.getElementById('usernamePreview').textContent = this.value || ''; });
         document.getElementById('profBio').addEventListener('input', function() { document.getElementById('bioCount').textContent = this.value.length; });
         document.getElementById('avatarBtn').addEventListener('click', function() { document.getElementById('avatarInput').click(); });
         document.getElementById('avatarInput').addEventListener('change', function(e) {
