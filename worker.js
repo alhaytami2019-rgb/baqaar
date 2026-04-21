@@ -4,6 +4,18 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type, X-User-Id',
 };
 
+async function verifyTurnstile(token, secret, ip) {
+  const fd = new FormData();
+  fd.append('secret', secret);
+  fd.append('response', token);
+  if (ip) fd.append('remoteip', ip);
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST', body: fd,
+  });
+  const data = await res.json();
+  return data.success === true;
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -38,6 +50,9 @@ async function handleAPI(request, env, url) {
     const display_name = (body.display_name || '').trim();
     if (!username || !display_name) return err('username and display_name required');
     if (!/^[a-z0-9_]{3,30}$/.test(username)) return err('Invalid username');
+    const ip = request.headers.get('CF-Connecting-IP');
+    const turnstileOk = await verifyTurnstile(body.turnstile_token || '', env.TURNSTILE_SECRET, ip);
+    if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
     if (existing) return err('Username taken', 409);
     const id = crypto.randomUUID();

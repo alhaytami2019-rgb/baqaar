@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baqaar — Your Digital Storefront</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -139,8 +140,9 @@
                         </div>
                         <p class="text-xs text-gray-400 mt-1.5">Customers will use this to order from your store.</p>
                     </div>
+                    <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="light" data-size="flexible"></div>
                     <button id="obCreateBtn"
-                        class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors mt-2 flex items-center justify-center gap-2">
+                        class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
                         <span class="iconify" data-icon="lucide:sparkles" data-width="16"></span>
                         Create My Store
                     </button>
@@ -573,10 +575,13 @@
             if (!obUsernameValid) { errorEl.textContent = 'Please choose a valid, available username.'; errorEl.classList.remove('hidden'); return; }
             if (!displayName) { errorEl.textContent = 'Please enter a display name.'; errorEl.classList.remove('hidden'); return; }
 
+            var turnstileToken = document.querySelector('[name="cf-turnstile-response"]');
+            if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = 'Please complete the security check.'; errorEl.classList.remove('hidden'); return; }
+
             this.disabled = true;
             this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
             try {
-                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp }) }).then(function(r) { return r.json(); });
+                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp, turnstile_token: turnstileToken.value }) }).then(function(r) { return r.json(); });
                 if (data.error) throw new Error(data.error);
                 userId = data.user.id;
                 localStorage.setItem('baqaar_uid', userId);
@@ -590,6 +595,7 @@
                 errorEl.classList.remove('hidden');
                 this.disabled = false;
                 this.innerHTML = '<span class="iconify" data-icon="lucide:sparkles" data-width="16"></span> Create My Store';
+                if (window.turnstile) turnstile.reset();
             }
         });
 
@@ -627,7 +633,19 @@
 
         function waLink(name, price) {
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
-            var msg = "Hi! I'd like to order: " + name + " (" + formatPrice(price) + ")";
+            var msg = "Hi! I'd like to order *" + name + "* (" + formatPrice(price) + "). Is it available?";
+            return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+        }
+
+        function waContactLink() {
+            var num = settings.whatsapp.replace(/[^0-9]/g, '');
+            var msg = "Hi! I came across your store and would like to know more about your products.";
+            return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+        }
+
+        function waOrderLink(phone, orderId, customerName) {
+            var num = (phone || '').replace(/[^0-9]/g, '');
+            var msg = "Hi " + customerName + "! This is an update regarding your order *" + orderId + "*. ";
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
@@ -893,7 +911,7 @@
                 html += '<p class="text-sm text-gray-600">' + escAttr(o.customer) + '</p>';
                 html += '<p class="text-xs text-gray-400 mt-0.5">' + escAttr(Array.isArray(o.items) ? o.items.join(', ') : o.items) + '</p></div>';
                 html += '<div class="flex items-center gap-4 sm:flex-col sm:items-end"><span class="text-sm font-semibold">' + escAttr(formatPrice(o.total)) + '</span><span class="text-xs text-gray-400">' + escAttr(o.date) + '</span>';
-                if (phone) html += '<a href="https://wa.me/' + phone + '" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-green-600 font-medium hover:underline"><span class="iconify" data-icon="mdi:whatsapp" data-width="14"></span>Message</a>';
+                if (phone) html += '<a href="' + waOrderLink(o.phone, o.id, o.customer) + '" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-green-600 font-medium hover:underline"><span class="iconify" data-icon="mdi:whatsapp" data-width="14"></span>Message</a>';
                 html += '</div></div>';
                 if (o.status !== 'delivered') {
                     html += '<div class="flex gap-2 mt-3 pt-3 border-t border-gray-100">';
@@ -932,7 +950,7 @@
             var contactBtn = document.getElementById('storeContactBtn');
             if (contactBtn) {
                 if (num) {
-                    contactBtn.href = 'https://wa.me/' + num;
+                    contactBtn.href = waContactLink();
                     contactBtn.classList.remove('hidden');
                     contactBtn.classList.add('flex');
                 } else {
