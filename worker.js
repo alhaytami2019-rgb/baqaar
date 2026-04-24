@@ -1,7 +1,8 @@
 const CORS = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://lifaaq.com',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, X-User-Id',
+  'Vary': 'Origin',
 };
 
 async function verifyTurnstile(token, secret, ip) {
@@ -171,9 +172,11 @@ async function handleAPI(request, env, url) {
       await env.DB.prepare('DELETE FROM links WHERE user_id = ?').bind(userId).run();
       const items = b.links || [];
       for (let i = 0; i < items.length; i++) {
+        const rawUrl = (items[i].url || '').trim();
+        if (!/^https?:\/\//i.test(rawUrl)) continue;
         await env.DB.prepare(
           'INSERT INTO links (user_id, platform, url, sort_order) VALUES (?, ?, ?, ?)'
-        ).bind(userId, items[i].platform, items[i].url, i).run();
+        ).bind(userId, items[i].platform, rawUrl, i).run();
       }
       return json({ ok: true });
     }

@@ -1,5 +1,6 @@
 {
 	"name": "baqaar",
+	"account_id": "535d83461cde23dfdcc02609d2460c69",
 	"compatibility_date": "2025-06-05",
 	"main": "worker.js",
 	"assets": {
