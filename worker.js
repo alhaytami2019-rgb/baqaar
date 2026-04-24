@@ -259,8 +259,8 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/')) return handleAPI(request, env, url);
-    // Serve index.html for public store routes (/@username)
-    if (/^\/@[a-z0-9_]+$/i.test(url.pathname)) {
+    // Serve index.html for public store routes (/@username or /username)
+    if (/^\/?@?[a-z0-9_]{3,30}$/i.test(url.pathname) && !url.pathname.includes('.')) {
       return env.ASSETS.fetch(new Request(new URL('/', url).toString(), request));
     }
     return env.ASSETS.fetch(request);

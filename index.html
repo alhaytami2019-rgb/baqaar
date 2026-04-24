@@ -1148,20 +1148,22 @@
                 var ogDesc = document.querySelector('meta[property="og:description"]');
                 if (ogDesc) ogDesc.setAttribute('content', 'Dunida La Wadaag Dukaankaaga. Hal meel kusoo bandhig waxwalibo iibiso, ka maamul macaamiishaada, hal click-na hakugula soo xeriiraan WhatsApp-ka.');
 
-                // Strip admin chrome
-                var sidebar = document.querySelector('.sidebar');
-                var mobileNav = document.querySelector('.mobile-nav');
+                // Remove all admin chrome from DOM entirely
+                ['aside.sidebar', 'nav.mobile-nav', '#onboardingOverlay', '#view-products',
+                 '#view-add-product', '#view-orders', '#view-links', '#view-profile',
+                 '#view-settings', '#productModal', '#linkModal', '#deleteModal'].forEach(function(sel) {
+                    var el = document.querySelector(sel);
+                    if (el) el.remove();
+                });
                 var mainWrap = document.querySelector('.main-wrap');
-                if (sidebar) sidebar.style.display = 'none';
-                if (mobileNav) mobileNav.style.display = 'none';
-                if (mainWrap) { mainWrap.style.marginLeft = '0'; mainWrap.style.paddingBottom = '48px'; }
+                if (mainWrap) { mainWrap.style.marginLeft = '0'; mainWrap.style.paddingBottom = '0'; }
 
                 // Lifaaq branding footer
                 var footer = document.createElement('a');
                 footer.href = '/';
                 footer.style.cssText = 'display:block;text-align:center;padding:14px 16px;font-size:13px;font-weight:500;color:#9ca3af;text-decoration:none;';
                 footer.textContent = 'Abuur Dukaankaaga →';
-                document.body.appendChild(footer);
+                document.querySelector('.main-wrap').appendChild(footer);
 
                 hideLoader();
                 showView('storefront');
@@ -1172,7 +1174,7 @@
         }
 
         // ===== START =====
-        var publicStoreMatch = window.location.pathname.match(/^\/@([a-z0-9_]+)$/i);
+        var publicStoreMatch = window.location.pathname.match(/^\/?@?([a-z0-9_]{3,30})$/i);
         if (publicStoreMatch) {
             initPublicStore(publicStoreMatch[1]);
         } else {
