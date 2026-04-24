@@ -140,7 +140,7 @@
                         </div>
                         <p class="text-xs text-gray-400 mt-1.5">Customers will use this to order from your store.</p>
                     </div>
-                    <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="light" data-size="flexible"></div>
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible"></div>
                     <button id="obCreateBtn"
                         class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
                         <span class="iconify" data-icon="lucide:sparkles" data-width="16"></span>
@@ -542,7 +542,8 @@
             var hintEl = document.getElementById('obUsernameHint');
             statusEl.classList.remove('show');
             clearTimeout(obUsernameTimer);
-            if (val.length < 3) { hintEl.textContent = 'Letters, numbers, underscores. 3–30 chars.'; hintEl.className = 'text-xs text-gray-400 mt-1.5'; return; }
+            if (val.length === 0) { hintEl.textContent = 'Letters, numbers, underscores. 3–30 chars.'; hintEl.className = 'text-xs text-gray-400 mt-1.5'; return; }
+            if (val.length < 3) { hintEl.textContent = 'Username must be at least 3 characters.'; hintEl.className = 'text-xs text-orange-500 mt-1.5'; return; }
             iconEl.innerHTML = '<div class="w-4 h-4 border-2 border-gray-300 border-t-accent rounded-full spin"></div>';
             statusEl.classList.add('show');
             obUsernameTimer = setTimeout(async function() {
