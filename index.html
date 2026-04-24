@@ -1139,13 +1139,32 @@
                 });
                 links = (data.links || []).map(function(l) { return { platform: l.platform, url: l.url }; });
 
+                // Update page title and meta for this store
+                document.title = profile.name + ' - Lifaaq';
+                var metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.setAttribute('content', 'Dunida La Wadaag Dukaankaaga. Hal meel kusoo bandhig waxwalibo iibiso, ka maamul macaamiishaada, hal click-na hakugula soo xeriiraan WhatsApp-ka.');
+                var ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.setAttribute('content', profile.name + ' - Lifaaq');
+                var ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.setAttribute('content', 'Dunida La Wadaag Dukaankaaga. Hal meel kusoo bandhig waxwalibo iibiso, ka maamul macaamiishaada, hal click-na hakugula soo xeriiraan WhatsApp-ka.');
+
                 // Strip admin chrome
                 var sidebar = document.querySelector('.sidebar');
                 var mobileNav = document.querySelector('.mobile-nav');
                 var mainWrap = document.querySelector('.main-wrap');
                 if (sidebar) sidebar.style.display = 'none';
                 if (mobileNav) mobileNav.style.display = 'none';
-                if (mainWrap) { mainWrap.style.marginLeft = '0'; mainWrap.style.paddingBottom = '0'; }
+                if (mainWrap) { mainWrap.style.marginLeft = '0'; mainWrap.style.paddingBottom = '72px'; }
+
+                // Lifaaq branding footer
+                var footer = document.createElement('div');
+                footer.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;';
+                footer.innerHTML = '<div style="display:flex;align-items:center;gap:8px;">' +
+                    '<div style="width:28px;height:28px;border-radius:8px;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🛍️</div>' +
+                    '<div><div style="font-size:13px;font-weight:700;color:#111827;line-height:1.2;">Lifaaq</div>' +
+                    '<div style="font-size:11px;color:#6b7280;line-height:1.2;">Dunida La Wadaag Dukaankaaga</div></div></div>' +
+                    '<a href="/" style="background:#25D366;color:#fff;padding:8px 18px;border-radius:100px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;flex-shrink:0;">Abuur dukaankaaga →</a>';
+                document.body.appendChild(footer);
 
                 hideLoader();
                 showView('storefront');
