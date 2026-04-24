@@ -1,7 +1,7 @@
 const CORS = {
   'Access-Control-Allow-Origin': 'https://lifaaq.com',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, X-User-Id',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Session-Id',
   'Vary': 'Origin',
 };
 
@@ -28,15 +28,47 @@ function err(msg, status = 400) {
   return json({ error: msg }, status);
 }
 
+async function createSession(userId, env) {
+  const sid = crypto.randomUUID();
+  await env.DB.prepare('INSERT INTO sessions (id, user_id) VALUES (?, ?)').bind(sid, userId).run();
+  return sid;
+}
+
+async function resolveSession(sid, env) {
+  if (!sid) return null;
+  const row = await env.DB.prepare('SELECT user_id FROM sessions WHERE id = ?').bind(sid).first();
+  return row ? row.user_id : null;
+}
+
+async function checkRateLimit(key, max, windowSecs, env) {
+  const now = Math.floor(Date.now() / 1000);
+  const windowStart = now - (now % windowSecs);
+  const row = await env.DB.prepare(
+    'SELECT count, window_start FROM rate_limits WHERE key = ?'
+  ).bind(key).first();
+  if (!row || row.window_start < windowStart) {
+    await env.DB.prepare(
+      'INSERT OR REPLACE INTO rate_limits (key, count, window_start) VALUES (?, 1, ?)'
+    ).bind(key, windowStart).run();
+    return false;
+  }
+  if (row.count >= max) return true;
+  await env.DB.prepare(
+    'UPDATE rate_limits SET count = count + 1 WHERE key = ?'
+  ).bind(key).run();
+  return false;
+}
+
 async function handleAPI(request, env, url) {
   const method = request.method;
   const path = url.pathname.replace('/api', '');
-  const userId = request.headers.get('X-User-Id');
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
 
   if (method === 'OPTIONS') return new Response(null, { headers: CORS });
 
   // Check username availability
   if (path === '/users/check' && method === 'GET') {
+    if (await checkRateLimit(`check:${ip}`, 30, 60, env)) return err('Too many requests', 429);
     const username = (url.searchParams.get('username') || '').toLowerCase().trim();
     if (!username) return err('username required');
     if (!/^[a-z0-9_]{3,30}$/.test(username)) return json({ available: false, reason: 'invalid' });
@@ -51,7 +83,6 @@ async function handleAPI(request, env, url) {
     const display_name = (body.display_name || '').trim();
     if (!username || !display_name) return err('username and display_name required');
     if (!/^[a-z0-9_]{3,30}$/.test(username)) return err('Invalid username');
-    const ip = request.headers.get('CF-Connecting-IP');
     const turnstileOk = await verifyTurnstile(body.turnstile_token || '', env.TURNSTILE_SECRET, ip);
     if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
@@ -61,9 +92,25 @@ async function handleAPI(request, env, url) {
       'INSERT INTO users (id, username, display_name, whatsapp) VALUES (?, ?, ?, ?)'
     ).bind(id, username, display_name, body.whatsapp || '').run();
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
-    return json({ user });
+    const session_id = await createSession(id, env);
+    return json({ user, session_id });
   }
 
+  // One-time migration: exchange a legacy user_id UUID for a proper session token
+  if (path === '/sessions' && method === 'POST') {
+    if (await checkRateLimit(`sessions:${ip}`, 10, 60, env)) return err('Too many requests', 429);
+    const body = await request.json();
+    const legacyUserId = (body.user_id || '').trim();
+    if (!legacyUserId) return err('user_id required');
+    const user = await env.DB.prepare('SELECT id FROM users WHERE id = ?').bind(legacyUserId).first();
+    if (!user) return err('Not found', 404);
+    const session_id = await createSession(legacyUserId, env);
+    return json({ session_id });
+  }
+
+  // All routes below require a valid session
+  const sid = request.headers.get('X-Session-Id');
+  const userId = await resolveSession(sid, env);
   if (!userId) return err('Unauthorized', 401);
 
   // Get current user

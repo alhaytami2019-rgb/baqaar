@@ -465,9 +465,7 @@
         var AVATAR_BLANK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f3f4f6'/%3E%3Ccircle cx='40' cy='30' r='15' fill='%23d1d5db'/%3E%3Cellipse cx='40' cy='70' rx='24' ry='18' fill='%23d1d5db'/%3E%3C/svg%3E";
         var PRODUCT_BLANK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f9fafb'/%3E%3Crect x='148' y='152' width='104' height='80' rx='10' fill='%23e5e7eb'/%3E%3Ccircle cx='178' cy='174' r='12' fill='%23d1d5db'/%3E%3Cpolygon points='148%2C232 180%2C196 204%2C214 228%2C194 252%2C232' fill='%23d1d5db'/%3E%3C/svg%3E";
 
-        // Migrate sessions from old baqaar_uid key
-        (function() { var l = localStorage.getItem('baqaar_uid'); if (l && !localStorage.getItem('lifaaq_uid')) { localStorage.setItem('lifaaq_uid', l); localStorage.removeItem('baqaar_uid'); } })();
-        var userId = localStorage.getItem('lifaaq_uid') || null;
+        var userId = localStorage.getItem('lifaaq_sid') || null;
         var products = [], orders = [], links = [];
         var profile = { name: '', username: '', bio: '', avatar: AVATAR_BLANK };
         var settings = { gridCols: 2, whatsapp: '', currency: 'USD', showUnavailable: false, socialBento: false };
@@ -488,7 +486,7 @@
 
         // ===== API =====
         async function api(method, path, body) {
-            var opts = { method: method, headers: { 'Content-Type': 'application/json', 'X-User-Id': userId || '' } };
+            var opts = { method: method, headers: { 'Content-Type': 'application/json', 'X-Session-Id': userId || '' } };
             if (body !== undefined) opts.body = JSON.stringify(body);
             var res = await fetch('/api' + path, opts);
             var data = await res.json();
@@ -498,6 +496,20 @@
 
         // ===== INIT =====
         async function initApp() {
+            // Migrate legacy UUID-based auth (baqaar_uid / lifaaq_uid) to session token
+            var legacyId = localStorage.getItem('lifaaq_uid') || localStorage.getItem('baqaar_uid');
+            if (legacyId && !userId) {
+                try {
+                    var migRes = await fetch('/api/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: legacyId }) }).then(function(r) { return r.json(); });
+                    if (migRes.session_id) {
+                        userId = migRes.session_id;
+                        localStorage.setItem('lifaaq_sid', userId);
+                    }
+                } catch(e) {}
+                localStorage.removeItem('lifaaq_uid');
+                localStorage.removeItem('baqaar_uid');
+            }
+
             if (!userId) { showOnboarding(); return; }
             try {
                 var userData = await api('GET', '/me');
@@ -524,7 +536,7 @@
                 renderOrders();
                 renderLinks();
             } catch (e) {
-                localStorage.removeItem('lifaaq_uid');
+                localStorage.removeItem('lifaaq_sid');
                 userId = null;
                 hideLoader();
                 showOnboarding();
@@ -589,8 +601,8 @@
             try {
                 var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp, turnstile_token: turnstileToken.value }) }).then(function(r) { return r.json(); });
                 if (data.error) throw new Error(data.error);
-                userId = data.user.id;
-                localStorage.setItem('lifaaq_uid', userId);
+                userId = data.session_id;
+                localStorage.setItem('lifaaq_sid', userId);
                 profile = { name: data.user.display_name, username: data.user.username, bio: '', avatar: AVATAR_BLANK };
                 settings.whatsapp = whatsapp;
                 document.getElementById('obStoreUrl').textContent = window.location.host + '/@' + username;
