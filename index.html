@@ -1123,8 +1123,45 @@
             try { await api('PUT', '/me/settings', settings); toast('Settings saved'); } catch(e) { toast('Error saving settings'); }
         });
 
+        // ===== PUBLIC STORE =====
+        async function initPublicStore(username) {
+            try {
+                var data = await fetch('/api/store/' + encodeURIComponent(username)).then(function(r) { return r.json(); });
+                if (data.error) {
+                    document.getElementById('appLoader').innerHTML = '<div class="text-center"><p class="text-gray-400 text-sm font-medium">Store not found.</p><a href="/" class="text-sm text-accent mt-2 inline-block">Go to Lifaaq</a></div>';
+                    return;
+                }
+                var u = data.user;
+                profile = { name: u.display_name, username: u.username, bio: u.bio || '', avatar: u.avatar_url || AVATAR_BLANK };
+                settings = { gridCols: u.grid_cols || 2, whatsapp: u.whatsapp || '', currency: u.currency || 'USD', showUnavailable: !!u.show_unavailable, socialBento: !!u.social_bento };
+                products = (data.products || []).map(function(p) {
+                    return { id: p.id, name: p.name, price: p.price, category: p.category, desc: p.description, stock: p.stock, available: !!p.available, img: p.image_url || PRODUCT_BLANK };
+                });
+                links = (data.links || []).map(function(l) { return { platform: l.platform, url: l.url }; });
+
+                // Strip admin chrome
+                var sidebar = document.querySelector('.sidebar');
+                var mobileNav = document.querySelector('.mobile-nav');
+                var mainWrap = document.querySelector('.main-wrap');
+                if (sidebar) sidebar.style.display = 'none';
+                if (mobileNav) mobileNav.style.display = 'none';
+                if (mainWrap) { mainWrap.style.marginLeft = '0'; mainWrap.style.paddingBottom = '0'; }
+
+                hideLoader();
+                showView('storefront');
+                renderStorefront();
+            } catch(e) {
+                document.getElementById('appLoader').innerHTML = '<p class="text-gray-400 text-sm">Something went wrong. Please try again.</p>';
+            }
+        }
+
         // ===== START =====
-        initApp();
+        var publicStoreMatch = window.location.pathname.match(/^\/@([a-z0-9_]+)$/i);
+        if (publicStoreMatch) {
+            initPublicStore(publicStoreMatch[1]);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>

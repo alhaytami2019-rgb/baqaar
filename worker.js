@@ -108,6 +108,29 @@ async function handleAPI(request, env, url) {
     return json({ session_id });
   }
 
+  // Public store — no auth required
+  const storePath = path.match(/^\/store\/([a-z0-9_]+)$/i);
+  if (storePath && method === 'GET') {
+    if (await checkRateLimit(`store:${ip}`, 60, 60, env)) return err('Too many requests', 429);
+    const username = storePath[1].toLowerCase();
+    const user = await env.DB.prepare('SELECT * FROM users WHERE username = ?').bind(username).first();
+    if (!user) return err('Store not found', 404);
+    const productsQuery = user.show_unavailable
+      ? 'SELECT * FROM products WHERE user_id = ? ORDER BY created_at DESC'
+      : 'SELECT * FROM products WHERE user_id = ? AND available = 1 ORDER BY created_at DESC';
+    const { results: products } = await env.DB.prepare(productsQuery).bind(user.id).all();
+    const { results: links } = await env.DB.prepare('SELECT * FROM links WHERE user_id = ? ORDER BY sort_order').bind(user.id).all();
+    return json({
+      user: {
+        username: user.username, display_name: user.display_name, bio: user.bio,
+        avatar_url: user.avatar_url, whatsapp: user.whatsapp, currency: user.currency,
+        grid_cols: user.grid_cols, show_unavailable: user.show_unavailable, social_bento: user.social_bento,
+      },
+      products,
+      links,
+    });
+  }
+
   // All routes below require a valid session
   const sid = request.headers.get('X-Session-Id');
   const userId = await resolveSession(sid, env);
@@ -236,6 +259,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/')) return handleAPI(request, env, url);
+    // Serve index.html for public store routes (/@username)
+    if (/^\/@[a-z0-9_]+$/i.test(url.pathname)) {
+      return env.ASSETS.fetch(new Request(new URL('/', url).toString(), request));
+    }
     return env.ASSETS.fetch(request);
   },
 };
