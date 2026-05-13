@@ -87,10 +87,12 @@ async function handleAPI(request, env, url) {
     if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
     if (existing) return err('Username taken', 409);
+    const waRaw = (body.whatsapp || '').trim();
+    if (waRaw && !/^\+\d{7,15}$/.test(waRaw)) return err('Invalid WhatsApp number format', 400);
     const id = crypto.randomUUID();
     await env.DB.prepare(
       'INSERT INTO users (id, username, display_name, whatsapp) VALUES (?, ?, ?, ?)'
-    ).bind(id, username, display_name, body.whatsapp || '').run();
+    ).bind(id, username, display_name, waRaw).run();
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
     const session_id = await createSession(id, env);
     return json({ user, session_id });
@@ -155,9 +157,11 @@ async function handleAPI(request, env, url) {
   // Update settings
   if (path === '/me/settings' && method === 'PUT') {
     const b = await request.json();
+    const waRaw = (b.whatsapp || '').trim();
+    if (waRaw && !/^\+\d{7,15}$/.test(waRaw)) return err('Invalid WhatsApp number format', 400);
     await env.DB.prepare(
       'UPDATE users SET whatsapp = ?, currency = ?, grid_cols = ?, show_unavailable = ?, social_bento = ? WHERE id = ?'
-    ).bind(b.whatsapp || '', b.currency || 'USD', b.grid_cols || 2, b.show_unavailable ? 1 : 0, b.social_bento ? 1 : 0, userId).run();
+    ).bind(waRaw, b.currency || 'USD', b.grid_cols || 2, b.show_unavailable ? 1 : 0, b.social_bento ? 1 : 0, userId).run();
     return json({ ok: true });
   }
 

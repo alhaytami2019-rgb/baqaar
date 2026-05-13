@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="so">
 
 <head>
     <meta charset="UTF-8">
@@ -106,18 +106,26 @@
     <div id="onboardingOverlay" class="hidden">
         <div class="w-full max-w-md">
 
+            <!-- Language toggle -->
+            <div class="flex justify-end mb-4">
+                <div class="flex items-center bg-gray-100 rounded-xl p-1 gap-1">
+                    <button id="langEnBtn" onclick="setLang('en')" class="lang-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-gray-900">EN</button>
+                    <button id="langSoBtn" onclick="setLang('so')" class="lang-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all text-gray-500">SO</button>
+                </div>
+            </div>
+
             <!-- Step 1: Create store -->
             <div id="ob-step1" class="ob-step active">
                 <div class="text-center mb-8">
                     <div class="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <span class="iconify text-white" data-icon="lucide:store" data-width="26"></span>
                     </div>
-                    <h1 class="text-2xl font-bold mb-1">Create your store</h1>
-                    <p class="text-gray-500 text-sm">Set up your Lifaaq storefront in seconds.</p>
+                    <h1 class="text-2xl font-bold mb-1" data-i18n="ob1Title">Create your store</h1>
+                    <p class="text-gray-500 text-sm" data-i18n="ob1Subtitle">Set up your Lifaaq storefront in seconds.</p>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Username <span class="text-gray-400 font-normal">(your store link)</span></label>
+                        <label class="block text-sm font-medium mb-2"><span data-i18n="ob1UsernameLabel">Username</span> <span class="text-gray-400 font-normal" data-i18n="ob1UsernameSub">(your store link)</span></label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">@</span>
                             <input id="obUsername" type="text" placeholder="yourstore"
@@ -127,27 +135,28 @@
                                 <span id="obUsernameIcon"></span>
                             </div>
                         </div>
-                        <p id="obUsernameHint" class="text-xs text-gray-400 mt-1.5">Letters, numbers, underscores. 3–30 chars.</p>
+                        <p id="obUsernameHint" class="text-xs text-gray-400 mt-1.5" data-i18n="usernameHint">Letters, numbers, underscores. 3–30 chars.</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Display Name</label>
+                        <label class="block text-sm font-medium mb-2" data-i18n="ob1DisplayNameLabel">Display Name</label>
                         <input id="obDisplayName" type="text" placeholder="e.g. Sarah's Boutique"
+                            data-i18n-ph="ob1DisplayNamePh"
                             class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">WhatsApp Number <span class="text-gray-400 font-normal">(optional)</span></label>
-                        <div class="flex items-center gap-2">
-                            <span class="iconify text-wa flex-shrink-0" data-icon="mdi:whatsapp" data-width="20"></span>
-                            <input id="obWhatsapp" type="tel" placeholder="+1 555 000 0000"
-                                class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm">
+                        <label class="block text-sm font-medium mb-2"><span data-i18n="ob1WaLabel">WhatsApp Number</span> <span class="text-gray-400 font-normal" data-i18n="ob1WaSub">(optional)</span></label>
+                        <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white">
+                            <span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span>
+                            <select id="obWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-3 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select>
+                            <input id="obWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-3 border-0 text-sm focus:outline-none min-w-0 bg-transparent">
                         </div>
-                        <p class="text-xs text-gray-400 mt-1.5">Customers will use this to order from your store.</p>
+                        <p class="text-xs text-gray-400 mt-1.5" data-i18n="ob1WaHint">Customers will use this to order from your store.</p>
                     </div>
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible"></div>
                     <button id="obCreateBtn"
                         class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
                         <span class="iconify" data-icon="lucide:sparkles" data-width="16"></span>
-                        Create My Store
+                        <span data-i18n="ob1CreateBtn">Create My Store</span>
                     </button>
                     <p id="obCreateError" class="text-xs text-red-500 text-center hidden"></p>
                 </div>
@@ -159,16 +168,16 @@
                     <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <span class="iconify text-green-500" data-icon="lucide:check-circle-2" data-width="32"></span>
                     </div>
-                    <h1 class="text-2xl font-bold mb-1">You're live! 🎉</h1>
-                    <p class="text-gray-500 text-sm">Your storefront is ready. Share it with the world.</p>
+                    <h1 class="text-2xl font-bold mb-1" data-i18n="ob2Title">You're live! 🎉</h1>
+                    <p class="text-gray-500 text-sm" data-i18n="ob2Subtitle">Your storefront is ready. Share it with the world.</p>
                 </div>
                 <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
-                    <p class="text-xs text-gray-500 font-medium mb-1.5">Your store link</p>
+                    <p class="text-xs text-gray-500 font-medium mb-1.5" data-i18n="ob2StoreLinkLabel">Your store link</p>
                     <div class="flex items-center gap-2">
                         <p id="obStoreUrl" class="text-sm font-semibold text-accent flex-1 truncate"></p>
                         <button id="obCopyBtn"
                             class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-medium hover:bg-gray-100 transition-colors flex items-center gap-1.5">
-                            <span class="iconify" data-icon="lucide:copy" data-width="12"></span>Copy
+                            <span class="iconify" data-icon="lucide:copy" data-width="12"></span><span data-i18n="ob2CopyBtn">Copy</span>
                         </button>
                     </div>
                 </div>
@@ -177,24 +186,24 @@
                         <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
                             <span class="iconify text-white" data-icon="lucide:package" data-width="14"></span>
                         </div>
-                        <p class="text-sm text-gray-700">Add your products and set prices</p>
+                        <p class="text-sm text-gray-700" data-i18n="ob2Bullet1">Add your products and set prices</p>
                     </div>
                     <div class="flex items-center gap-3 p-3 bg-accent-light rounded-xl">
                         <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
                             <span class="iconify text-white" data-icon="lucide:share-2" data-width="14"></span>
                         </div>
-                        <p class="text-sm text-gray-700">Share your link so customers can order via WhatsApp</p>
+                        <p class="text-sm text-gray-700" data-i18n="ob2Bullet2">Share your link so customers can order via WhatsApp</p>
                     </div>
                     <div class="flex items-center gap-3 p-3 bg-accent-light rounded-xl">
                         <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
                             <span class="iconify text-white" data-icon="lucide:receipt-text" data-width="14"></span>
                         </div>
-                        <p class="text-sm text-gray-700">Track orders and manage your store from here</p>
+                        <p class="text-sm text-gray-700" data-i18n="ob2Bullet3">Track orders and manage your store from here</p>
                     </div>
                 </div>
                 <button id="obStartBtn"
                     class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
-                    Start Adding Products
+                    <span data-i18n="ob2StartBtn">Start Adding Products</span>
                     <span class="iconify" data-icon="lucide:arrow-right" data-width="16"></span>
                 </button>
             </div>
@@ -210,17 +219,17 @@
                 <div class="w-9 h-9 rounded-lg flex items-center justify-center text-base" style="background:#25D366">🛍️</div>
                 <div>
                     <div class="font-semibold text-sm">Lifaaq</div>
-                    <div class="text-xs text-gray-400">Digital Storefront</div>
+                    <div class="text-xs text-gray-400" data-i18n="appTagline">Digital Storefront</div>
                 </div>
             </div>
         </div>
         <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
-            <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="18"></span>Products</div>
-            <div class="nav-item" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="18"></span>Orders</div>
-            <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="18"></span>Storefront</div>
-            <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span>Links</div>
-            <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span>Profile</div>
-            <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span>Settings</div>
+            <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="18"></span><span data-i18n="navProducts">Products</span></div>
+            <div class="nav-item" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="18"></span><span data-i18n="navOrders">Orders</span></div>
+            <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
+            <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span><span data-i18n="navLinks">Links</span></div>
+            <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span><span data-i18n="navProfile">Profile</span></div>
+            <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span><span data-i18n="navSettings">Settings</span></div>
         </nav>
         <div class="p-4 border-t border-gray-100">
             <div class="flex items-center gap-3">
@@ -234,11 +243,11 @@
     </aside>
 
     <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 justify-around items-center py-2 px-1">
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium">Products</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="20"></span><span class="text-[10px] font-medium">Orders</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="20"></span><span class="text-[10px] font-medium">Store</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium">Links</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium">Profile</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProducts">Products</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navOrders">Orders</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navLinks">Links</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProfile">Profile</span></div>
     </nav>
 
     <main class="main-wrap ml-60 min-h-screen">
@@ -248,54 +257,54 @@
             <div class="p-6 md:p-8 max-w-6xl">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
-                        <h1 class="text-2xl font-semibold">Products</h1>
-                        <p class="text-sm text-gray-500 mt-1">Manage what you sell. Add, edit, or toggle availability.</p>
+                        <h1 class="text-2xl font-semibold" data-i18n="productsTitle">Products</h1>
+                        <p class="text-sm text-gray-500 mt-1" data-i18n="productsDesc">Manage what you sell. Add, edit, or toggle availability.</p>
                     </div>
-                    <button id="addProductBtn" class="inline-flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-accent-dark transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span>Add Product</button>
+                    <button id="addProductBtn" class="inline-flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-accent-dark transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span><span data-i18n="addProductBtn">Add Product</span></button>
                 </div>
                 <div class="grid grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1">Total Products</div><div id="statTotal" class="text-2xl font-semibold">0</div></div>
-                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1">Available</div><div id="statAvailable" class="text-2xl font-semibold text-green-600">0</div></div>
-                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1">Unavailable</div><div id="statUnavailable" class="text-2xl font-semibold text-gray-400">0</div></div>
+                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1" data-i18n="statTotal">Total Products</div><div id="statTotal" class="text-2xl font-semibold">0</div></div>
+                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1" data-i18n="statAvailable">Available</div><div id="statAvailable" class="text-2xl font-semibold text-green-600">0</div></div>
+                    <div class="bg-white rounded-xl p-4 border border-gray-200"><div class="text-xs text-gray-500 font-medium mb-1" data-i18n="statUnavailable">Unavailable</div><div id="statUnavailable" class="text-2xl font-semibold text-gray-400">0</div></div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3 mb-6">
-                    <div class="relative flex-1"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="productSearch" type="text" placeholder="Search products…" class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm"></div>
+                    <div class="relative flex-1"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="productSearch" type="text" placeholder="Search products…" data-i18n-ph="searchProductsPh" class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm"></div>
                     <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer bg-white border border-gray-200 rounded-xl px-4 py-2.5">
-                        <div id="toggleShowUnavailable" class="toggle" onclick="this.classList.toggle('on'); renderProducts()"></div>Show unavailable
+                        <div id="toggleShowUnavailable" class="toggle" onclick="this.classList.toggle('on'); renderProducts()"></div><span data-i18n="showUnavailableLabel">Show unavailable</span>
                     </label>
                 </div>
                 <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                <div id="noProducts" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3" data-icon="lucide:package-open" data-width="40"></span><p class="text-sm">No products yet. Add your first one above.</p></div>
+                <div id="noProducts" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3" data-icon="lucide:package-open" data-width="40"></span><p class="text-sm" data-i18n="noProducts">No products yet. Add your first one above.</p></div>
             </div>
         </div>
 
         <!-- ADD/EDIT PRODUCT -->
         <div id="view-add-product" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
-                <button id="backToProductsBtn" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"><span class="iconify" data-icon="lucide:arrow-left" data-width="16"></span>Back to Products</button>
-                <h1 id="formTitle" class="text-2xl font-semibold mb-1">Add a Product</h1>
-                <p class="text-sm text-gray-500 mb-8">Fill in the details below. You can always edit later.</p>
+                <button id="backToProductsBtn" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"><span class="iconify" data-icon="lucide:arrow-left" data-width="16"></span><span data-i18n="backToProducts">Back to Products</span></button>
+                <h1 id="formTitle" class="text-2xl font-semibold mb-1" data-i18n="addProductTitle">Add a Product</h1>
+                <p class="text-sm text-gray-500 mb-8" data-i18n="addProductDesc">Fill in the details below. You can always edit later.</p>
                 <form id="productForm" class="space-y-6">
                     <input type="hidden" id="editProductId" value="">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Product Image</label>
+                        <label class="block text-sm font-medium mb-2" data-i18n="productImageLabel">Product Image</label>
                         <div id="uploadZone" class="upload-zone p-8 text-center">
                             <img id="imgPreview" src="" class="hidden mx-auto max-h-40 rounded-lg mb-3 object-cover">
-                            <div id="imgPlaceholder"><span class="iconify mx-auto text-gray-300 mb-2" data-icon="lucide:image-plus" data-width="32"></span><p class="text-sm text-gray-500">Click to upload an image</p><p class="text-xs text-gray-400 mt-1">JPG, PNG up to 500KB</p></div>
+                            <div id="imgPlaceholder"><span class="iconify mx-auto text-gray-300 mb-2" data-icon="lucide:image-plus" data-width="32"></span><p class="text-sm text-gray-500" data-i18n="uploadClick">Click to upload an image</p><p class="text-xs text-gray-400 mt-1" data-i18n="uploadHint">JPG, PNG up to 500KB</p></div>
                         </div>
                         <input id="imgInput" type="file" accept="image/*" class="hidden">
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Product Name</label><input id="pName" type="text" placeholder="e.g. Classic White Tee" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="productNameLabel">Product Name</label><input id="pName" type="text" placeholder="e.g. Classic White Tee" data-i18n-ph="productNamePh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-2">Price</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span><input id="pPrice" type="number" step="0.01" placeholder="0.00" class="w-full pl-7 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div></div>
-                        <div><label class="block text-sm font-medium mb-2">Category</label><select id="pCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="Apparel">Apparel</option><option value="Accessories">Accessories</option><option value="Electronics">Electronics</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Other">Other</option></select></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="priceLabel">Price</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span><input id="pPrice" type="number" step="0.01" placeholder="0.00" class="w-full pl-7 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="categoryLabel">Category</label><select id="pCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="Apparel" data-i18n-opt="catApparel">Apparel</option><option value="Accessories" data-i18n-opt="catAccessories">Accessories</option><option value="Electronics" data-i18n-opt="catElectronics">Electronics</option><option value="Home" data-i18n-opt="catHome">Home</option><option value="Beauty" data-i18n-opt="catBeauty">Beauty</option><option value="Other" data-i18n-opt="catOther">Other</option></select></div>
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Description</label><textarea id="pDesc" rows="3" placeholder="A short description of your product…" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="descLabel">Description</label><textarea id="pDesc" rows="3" placeholder="A short description of your product…" data-i18n-ph="descPh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-2">Stock Quantity</label><input id="pStock" type="number" placeholder="0" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                        <div class="flex items-end"><label class="flex items-center gap-3 cursor-pointer pb-1"><div id="pAvailable" class="toggle on" onclick="this.classList.toggle('on')"></div><span class="text-sm text-gray-700">Available</span></label></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="stockLabel">Stock Quantity</label><input id="pStock" type="number" placeholder="0" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                        <div class="flex items-end"><label class="flex items-center gap-3 cursor-pointer pb-1"><div id="pAvailable" class="toggle on" onclick="this.classList.toggle('on')"></div><span class="text-sm text-gray-700" data-i18n="availableLabel">Available</span></label></div>
                     </div>
-                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span id="formSaveText">Save Product</span></button></div>
+                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span id="formSaveText" data-i18n="saveProductBtn">Save Product</span></button></div>
                 </form>
             </div>
         </div>
@@ -303,16 +312,16 @@
         <!-- ORDERS -->
         <div id="view-orders" class="view">
             <div class="p-6 md:p-8 max-w-6xl">
-                <h1 class="text-2xl font-semibold mb-1">Orders</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-6">Every order that comes through your store, in one place.</p>
+                <h1 class="text-2xl font-semibold mb-1" data-i18n="ordersTitle">Orders</h1>
+                <p class="text-sm text-gray-500 mt-1 mb-6" data-i18n="ordersDesc">Every order that comes through your store, in one place.</p>
                 <div class="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6 w-fit">
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium bg-white shadow-sm text-gray-900" data-filter="all">All</button>
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="pending">Pending</button>
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="confirmed">Confirmed</button>
-                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="delivered">Delivered</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium bg-white shadow-sm text-gray-900" data-filter="all" data-i18n="filterAll">All</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="pending" data-i18n="filterPending">Pending</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="confirmed" data-i18n="filterConfirmed">Confirmed</button>
+                    <button class="order-tab px-4 py-2 rounded-lg text-sm font-medium text-gray-500" data-filter="delivered" data-i18n="filterDelivered">Delivered</button>
                 </div>
                 <div id="ordersList" class="space-y-3"></div>
-                <div id="noOrders" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3" data-icon="lucide:inbox" data-width="40"></span><p class="text-sm">No orders yet. Share your storefront to get started.</p></div>
+                <div id="noOrders" class="hidden text-center py-16 text-gray-400"><span class="iconify mx-auto mb-3" data-icon="lucide:inbox" data-width="40"></span><p class="text-sm" data-i18n="noOrders">No orders yet. Share your storefront to get started.</p></div>
             </div>
         </div>
 
@@ -334,63 +343,63 @@
                 </div>
                 <div id="storeSocials" class="bg-white px-5 pb-4"></div>
                 <div class="bg-white px-5 pb-4 border-b border-gray-100">
-                    <div class="relative"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="storeSearch" type="text" placeholder="Search store…" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" oninput="renderStorefront()"></div>
+                    <div class="relative"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="storeSearch" type="text" placeholder="Search store…" data-i18n-ph="searchStorePh" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" oninput="renderStorefront()"></div>
                 </div>
                 <div class="store-cat-tabs flex gap-2 px-5 py-3 bg-gray-50" id="storeTabs"></div>
                 <div id="storeGrid" class="store-grid px-5 pb-8 grid grid-cols-2 gap-3"></div>
-                <div id="noStoreProducts" class="hidden px-5 pb-8 text-center py-12 text-gray-400"><p class="text-sm">No products available right now.</p></div>
+                <div id="noStoreProducts" class="hidden px-5 pb-8 text-center py-12 text-gray-400"><p class="text-sm" data-i18n="noStoreProducts">No products available right now.</p></div>
             </div>
         </div>
 
         <!-- LINKS -->
         <div id="view-links" class="view">
             <div class="p-6 md:p-8 max-w-3xl">
-                <h1 class="text-2xl font-semibold mb-1">Links</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-6">Your social hubs, all in one place.</p>
+                <h1 class="text-2xl font-semibold mb-1" data-i18n="linksTitle">Links</h1>
+                <p class="text-sm text-gray-500 mt-1 mb-6" data-i18n="linksDesc">Your social hubs, all in one place.</p>
                 <div id="linksOnboarding" class="bg-accent-light border border-indigo-200 rounded-xl p-5 mb-6 flex items-start gap-4">
                     <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"><span class="iconify text-white" data-icon="lucide:sparkles" data-width="18"></span></div>
-                    <div><h3 class="font-semibold text-sm mb-1">Get discovered more easily</h3><p class="text-sm text-gray-600 leading-relaxed">Add your social media links below. They'll appear on your storefront so customers can connect with you beyond the store.</p></div>
+                    <div><h3 class="font-semibold text-sm mb-1" data-i18n="linksOnboardTitle">Get discovered more easily</h3><p class="text-sm text-gray-600 leading-relaxed" data-i18n="linksOnboardDesc">Add your social media links below. They'll appear on your storefront so customers can connect with you beyond the store.</p></div>
                     <button id="dismissOnboarding" class="text-gray-400 hover:text-gray-600 flex-shrink-0 mt-0.5"><span class="iconify" data-icon="lucide:x" data-width="16"></span></button>
                 </div>
                 <div id="linksGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6"></div>
-                <button id="addLinkBtn" class="w-full border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span>Add a Link</button>
-                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Links</button></div>
+                <button id="addLinkBtn" class="w-full border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span><span data-i18n="addLinkBtn">Add a Link</span></button>
+                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveLinksBtn">Save Links</span></button></div>
             </div>
         </div>
 
         <!-- PROFILE + MOBILE SETTINGS -->
         <div id="view-profile" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
-                <h1 class="text-2xl font-semibold mb-1">Profile</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-8">How you appear to your customers.</p>
+                <h1 class="text-2xl font-semibold mb-1" data-i18n="profileTitle">Profile</h1>
+                <p class="text-sm text-gray-500 mt-1 mb-8" data-i18n="profileDesc">How you appear to your customers.</p>
                 <form id="profileForm" class="space-y-6">
                     <div class="flex items-center gap-5">
                         <div class="relative"><img id="profileAvatar" src="" class="w-20 h-20 rounded-full object-cover" alt=""><button type="button" id="avatarBtn" class="absolute -bottom-1 -right-1 w-7 h-7 bg-accent rounded-full flex items-center justify-center text-white shadow-lg"><span class="iconify" data-icon="lucide:camera" data-width="13"></span></button><input id="avatarInput" type="file" accept="image/*" class="hidden"></div>
-                        <div><p class="text-sm font-medium">Profile Photo</p><p class="text-xs text-gray-400 mt-0.5">Square image works best</p></div>
+                        <div><p class="text-sm font-medium" data-i18n="profilePhotoLabel">Profile Photo</p><p class="text-xs text-gray-400 mt-0.5" data-i18n="profilePhotoHint">Square image works best</p></div>
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Display Name</label><input id="profName" type="text" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                    <div><label class="block text-sm font-medium mb-2">Username</label>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="displayNameLabel">Display Name</label><input id="profName" type="text" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="usernameLabel">Username</label>
                         <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span><input id="profUsername" type="text" class="w-full pl-8 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
                         <p class="text-xs text-gray-400 mt-1.5">lifaaq.com/@<span id="usernamePreview">username</span></p>
                     </div>
-                    <div><label class="block text-sm font-medium mb-2">Bio</label><textarea id="profBio" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea><p class="text-xs text-gray-400 mt-1.5 text-right"><span id="bioCount">0</span>/150</p></div>
-                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Profile</button></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="bioLabel">Bio</label><textarea id="profBio" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea><p class="text-xs text-gray-400 mt-1.5 text-right"><span id="bioCount">0</span>/150</p></div>
+                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveProfileBtn">Save Profile</span></button></div>
                 </form>
                 <div class="mobile-settings-section mt-10">
-                    <div class="border-t border-gray-200 pt-8 mb-6"><h2 class="text-xl font-semibold mb-1">Settings</h2><p class="text-sm text-gray-500 mt-1">Fine-tune your store.</p></div>
+                    <div class="border-t border-gray-200 pt-8 mb-6"><h2 class="text-xl font-semibold mb-1" data-i18n="settingsTitle">Settings</h2><p class="text-sm text-gray-500 mt-1" data-i18n="settingsDesc">Fine-tune your store.</p></div>
                     <form id="mobileSettingsForm" class="space-y-6">
-                        <div><label class="block text-sm font-medium mb-3">Storefront Grid Layout</label>
+                        <div><label class="block text-sm font-medium mb-3" data-i18n="gridLayoutLabel">Storefront Grid Layout</label>
                             <div class="flex gap-3">
                                 <div class="grid-opt mobile-grid-opt" data-cols="2"><span></span><span></span><span></span><span></span></div>
                                 <div class="grid-opt mobile-grid-opt active" data-cols="3"><span></span><span></span><span></span><span></span><span></span><span></span></div>
                                 <div class="grid-opt mobile-grid-opt" data-cols="4"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Socials as bento cards</p></div><div id="mobSetSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
-                        <div><label class="block text-sm font-medium mb-2">WhatsApp Number</label><div class="flex items-center gap-2"><span class="iconify text-wa" data-icon="mdi:whatsapp" data-width="20"></span><input id="mobSetWhatsapp" type="tel" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div></div>
-                        <div><label class="block text-sm font-medium mb-2">Currency</label><select id="mobSetCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="NGN">NGN</option><option value="KES">KES</option><option value="GHS">GHS</option></select></div>
-                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Show unavailable</p></div><div id="mobSetShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
-                        <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Settings</button></div>
+                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="socialBentoMobile">Socials as bento cards</p></div><div id="mobSetSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="waNumberLabel">WhatsApp Number</label><div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white"><span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span><select id="mobWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-2.5 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select><input id="mobSetWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-2.5 border-0 text-sm focus:outline-none min-w-0 bg-transparent"></div></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="currencyLabel">Currency</label><select id="mobSetCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="NGN">NGN</option><option value="KES">KES</option><option value="GHS">GHS</option></select></div>
+                        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="showUnavailMobile">Show unavailable</p></div><div id="mobSetShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                        <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveSettingsBtn">Save Settings</span></button></div>
                     </form>
                 </div>
             </div>
@@ -399,22 +408,22 @@
         <!-- SETTINGS (desktop) -->
         <div id="view-settings" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
-                <h1 class="text-2xl font-semibold mb-1">Settings</h1>
-                <p class="text-sm text-gray-500 mt-1 mb-8">Fine-tune your store.</p>
+                <h1 class="text-2xl font-semibold mb-1" data-i18n="settingsTitle">Settings</h1>
+                <p class="text-sm text-gray-500 mt-1 mb-8" data-i18n="settingsDesc">Fine-tune your store.</p>
                 <form id="settingsForm" class="space-y-8">
-                    <div><label class="block text-sm font-medium mb-3">Storefront Grid Layout</label>
+                    <div><label class="block text-sm font-medium mb-3" data-i18n="gridLayoutLabel">Storefront Grid Layout</label>
                         <div class="flex gap-3">
                             <div class="grid-opt desktop-grid-opt" data-cols="2"><span></span><span></span><span></span><span></span></div>
                             <div class="grid-opt desktop-grid-opt active" data-cols="3"><span></span><span></span><span></span><span></span><span></span><span></span></div>
                             <div class="grid-opt desktop-grid-opt" data-cols="4"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
                         </div>
-                        <p class="text-xs text-gray-400 mt-2">How products are arranged on your storefront</p>
+                        <p class="text-xs text-gray-400 mt-2" data-i18n="gridLayoutHint">How products are arranged on your storefront</p>
                     </div>
-                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Show socials as bento cards</p><p class="text-xs text-gray-400 mt-0.5">Display your social links as cards instead of small icons</p></div><div id="setSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
-                    <div><label class="block text-sm font-medium mb-2">WhatsApp Number</label><div class="flex items-center gap-2"><span class="iconify text-wa" data-icon="mdi:whatsapp" data-width="20"></span><input id="setWhatsapp" type="tel" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div><p class="text-xs text-gray-400 mt-1.5">Used for the contact button on your storefront</p></div>
-                    <div><label class="block text-sm font-medium mb-2">Currency</label><select id="setCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD — US Dollar ($)</option><option value="EUR">EUR — Euro (€)</option><option value="GBP">GBP — British Pound (£)</option><option value="NGN">NGN — Nigerian Naira (₦)</option><option value="KES">KES — Kenyan Shilling (KSh)</option><option value="GHS">GHS — Ghanaian Cedi (₵)</option></select></div>
-                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium">Show unavailable products</p><p class="text-xs text-gray-400 mt-0.5">Visitors will see out-of-stock items marked as unavailable</p></div><div id="setShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
-                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span>Save Settings</button></div>
+                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="socialBentoLabel">Show socials as bento cards</p><p class="text-xs text-gray-400 mt-0.5" data-i18n="socialBentoDesc">Display your social links as cards instead of small icons</p></div><div id="setSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="waNumberLabel">WhatsApp Number</label><div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white"><span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span><select id="setWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-2.5 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select><input id="setWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-2.5 border-0 text-sm focus:outline-none min-w-0 bg-transparent"></div><p class="text-xs text-gray-400 mt-1.5" data-i18n="waNumberHint">Used for the contact button on your storefront</p></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="currencyLabel">Currency</label><select id="setCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD — US Dollar ($)</option><option value="EUR">EUR — Euro (€)</option><option value="GBP">GBP — British Pound (£)</option><option value="NGN">NGN — Nigerian Naira (₦)</option><option value="KES">KES — Kenyan Shilling (KSh)</option><option value="GHS">GHS — Ghanaian Cedi (₵)</option></select></div>
+                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="showUnavailProdLabel">Show unavailable products</p><p class="text-xs text-gray-400 mt-0.5" data-i18n="showUnavailProdDesc">Visitors will see out-of-stock items marked as unavailable</p></div><div id="setShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveSettingsBtn">Save Settings</span></button></div>
                 </form>
             </div>
         </div>
@@ -441,11 +450,11 @@
     <!-- ADD LINK MODAL -->
     <div id="linkModal" class="modal-overlay">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
-            <h3 class="font-semibold text-lg mb-4">Add a Link</h3>
+            <h3 class="font-semibold text-lg mb-4" data-i18n="linkModalTitle">Add a Link</h3>
             <div class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
-                <div><label class="block text-sm font-medium mb-2">URL or Handle</label><input id="linkUrl" type="text" placeholder="https://… or @handle" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                <div class="flex gap-3"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors">Add</button></div>
+                <div><label class="block text-sm font-medium mb-2" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
+                <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">URL or Handle</label><input id="linkUrl" type="text" placeholder="https://… or @handle" data-i18n-ph="urlPh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                <div class="flex gap-3"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors" data-i18n="addBtn">Add</button></div>
             </div>
         </div>
     </div>
@@ -454,13 +463,227 @@
     <div id="deleteModal" class="modal-overlay">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl text-center">
             <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="iconify text-red-500" data-icon="lucide:trash-2" data-width="20"></span></div>
-            <h3 class="font-semibold text-lg mb-2">Delete this product?</h3>
-            <p class="text-sm text-gray-500 mb-6">This action can't be undone.</p>
-            <div class="flex gap-3"><button id="cancelDeleteBtn" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors">Cancel</button><button id="confirmDeleteBtn" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors">Delete</button></div>
+            <h3 class="font-semibold text-lg mb-2" data-i18n="deleteTitle">Delete this product?</h3>
+            <p class="text-sm text-gray-500 mb-6" data-i18n="deleteDesc">This action can't be undone.</p>
+            <div class="flex gap-3"><button id="cancelDeleteBtn" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmDeleteBtn" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors" data-i18n="deleteConfirmBtn">Delete</button></div>
         </div>
     </div>
 
     <script>
+        // ===== TRANSLATIONS =====
+        var strings = {
+            en: {
+                appTagline:'Digital Storefront',
+                navProducts:'Products', navOrders:'Orders', navStorefront:'Storefront',
+                navLinks:'Links', navProfile:'Profile', navSettings:'Settings', navStore:'Store',
+                ob1Title:'Create your store', ob1Subtitle:'Set up your Lifaaq storefront in seconds.',
+                ob1UsernameLabel:'Username', ob1UsernameSub:'(your store link)',
+                ob1DisplayNameLabel:'Display Name', ob1DisplayNamePh:"e.g. Sarah's Boutique",
+                ob1WaLabel:'WhatsApp Number', ob1WaSub:'(optional)', ob1WaPh:'+1 555 000 0000',
+                ob1WaHint:'Customers will use this to order from your store.',
+                ob1CreateBtn:'Create My Store',
+                ob2Title:"You're live! 🎉", ob2Subtitle:'Your storefront is ready. Share it with the world.',
+                ob2StoreLinkLabel:'Your store link', ob2CopyBtn:'Copy',
+                ob2Bullet1:'Add your products and set prices',
+                ob2Bullet2:'Share your link so customers can order via WhatsApp',
+                ob2Bullet3:'Track orders and manage your store from here',
+                ob2StartBtn:'Start Adding Products',
+                productsTitle:'Products', productsDesc:'Manage what you sell. Add, edit, or toggle availability.',
+                addProductBtn:'Add Product', statTotal:'Total Products', statAvailable:'Available', statUnavailable:'Unavailable',
+                searchProductsPh:'Search products…', showUnavailableLabel:'Show unavailable',
+                noProducts:'No products yet. Add your first one above.',
+                backToProducts:'Back to Products', addProductTitle:'Add a Product', editProductTitle:'Edit Product',
+                addProductDesc:'Fill in the details below. You can always edit later.',
+                productImageLabel:'Product Image', uploadClick:'Click to upload an image', uploadHint:'JPG, PNG up to 500KB',
+                productNameLabel:'Product Name', productNamePh:'e.g. Classic White Tee',
+                priceLabel:'Price', categoryLabel:'Category',
+                catApparel:'Apparel', catAccessories:'Accessories', catElectronics:'Electronics',
+                catHome:'Home', catBeauty:'Beauty', catOther:'Other',
+                descLabel:'Description', descPh:'A short description of your product…',
+                stockLabel:'Stock Quantity', availableLabel:'Available',
+                saveProductBtn:'Save Product', updateProductBtn:'Update Product',
+                ordersTitle:'Orders', ordersDesc:'Every order that comes through your store, in one place.',
+                filterAll:'All', filterPending:'Pending', filterConfirmed:'Confirmed', filterDelivered:'Delivered',
+                noOrders:'No orders yet. Share your storefront to get started.',
+                markConfirmed:'Mark Confirmed', markDelivered:'Mark Delivered', message:'Message',
+                searchStorePh:'Search store…', noStoreProducts:'No products available right now.',
+                contactBtn:'Contact', orderNow:'Order This Now', orderOnWa:'Order on WhatsApp',
+                linksTitle:'Links', linksDesc:'Your social hubs, all in one place.',
+                linksOnboardTitle:'Get discovered more easily',
+                linksOnboardDesc:"Add your social media links below. They'll appear on your storefront so customers can connect with you beyond the store.",
+                addLinkBtn:'Add a Link', saveLinksBtn:'Save Links',
+                linkModalTitle:'Add a Link', platformLabel:'Platform', urlLabel:'URL or Handle',
+                urlPh:'https://… or @handle', cancelBtn:'Cancel', addBtn:'Add',
+                profileTitle:'Profile', profileDesc:'How you appear to your customers.',
+                profilePhotoLabel:'Profile Photo', profilePhotoHint:'Square image works best',
+                displayNameLabel:'Display Name', usernameLabel:'Username', bioLabel:'Bio',
+                saveProfileBtn:'Save Profile',
+                settingsTitle:'Settings', settingsDesc:'Fine-tune your store.',
+                gridLayoutLabel:'Storefront Grid Layout', gridLayoutHint:'How products are arranged on your storefront',
+                socialBentoLabel:'Show socials as bento cards',
+                socialBentoDesc:'Display your social links as cards instead of small icons',
+                socialBentoMobile:'Socials as bento cards',
+                waNumberLabel:'WhatsApp Number', waNumberHint:'Used for the contact button on your storefront',
+                currencyLabel:'Currency', showUnavailProdLabel:'Show unavailable products',
+                showUnavailProdDesc:'Visitors will see out-of-stock items marked as unavailable',
+                showUnavailMobile:'Show unavailable', saveSettingsBtn:'Save Settings',
+                deleteTitle:'Delete this product?', deleteDesc:"This action can't be undone.", deleteConfirmBtn:'Delete',
+                usernameHint:'Letters, numbers, underscores. 3–30 chars.',
+                usernameTooShort:'Username must be at least 3 characters.',
+                usernameAvailable:' is available', usernameTaken:' is already taken.',
+                usernameInvalid:'Invalid username format.',
+                errEnterUsername:'Please enter a username.',
+                errChooseUsername:'Please choose a valid, available username.',
+                errEnterDisplayName:'Please enter a display name.',
+                errCompleteCheck:'Please complete the security check.',
+                errInvalidWa:'Please enter a valid WhatsApp number (at least 4 digits after the country code).',
+                somethingWrong:'Something went wrong. Please try again.',
+                imageSizeError:'Image must be under 500KB',
+                productUpdated:'Product updated', productAdded:'Product added',
+                productDeleted:'Product deleted', errorDeleting:'Error deleting',
+                markedAvailable:'Marked as available', markedUnavailable:'Marked as unavailable',
+                errorSaving:'Error saving', noDesc:'No description provided.',
+                badgeAvailable:'Available', badgeUnavailable:'Unavailable',
+                editProductBtn:'Edit Product', orderMarked:'Order marked as',
+                errorUpdatingOrder:'Error updating order', catAll:'All',
+                linkRemoved:'Link removed', errorRemovingLink:'Error removing link',
+                linkAdded:'Link added', errorAddingLink:'Error adding link',
+                linksSaved:'Links saved', errorSavingLinks:'Error saving links',
+                profileSaved:'Profile saved', settingsSaved:'Settings saved',
+                errorSavingSettings:'Error saving settings',
+                storeNotFound:'Store not found.', goToLifaaq:'Go to Lifaaq',
+                linkCopied:'Link copied!',
+                waOrderMsg:"Hi! I'd like to order *{name}* ({price}). Is it available?",
+                waContactMsg:"Hi! I came across your store and would like to know more about your products.",
+                waOrderUpdateMsg:"Hi {customer}! This is an update regarding your order *{orderId}*. ",
+                storeFooter:'Create Your Store →',
+                statusPending:'Pending', statusConfirmed:'Confirmed', statusDelivered:'Delivered',
+            },
+            so: {
+                appTagline:'Dukaanka Dijital',
+                navProducts:'Alaabada', navOrders:'Dalabada', navStorefront:'Dukaanka',
+                navLinks:'Xiriirrada', navProfile:'Profaylka', navSettings:'Dejinta', navStore:'Dukaanka',
+                ob1Title:'Samee Dukaankaaga', ob1Subtitle:'Diyaari dukaankaaga Lifaaq daqiiqo gudahood.',
+                ob1UsernameLabel:'Magaca Isticmaalaha', ob1UsernameSub:'(xiriirkaaga dukaanka)',
+                ob1DisplayNameLabel:'Magaca La Muujinayo', ob1DisplayNamePh:'tusaale. Dukaanka Faadumo',
+                ob1WaLabel:'Lambarka WhatsApp', ob1WaSub:'(ikhtiyaari)', ob1WaPh:'+252 61 000 0000',
+                ob1WaHint:'Macaamiishu waxay isticmaalaan si ay ugaga dalban dukaankaaga.',
+                ob1CreateBtn:'Samee Dukaankayga',
+                ob2Title:'Waxaad noqotay mid socda! 🎉', ob2Subtitle:'Dukaankaaga waa diyaar. La wadaag adduunka.',
+                ob2StoreLinkLabel:'Xiriirkaaga dukaanka', ob2CopyBtn:'Koobiyee',
+                ob2Bullet1:'Ku dar alaabadaada oo dejiso qiimaha',
+                ob2Bullet2:'La wadaag xiriirkaaga si macaamiishu ugu dalban karaan WhatsApp',
+                ob2Bullet3:'Halkaan ku raac dalabada oo maamul dukaankaaga',
+                ob2StartBtn:'Bilow Ku Darida Alaabada',
+                productsTitle:'Alaabada', productsDesc:'Maamul waxaad iibiso. Ku dar, wax ka beddel, ama beddel helitaanka.',
+                addProductBtn:'Ku Dar Alaabo', statTotal:'Alaabada Guud', statAvailable:'La Heli Karo', statUnavailable:'Lama Heli Karo',
+                searchProductsPh:'Raadi alaabada…', showUnavailableLabel:'Muuji kuwa aan la heli karin',
+                noProducts:'Wali alaabo ma jirto. Ku dar kii ugu horreeya kore.',
+                backToProducts:'Ku laabo Alaabada', addProductTitle:'Ku Dar Alaabo', editProductTitle:'Wax Ka Beddel Alaabta',
+                addProductDesc:'Buuxi faahfaahinta hoose. Weligaa waxaad wax ka beddelaysaa dambe.',
+                productImageLabel:'Sawirka Alaabta', uploadClick:'Guji si aad u soo geliso sawir', uploadHint:'JPG, PNG ilaa 500KB',
+                productNameLabel:'Magaca Alaabta', productNamePh:'tusaale. Garan Cad',
+                priceLabel:'Qiimaha', categoryLabel:'Nooca',
+                catApparel:'Dharka', catAccessories:'Qalab', catElectronics:'Elektaroonigga',
+                catHome:'Guriga', catBeauty:'Quruxda', catOther:'Kale',
+                descLabel:'Faahfaahinta', descPh:'Faahfaahin kooban oo alaabadaada…',
+                stockLabel:'Tirada Kaydka', availableLabel:'La Heli Karo',
+                saveProductBtn:'Kaydi Alaabta', updateProductBtn:'Cusboonaysii Alaabta',
+                ordersTitle:'Dalabada', ordersDesc:'Dalabada oo dhan ee dukaankaaga ku yimaadda, meel kaliya.',
+                filterAll:'Dhammaan', filterPending:'Sugaya', filterConfirmed:'La Xaqiijiyay', filterDelivered:'La Gadhsiiyay',
+                noOrders:'Wali dalabo ma jiro. La wadaag dukaankaaga si aad u bilowdo.',
+                markConfirmed:'Xaqiiji', markDelivered:'Gadhsi', message:'Fariin',
+                searchStorePh:'Raadi dukaanka…', noStoreProducts:'Hadda wax alaabo ah lama heli karo.',
+                contactBtn:'Xiriir', orderNow:'Dalbo Hada', orderOnWa:'WhatsApp ku Dalbo',
+                linksTitle:'Xiriirrada', linksDesc:'Goobaha bulshada, dhammaantood meel kaliya.',
+                linksOnboardTitle:'Si sahlan u helidda',
+                linksOnboardDesc:'Ku dar xiriirradaada baraha bulshada hoose. Waxay ka soo muuqan doonaan dukaankaaga si macaamiishu wax kula xiriiri karaan dibadda dukaanka.',
+                addLinkBtn:'Ku Dar Xiriir', saveLinksBtn:'Kaydi Xiriirrada',
+                linkModalTitle:'Ku Dar Xiriir', platformLabel:'Goobta', urlLabel:'URL ama Handle',
+                urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
+                profileTitle:'Profaylka', profileDesc:'Sida aad macaamiishaada ugu muuqato.',
+                profilePhotoLabel:'Sawirka Profaylka', profilePhotoHint:'Sawirka afar-geeska ah ayaa ugu fiican',
+                displayNameLabel:'Magaca La Muujinayo', usernameLabel:'Magaca Isticmaalaha', bioLabel:'Taariikh Nololeed',
+                saveProfileBtn:'Kaydi Profaylka',
+                settingsTitle:'Dejinta', settingsDesc:'Hagaaji dukaankaaga.',
+                gridLayoutLabel:'Qaabeynta Shabakada Dukaanka', gridLayoutHint:'Sida alaabada loogu habeeyo dukaankaaga',
+                socialBentoLabel:'Muuji baraha bulshada sidii kaardhadhka bento',
+                socialBentoDesc:'Tus xiriirradaada bulshada sidii kaardhadhka halkii ay ka ahaan lahaayeen astaamaha yar',
+                socialBentoMobile:'Baraha Bulshada sidii Bento',
+                waNumberLabel:'Lambarka WhatsApp', waNumberHint:'Waxaa loo isticmaalaa badhanka xiriirka dukaankaaga',
+                currencyLabel:'Lacagta', showUnavailProdLabel:'Muuji alaabada lama heli karin',
+                showUnavailProdDesc:'Booqdayaashu waxay arki doonaan alaabada aan kaydka lahayn oo calaamadaysan lama heli karin',
+                showUnavailMobile:'Muuji kuwa aan la heli karin', saveSettingsBtn:'Kaydi Dejinta',
+                deleteTitle:'Ma tirtirtaa alaabtan?', deleteDesc:'Ficilkaan lama soo celin karo.', deleteConfirmBtn:'Tirtir',
+                usernameHint:'Xarfaha, tirooyinka, xariijinta. 3–30 xaraf.',
+                usernameTooShort:'Magaca isticmaalaha waa inuu ahaadaa ugu yaraan 3 xaraf.',
+                usernameAvailable:' waa furan yahay', usernameTaken:' hore ayaa la qaatay.',
+                usernameInvalid:'Qaabka magaca isticmaalaha waa khalad.',
+                errEnterUsername:'Fadlan geli magaca isticmaalaha.',
+                errChooseUsername:'Fadlan dooro magac isticmaale oo sax ah, oo furan.',
+                errEnterDisplayName:'Fadlan geli magaca la muujinayo.',
+                errCompleteCheck:'Fadlan dhami hubinta amniga.',
+                errInvalidWa:'Fadlan geli lambarka WhatsApp oo sax ah (ugu yaraan 4 lambar ka dib koodka dalka).',
+                somethingWrong:'Wax khaldanaaday. Fadlan isku day mar kale.',
+                imageSizeError:'Sawirku waa inuu ka yar yahay 500KB',
+                productUpdated:'Alaabta waa la cusboonaysiiyay', productAdded:'Alaabta waa lagu daray',
+                productDeleted:'Alaabta waa la tirtiray', errorDeleting:'Khalad tirtiridda',
+                markedAvailable:'Waxaa lagu calaamadeeyay la heli karo', markedUnavailable:'Waxaa lagu calaamadeeyay lama heli karo',
+                errorSaving:'Khalad kaydinta', noDesc:'Faahfaahin lama bixin.',
+                badgeAvailable:'La Heli Karo', badgeUnavailable:'Lama Heli Karo',
+                editProductBtn:'Wax Ka Beddel Alaabta', orderMarked:'Dalabka waxaa lagu calaamadeeyay',
+                errorUpdatingOrder:'Khalad cusboonaysiinta dalabka', catAll:'Dhammaan',
+                linkRemoved:'Xiriirka waa la tirtiray', errorRemovingLink:'Khalad tirtiridda xiriirka',
+                linkAdded:'Xiriirka waa lagu daray', errorAddingLink:'Khalad ku darista xiriirka',
+                linksSaved:'Xiriirrada waa la keydsaday', errorSavingLinks:'Khalad kaydinta xiriirrada',
+                profileSaved:'Profaylka waa la keydsaday', settingsSaved:'Dejinta waa la keydsaday',
+                errorSavingSettings:'Khalad kaydinta dejinta',
+                storeNotFound:'Dukaanka lama helin.', goToLifaaq:'Aad Lifaaq',
+                linkCopied:'Xiriirka lagu koobiyeeyay!',
+                waOrderMsg:"Salaan! Waxaan jeclaan lahaa inaan dalbo *{name}* ({price}). Ma heli karaa?",
+                waContactMsg:"Salaan! Waxaan ka helay dukaankaaga waxaana jeclaan lahaa inaan wax badan ka ogaado alaabadaada.",
+                waOrderUpdateMsg:"Salaan {customer}! Tani waa wariye ku saabsan dalabkaaga *{orderId}*. ",
+                storeFooter:'Abuur Dukaankaaga →',
+                statusPending:'Sugaya', statusConfirmed:'La Xaqiijiyay', statusDelivered:'La Gadhsiiyay',
+            }
+        };
+
+        var currentLang = localStorage.getItem('lifaaq_lang') || 'so';
+        function s(key) { return (strings[currentLang] && strings[currentLang][key]) || strings.en[key] || key; }
+
+        function applyTranslations() {
+            document.documentElement.lang = currentLang;
+            // Update data-i18n elements
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                el.textContent = s(el.dataset.i18n);
+            });
+            // Update placeholder attributes
+            document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+                el.placeholder = s(el.dataset.i18nPh);
+            });
+            // Update select option labels
+            document.querySelectorAll('[data-i18n-opt]').forEach(function(el) {
+                el.textContent = s(el.dataset.i18nOpt);
+            });
+            // Sync lang toggle button styles
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                var active = btn.id === 'lang' + currentLang.charAt(0).toUpperCase() + currentLang.slice(1) + 'Btn';
+                btn.className = 'lang-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ' +
+                    (active ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500');
+            });
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lifaaq_lang', lang);
+            applyTranslations();
+            // Re-render dynamic views so their JS-generated strings update too
+            renderProducts();
+            renderOrders();
+            renderLinks();
+            if (document.getElementById('view-storefront').classList.contains('active')) renderStorefront();
+        }
+
         // ===== STATE =====
         var AVATAR_BLANK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f3f4f6'/%3E%3Ccircle cx='40' cy='30' r='15' fill='%23d1d5db'/%3E%3Cellipse cx='40' cy='70' rx='24' ry='18' fill='%23d1d5db'/%3E%3C/svg%3E";
         var PRODUCT_BLANK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f9fafb'/%3E%3Crect x='148' y='152' width='104' height='80' rx='10' fill='%23e5e7eb'/%3E%3Ccircle cx='178' cy='174' r='12' fill='%23d1d5db'/%3E%3Cpolygon points='148%2C232 180%2C196 204%2C214 228%2C194 252%2C232' fill='%23d1d5db'/%3E%3C/svg%3E";
@@ -483,6 +706,65 @@
             other: { icon: 'lucide:link', color: '#6b7280', label: 'Other' }
         };
         var currencySymbols = { USD: '$', EUR: '€', GBP: '£', NGN: '₦', KES: 'KSh', GHS: '₵' };
+
+        // ===== WHATSAPP PHONE WIDGET =====
+        var WA_COUNTRIES = [
+            {dial:'252',flag:'🇸🇴',name:'Somalia'},{dial:'254',flag:'🇰🇪',name:'Kenya'},
+            {dial:'251',flag:'🇪🇹',name:'Ethiopia'},{dial:'256',flag:'🇺🇬',name:'Uganda'},
+            {dial:'255',flag:'🇹🇿',name:'Tanzania'},{dial:'253',flag:'🇩🇯',name:'Djibouti'},
+            {dial:'291',flag:'🇪🇷',name:'Eritrea'},{dial:'249',flag:'🇸🇩',name:'Sudan'},
+            {dial:'20',flag:'🇪🇬',name:'Egypt'},{dial:'218',flag:'🇱🇾',name:'Libya'},
+            {dial:'234',flag:'🇳🇬',name:'Nigeria'},{dial:'233',flag:'🇬🇭',name:'Ghana'},
+            {dial:'27',flag:'🇿🇦',name:'South Africa'},{dial:'212',flag:'🇲🇦',name:'Morocco'},
+            {dial:'216',flag:'🇹🇳',name:'Tunisia'},{dial:'971',flag:'🇦🇪',name:'UAE'},
+            {dial:'966',flag:'🇸🇦',name:'Saudi Arabia'},{dial:'974',flag:'🇶🇦',name:'Qatar'},
+            {dial:'973',flag:'🇧🇭',name:'Bahrain'},{dial:'968',flag:'🇴🇲',name:'Oman'},
+            {dial:'965',flag:'🇰🇼',name:'Kuwait'},{dial:'962',flag:'🇯🇴',name:'Jordan'},
+            {dial:'90',flag:'🇹🇷',name:'Turkey'},{dial:'44',flag:'🇬🇧',name:'UK'},
+            {dial:'1',flag:'🇺🇸',name:'United States'},{dial:'49',flag:'🇩🇪',name:'Germany'},
+            {dial:'33',flag:'🇫🇷',name:'France'},{dial:'31',flag:'🇳🇱',name:'Netherlands'},
+            {dial:'46',flag:'🇸🇪',name:'Sweden'},{dial:'47',flag:'🇳🇴',name:'Norway'},
+            {dial:'61',flag:'🇦🇺',name:'Australia'}
+        ];
+
+        function initWaSelects() {
+            var opts = WA_COUNTRIES.map(function(c) {
+                return '<option value="' + c.dial + '">' + c.flag + ' +' + c.dial + '</option>';
+            }).join('');
+            document.querySelectorAll('.wa-country-select').forEach(function(sel) { sel.innerHTML = opts; });
+        }
+
+        function getWaValue(selectId, inputId) {
+            var sel = document.getElementById(selectId);
+            var inp = document.getElementById(inputId);
+            if (!sel || !inp) return '';
+            var local = inp.value.replace(/[^0-9]/g, '');
+            if (!local) return '';
+            return '+' + sel.value + local;
+        }
+
+        function setWaValue(full, selectId, inputId) {
+            var sel = document.getElementById(selectId);
+            var inp = document.getElementById(inputId);
+            if (!sel || !inp) return;
+            var digits = (full || '').replace(/[^0-9]/g, '');
+            if (!digits) { inp.value = ''; return; }
+            var sorted = WA_COUNTRIES.slice().sort(function(a, b) { return b.dial.length - a.dial.length || Number(a.dial) - Number(b.dial); });
+            var matched = null;
+            for (var i = 0; i < sorted.length; i++) {
+                if (digits.indexOf(sorted[i].dial) === 0) { matched = sorted[i]; break; }
+            }
+            if (matched) { sel.value = matched.dial; inp.value = digits.slice(matched.dial.length); }
+            else { inp.value = digits; }
+        }
+
+        function validateWaInput(inputId) {
+            var inp = document.getElementById(inputId);
+            if (!inp) return true;
+            var digits = inp.value.replace(/[^0-9]/g, '');
+            if (!digits) return true; // empty is OK (field is optional)
+            return digits.length >= 4 && digits.length <= 12;
+        }
 
         // ===== API =====
         async function api(method, path, body) {
@@ -559,8 +841,8 @@
             var hintEl = document.getElementById('obUsernameHint');
             statusEl.classList.remove('show');
             clearTimeout(obUsernameTimer);
-            if (val.length === 0) { hintEl.textContent = 'Letters, numbers, underscores. 3–30 chars.'; hintEl.className = 'text-xs text-gray-400 mt-1.5'; return; }
-            if (val.length < 3) { hintEl.textContent = 'Username must be at least 3 characters.'; hintEl.className = 'text-xs text-orange-500 mt-1.5'; return; }
+            if (val.length === 0) { hintEl.textContent = s('usernameHint'); hintEl.className = 'text-xs text-gray-400 mt-1.5'; return; }
+            if (val.length < 3) { hintEl.textContent = s('usernameTooShort'); hintEl.className = 'text-xs text-orange-500 mt-1.5'; return; }
             iconEl.innerHTML = '<div class="w-4 h-4 border-2 border-gray-300 border-t-accent rounded-full spin"></div>';
             statusEl.classList.add('show');
             obUsernameTimer = setTimeout(async function() {
@@ -568,12 +850,12 @@
                     var data = await fetch('/api/users/check?username=' + encodeURIComponent(val)).then(function(r) { return r.json(); });
                     if (data.available) {
                         iconEl.innerHTML = '<span class="iconify text-green-500" data-icon="lucide:check-circle" data-width="16"></span>';
-                        hintEl.textContent = '@' + val + ' is available';
+                        hintEl.textContent = '@' + val + s('usernameAvailable');
                         hintEl.className = 'text-xs text-green-600 mt-1.5';
                         obUsernameValid = true;
                     } else {
                         iconEl.innerHTML = '<span class="iconify text-red-400" data-icon="lucide:x-circle" data-width="16"></span>';
-                        hintEl.textContent = data.reason === 'invalid' ? 'Invalid username format.' : '@' + val + ' is already taken.';
+                        hintEl.textContent = data.reason === 'invalid' ? s('usernameInvalid') : '@' + val + s('usernameTaken');
                         hintEl.className = 'text-xs text-red-500 mt-1.5';
                         obUsernameValid = false;
                     }
@@ -585,16 +867,17 @@
         document.getElementById('obCreateBtn').addEventListener('click', async function() {
             var username = document.getElementById('obUsername').value.trim();
             var displayName = document.getElementById('obDisplayName').value.trim();
-            var whatsapp = document.getElementById('obWhatsapp').value.trim();
+            var whatsapp = getWaValue('obWaCountry', 'obWhatsapp');
             var errorEl = document.getElementById('obCreateError');
             errorEl.classList.add('hidden');
 
-            if (!username) { errorEl.textContent = 'Please enter a username.'; errorEl.classList.remove('hidden'); return; }
-            if (!obUsernameValid) { errorEl.textContent = 'Please choose a valid, available username.'; errorEl.classList.remove('hidden'); return; }
-            if (!displayName) { errorEl.textContent = 'Please enter a display name.'; errorEl.classList.remove('hidden'); return; }
+            if (!username) { errorEl.textContent = s('errEnterUsername'); errorEl.classList.remove('hidden'); return; }
+            if (!obUsernameValid) { errorEl.textContent = s('errChooseUsername'); errorEl.classList.remove('hidden'); return; }
+            if (!displayName) { errorEl.textContent = s('errEnterDisplayName'); errorEl.classList.remove('hidden'); return; }
+            if (whatsapp && !validateWaInput('obWhatsapp')) { errorEl.textContent = s('errInvalidWa'); errorEl.classList.remove('hidden'); return; }
 
             var turnstileToken = document.querySelector('[name="cf-turnstile-response"]');
-            if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = 'Please complete the security check.'; errorEl.classList.remove('hidden'); return; }
+            if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = s('errCompleteCheck'); errorEl.classList.remove('hidden'); return; }
 
             this.disabled = true;
             this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
@@ -609,17 +892,17 @@
                 document.getElementById('ob-step1').classList.remove('active');
                 document.getElementById('ob-step2').classList.add('active');
             } catch(e) {
-                errorEl.textContent = e.message || 'Something went wrong. Please try again.';
+                errorEl.textContent = e.message || s('somethingWrong');
                 errorEl.classList.remove('hidden');
                 this.disabled = false;
-                this.innerHTML = '<span class="iconify" data-icon="lucide:sparkles" data-width="16"></span> Create My Store';
+                this.innerHTML = '<span class="iconify" data-icon="lucide:sparkles" data-width="16"></span> ' + s('ob1CreateBtn');
                 if (window.turnstile) turnstile.reset();
             }
         });
 
         document.getElementById('obCopyBtn').addEventListener('click', function() {
             var url = 'https://' + window.location.host + '/@' + profile.username;
-            navigator.clipboard.writeText(url).then(function() { toast('Link copied!'); });
+            navigator.clipboard.writeText(url).then(function() { toast(s('linkCopied')); });
         });
 
         document.getElementById('obStartBtn').addEventListener('click', function() {
@@ -651,19 +934,19 @@
 
         function waLink(name, price) {
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
-            var msg = "Hi! I'd like to order *" + name + "* (" + formatPrice(price) + "). Is it available?";
+            var msg = s('waOrderMsg').replace('{name}', name).replace('{price}', formatPrice(price));
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
         function waContactLink() {
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
-            var msg = "Hi! I came across your store and would like to know more about your products.";
+            var msg = s('waContactMsg');
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
         function waOrderLink(phone, orderId, customerName) {
             var num = (phone || '').replace(/[^0-9]/g, '');
-            var msg = "Hi " + customerName + "! This is an update regarding your order *" + orderId + "*. ";
+            var msg = s('waOrderUpdateMsg').replace('{customer}', customerName).replace('{orderId}', orderId);
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
@@ -688,7 +971,7 @@
 
         // ===== SYNC UI =====
         function syncSettingsUI() {
-            document.getElementById('setWhatsapp').value = settings.whatsapp;
+            setWaValue(settings.whatsapp, 'setWaCountry', 'setWhatsapp');
             document.getElementById('setCurrency').value = settings.currency;
             var showUnavEl = document.getElementById('setShowUnavailable');
             settings.showUnavailable ? showUnavEl.classList.add('on') : showUnavEl.classList.remove('on');
@@ -710,7 +993,7 @@
         }
 
         function syncMobileSettings() {
-            document.getElementById('mobSetWhatsapp').value = settings.whatsapp;
+            setWaValue(settings.whatsapp, 'mobWaCountry', 'mobSetWhatsapp');
             document.getElementById('mobSetCurrency').value = settings.currency;
             var mobBento = document.getElementById('mobSetSocialBento');
             var mobUnavail = document.getElementById('mobSetShowUnavailable');
@@ -727,7 +1010,7 @@
         document.getElementById('imgInput').addEventListener('change', function(e) {
             var file = e.target.files[0];
             if (!file) return;
-            if (file.size > 500 * 1024) { toast('Image must be under 500KB'); this.value = ''; return; }
+            if (file.size > 500 * 1024) { toast(s('imageSizeError')); this.value = ''; return; }
             var reader = new FileReader();
             reader.onload = function(ev) {
                 document.getElementById('imgPreview').src = ev.target.result;
@@ -756,19 +1039,19 @@
                     var res = await api('PUT', '/products/' + editId, data);
                     var idx = products.findIndex(function(x) { return x.id === parseInt(editId); });
                     if (idx > -1) products[idx] = { id: parseInt(editId), name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || PRODUCT_BLANK };
-                    toast('Product updated');
+                    toast(s('productUpdated'));
                 } else {
                     var res = await api('POST', '/products', data);
                     products.unshift({ id: res.product.id, name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || PRODUCT_BLANK });
-                    toast('Product added');
+                    toast(s('productAdded'));
                 }
                 showView('products');
             } catch(e) { toast('Error: ' + e.message); }
         });
 
         function resetProductForm() {
-            document.getElementById('formTitle').textContent = 'Add a Product';
-            document.getElementById('formSaveText').textContent = 'Save Product';
+            document.getElementById('formTitle').textContent = s('addProductTitle');
+            document.getElementById('formSaveText').textContent = s('saveProductBtn');
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pPrice').value = '';
@@ -786,8 +1069,8 @@
             var p = products.find(function(x) { return x.id === id; });
             if (!p) return;
             showView('add-product');
-            document.getElementById('formTitle').textContent = 'Edit Product';
-            document.getElementById('formSaveText').textContent = 'Update Product';
+            document.getElementById('formTitle').textContent = s('editProductTitle');
+            document.getElementById('formSaveText').textContent = s('updateProductBtn');
             document.getElementById('editProductId').value = p.id;
             document.getElementById('pName').value = p.name;
             document.getElementById('pPrice').value = p.price;
@@ -822,7 +1105,7 @@
                 html += '<div class="product-card bg-white rounded-xl border border-gray-200 overflow-hidden fade-up">';
                 html += '<div class="relative cursor-pointer" data-open-product="' + p.id + '">';
                 html += '<img src="' + escAttr(p.img) + '" class="w-full aspect-square object-cover" alt="' + escAttr(p.name) + '">';
-                if (!p.available) html += '<div class="absolute inset-0 bg-white/60 flex items-center justify-center"><span class="text-xs font-medium text-gray-500 bg-white px-3 py-1 rounded-full">Unavailable</span></div>';
+                if (!p.available) html += '<div class="absolute inset-0 bg-white/60 flex items-center justify-center"><span class="text-xs font-medium text-gray-500 bg-white px-3 py-1 rounded-full">' + s('badgeUnavailable') + '</span></div>';
                 html += '</div><div class="p-3"><div class="flex items-start justify-between gap-2">';
                 html += '<div class="min-w-0 cursor-pointer" data-open-product="' + p.id + '"><p class="text-sm font-medium truncate">' + escAttr(p.name) + '</p><p class="text-sm text-accent font-semibold mt-0.5">' + escAttr(formatPrice(p.price)) + '</p></div>';
                 html += '<div class="flex items-center gap-1 flex-shrink-0">';
@@ -854,8 +1137,8 @@
                     this.classList.toggle('on');
                     try {
                         await api('PUT', '/products/' + id, { name: p.name, price: p.price, category: p.category, description: p.desc, stock: p.stock, available: p.available, image_url: p.img });
-                        toast(p.available ? 'Marked as available' : 'Marked as unavailable');
-                    } catch(e) { p.available = !p.available; renderProducts(); toast('Error saving'); }
+                        toast(p.available ? s('markedAvailable') : s('markedUnavailable'));
+                    } catch(e) { p.available = !p.available; renderProducts(); toast(s('errorSaving')); }
                 });
             });
         }
@@ -873,8 +1156,8 @@
                 document.getElementById('deleteModal').classList.remove('active');
                 deleteTargetId = null;
                 renderProducts();
-                toast('Product deleted');
-            } catch(e) { toast('Error deleting'); }
+                toast(s('productDeleted'));
+            } catch(e) { toast(s('errorDeleting')); }
         });
 
         // ===== PRODUCT MODAL =====
@@ -885,15 +1168,15 @@
             document.getElementById('modalImg').src = p.img;
             document.getElementById('modalName').textContent = p.name;
             document.getElementById('modalPrice').textContent = formatPrice(p.price);
-            document.getElementById('modalDesc').textContent = p.desc || 'No description provided.';
+            document.getElementById('modalDesc').textContent = p.desc || s('noDesc');
             var badge = document.getElementById('modalBadge');
-            if (p.available) { badge.textContent = 'Available'; badge.className = 'absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-green-500 text-white'; }
-            else { badge.textContent = 'Unavailable'; badge.className = 'absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600'; }
+            if (p.available) { badge.textContent = s('badgeAvailable'); badge.className = 'absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-green-500 text-white'; }
+            else { badge.textContent = s('badgeUnavailable'); badge.className = 'absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600'; }
             var btnEl = document.getElementById('modalOrderBtn');
             if (modalContext === 'store') {
-                btnEl.innerHTML = '<a href="' + waLink(p.name, p.price) + '" target="_blank" class="w-full bg-wa text-white py-3.5 rounded-xl font-semibold hover:brightness-110 transition-all flex items-center justify-center gap-2.5 text-[15px]"><span class="iconify" data-icon="mdi:whatsapp" data-width="20"></span>Order on WhatsApp</a>';
+                btnEl.innerHTML = '<a href="' + waLink(p.name, p.price) + '" target="_blank" class="w-full bg-wa text-white py-3.5 rounded-xl font-semibold hover:brightness-110 transition-all flex items-center justify-center gap-2.5 text-[15px]"><span class="iconify" data-icon="mdi:whatsapp" data-width="20"></span>' + s('orderOnWa') + '</a>';
             } else {
-                btnEl.innerHTML = '<button class="modal-edit-btn w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"><span class="iconify" data-icon="lucide:pencil" data-width="15"></span>Edit Product</button>';
+                btnEl.innerHTML = '<button class="modal-edit-btn w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"><span class="iconify" data-icon="lucide:pencil" data-width="15"></span>' + s('editProductBtn') + '</button>';
                 document.querySelector('.modal-edit-btn').addEventListener('click', function() { document.getElementById('productModal').classList.remove('active'); editProduct(id); });
             }
             document.getElementById('productModal').classList.add('active');
@@ -909,8 +1192,8 @@
                 var o = orders.find(function(x) { return x.id === orderId; });
                 if (o) o.status = status;
                 renderOrders();
-                toast('Order marked as ' + status);
-            } catch(e) { toast('Error updating order'); }
+                toast(s('orderMarked') + ' ' + status);
+            } catch(e) { toast(s('errorUpdatingOrder')); }
         }
 
         function renderOrders() {
@@ -925,16 +1208,17 @@
                 var phone = (o.phone || '').replace(/[^0-9]/g, '');
                 html += '<div class="bg-white rounded-xl border border-gray-200 p-4 fade-up">';
                 html += '<div class="flex flex-col sm:flex-row sm:items-center gap-3">';
-                html += '<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-semibold">' + escAttr(o.id) + '</span><span class="px-2 py-0.5 rounded-full text-xs font-medium ' + sc[o.status] + '">' + o.status.charAt(0).toUpperCase() + o.status.slice(1) + '</span></div>';
+                var statusLabel = s('status' + o.status.charAt(0).toUpperCase() + o.status.slice(1)) || (o.status.charAt(0).toUpperCase() + o.status.slice(1));
+                html += '<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-semibold">' + escAttr(o.id) + '</span><span class="px-2 py-0.5 rounded-full text-xs font-medium ' + sc[o.status] + '">' + statusLabel + '</span></div>';
                 html += '<p class="text-sm text-gray-600">' + escAttr(o.customer) + '</p>';
                 html += '<p class="text-xs text-gray-400 mt-0.5">' + escAttr(Array.isArray(o.items) ? o.items.join(', ') : o.items) + '</p></div>';
                 html += '<div class="flex items-center gap-4 sm:flex-col sm:items-end"><span class="text-sm font-semibold">' + escAttr(formatPrice(o.total)) + '</span><span class="text-xs text-gray-400">' + escAttr(o.date) + '</span>';
-                if (phone) html += '<a href="' + waOrderLink(o.phone, o.id, o.customer) + '" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-green-600 font-medium hover:underline"><span class="iconify" data-icon="mdi:whatsapp" data-width="14"></span>Message</a>';
+                if (phone) html += '<a href="' + waOrderLink(o.phone, o.id, o.customer) + '" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-green-600 font-medium hover:underline"><span class="iconify" data-icon="mdi:whatsapp" data-width="14"></span>' + s('message') + '</a>';
                 html += '</div></div>';
                 if (o.status !== 'delivered') {
                     html += '<div class="flex gap-2 mt-3 pt-3 border-t border-gray-100">';
-                    if (o.status === 'pending') html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="confirmed">Mark Confirmed</button>';
-                    html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700 hover:bg-green-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="delivered">Mark Delivered</button>';
+                    if (o.status === 'pending') html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="confirmed">' + s('markConfirmed') + '</button>';
+                    html += '<button class="order-status-btn flex-1 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700 hover:bg-green-100 transition-colors" data-order-id="' + escAttr(o.id) + '" data-status="delivered">' + s('markDelivered') + '</button>';
                     html += '</div>';
                 }
                 html += '</div>';
@@ -981,7 +1265,7 @@
             products.forEach(function(p) { if (cats.indexOf(p.category) === -1) cats.push(p.category); });
             var tabsEl = document.getElementById('storeTabs');
             tabsEl.innerHTML = cats.map(function(c) {
-                return '<button class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ' + (c === storeCat ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600') + '" data-cat="' + escAttr(c) + '">' + escAttr(c === 'all' ? 'All' : c) + '</button>';
+                return '<button class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ' + (c === storeCat ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600') + '" data-cat="' + escAttr(c) + '">' + escAttr(c === 'all' ? s('catAll') : c) + '</button>';
             }).join('');
             tabsEl.querySelectorAll('.store-cat-tab').forEach(function(btn) {
                 btn.addEventListener('click', function() { storeCat = this.dataset.cat; renderStorefront(); });
@@ -1011,8 +1295,8 @@
                 var html = '<div class="store-item cursor-pointer' + (!p.available ? ' opacity-60' : '') + '" data-store-open="' + p.id + '">';
                 html += '<img src="' + escAttr(p.img) + '" class="store-card-img" alt="' + escAttr(p.name) + '">';
                 html += '<div class="mt-2"><p class="text-[13px] font-medium leading-tight truncate">' + escAttr(p.name) + '</p>';
-                if (!p.available) { html += '<p class="text-[11px] text-gray-400 mt-0.5">Unavailable</p>'; }
-                else { html += '<p class="text-[13px] font-semibold text-accent mt-0.5">' + escAttr(formatPrice(p.price)) + '</p><a href="' + waLink(p.name, p.price) + '" target="_blank" class="store-wa-link w-full mt-1.5 bg-wa text-white py-[7px] rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 hover:brightness-110 transition-all"><span class="iconify" data-icon="mdi:whatsapp" data-width="13"></span>Order This Now</a>'; }
+                if (!p.available) { html += '<p class="text-[11px] text-gray-400 mt-0.5">' + s('badgeUnavailable') + '</p>'; }
+                else { html += '<p class="text-[13px] font-semibold text-accent mt-0.5">' + escAttr(formatPrice(p.price)) + '</p><a href="' + waLink(p.name, p.price) + '" target="_blank" class="store-wa-link w-full mt-1.5 bg-wa text-white py-[7px] rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 hover:brightness-110 transition-all"><span class="iconify" data-icon="mdi:whatsapp" data-width="13"></span>' + s('orderNow') + '</a>'; }
                 html += '</div></div>';
                 return html;
             }).join('');
@@ -1038,7 +1322,7 @@
                 btn.addEventListener('click', async function(e) {
                     e.stopPropagation();
                     links.splice(parseInt(this.dataset.linkIdx), 1);
-                    try { await api('PUT', '/links', { links: links }); renderLinks(); toast('Link removed'); } catch(e) { toast('Error removing link'); }
+                    try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkRemoved')); } catch(e) { toast(s('errorRemovingLink')); }
                 });
             });
         }
@@ -1050,11 +1334,11 @@
             if (!url) return;
             links.push({ platform: document.getElementById('linkPlatform').value, url: url });
             document.getElementById('linkModal').classList.remove('active');
-            try { await api('PUT', '/links', { links: links }); renderLinks(); toast('Link added'); } catch(e) { links.pop(); toast('Error adding link'); }
+            try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkAdded')); } catch(e) { links.pop(); toast(s('errorAddingLink')); }
         });
         document.getElementById('linkModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
         document.getElementById('saveLinksBtn').addEventListener('click', async function() {
-            try { await api('PUT', '/links', { links: links }); toast('Links saved'); } catch(e) { toast('Error saving links'); }
+            try { await api('PUT', '/links', { links: links }); toast(s('linksSaved')); } catch(e) { toast(s('errorSavingLinks')); }
         });
         document.getElementById('dismissOnboarding').addEventListener('click', async function() {
             onboardingDismissed = true;
@@ -1068,7 +1352,7 @@
         document.getElementById('avatarBtn').addEventListener('click', function() { document.getElementById('avatarInput').click(); });
         document.getElementById('avatarInput').addEventListener('change', function(e) {
             var file = e.target.files[0]; if (!file) return;
-            if (file.size > 500 * 1024) { toast('Image must be under 500KB'); this.value = ''; return; }
+            if (file.size > 500 * 1024) { toast(s('imageSizeError')); this.value = ''; return; }
             var reader = new FileReader();
             reader.onload = function(ev) {
                 document.getElementById('profileAvatar').src = ev.target.result;
@@ -1087,7 +1371,7 @@
                 await api('PUT', '/me/profile', { display_name: profile.name, username: profile.username, bio: profile.bio, avatar_url: profile.avatar });
                 document.getElementById('sidebarName').textContent = profile.name;
                 document.getElementById('sidebarUsername').textContent = '@' + profile.username;
-                toast('Profile saved');
+                toast(s('profileSaved'));
             } catch(e) { toast('Error: ' + e.message); }
         });
 
@@ -1107,20 +1391,22 @@
 
         document.getElementById('settingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            settings.whatsapp = document.getElementById('setWhatsapp').value;
+            if (!validateWaInput('setWhatsapp')) { toast(s('errInvalidWa')); return; }
+            settings.whatsapp = getWaValue('setWaCountry', 'setWhatsapp');
             settings.currency = document.getElementById('setCurrency').value;
             settings.showUnavailable = document.getElementById('setShowUnavailable').classList.contains('on');
             settings.socialBento = document.getElementById('setSocialBento').classList.contains('on');
-            try { await api('PUT', '/me/settings', settings); toast('Settings saved'); } catch(e) { toast('Error saving settings'); }
+            try { await api('PUT', '/me/settings', settings); toast(s('settingsSaved')); } catch(e) { toast(s('errorSavingSettings')); }
         });
 
         document.getElementById('mobileSettingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            settings.whatsapp = document.getElementById('mobSetWhatsapp').value;
+            if (!validateWaInput('mobSetWhatsapp')) { toast(s('errInvalidWa')); return; }
+            settings.whatsapp = getWaValue('mobWaCountry', 'mobSetWhatsapp');
             settings.currency = document.getElementById('mobSetCurrency').value;
             settings.showUnavailable = document.getElementById('mobSetShowUnavailable').classList.contains('on');
             settings.socialBento = document.getElementById('mobSetSocialBento').classList.contains('on');
-            try { await api('PUT', '/me/settings', settings); toast('Settings saved'); } catch(e) { toast('Error saving settings'); }
+            try { await api('PUT', '/me/settings', settings); toast(s('settingsSaved')); } catch(e) { toast(s('errorSavingSettings')); }
         });
 
         // ===== PUBLIC STORE =====
@@ -1128,7 +1414,7 @@
             try {
                 var data = await fetch('/api/store/' + encodeURIComponent(username)).then(function(r) { return r.json(); });
                 if (data.error) {
-                    document.getElementById('appLoader').innerHTML = '<div class="text-center"><p class="text-gray-400 text-sm font-medium">Store not found.</p><a href="/" class="text-sm text-accent mt-2 inline-block">Go to Lifaaq</a></div>';
+                    document.getElementById('appLoader').innerHTML = '<div class="text-center"><p class="text-gray-400 text-sm font-medium">' + s('storeNotFound') + '</p><a href="/" class="text-sm text-accent mt-2 inline-block">' + s('goToLifaaq') + '</a></div>';
                     return;
                 }
                 var u = data.user;
@@ -1162,18 +1448,20 @@
                 var footer = document.createElement('a');
                 footer.href = '/';
                 footer.style.cssText = 'display:block;text-align:center;padding:14px 16px;font-size:13px;font-weight:500;color:#9ca3af;text-decoration:none;';
-                footer.textContent = 'Abuur Dukaankaaga →';
+                footer.textContent = s('storeFooter');
                 document.querySelector('.main-wrap').appendChild(footer);
 
                 hideLoader();
                 showView('storefront');
                 renderStorefront();
             } catch(e) {
-                document.getElementById('appLoader').innerHTML = '<p class="text-gray-400 text-sm">Something went wrong. Please try again.</p>';
+                document.getElementById('appLoader').innerHTML = '<p class="text-gray-400 text-sm">' + s('somethingWrong') + '</p>';
             }
         }
 
         // ===== START =====
+        initWaSelects();
+        applyTranslations(); // apply saved language on load
         var publicStoreMatch = window.location.pathname.match(/^\/?@?([a-z0-9_]{3,30})$/i);
         if (publicStoreMatch) {
             initPublicStore(publicStoreMatch[1]);
