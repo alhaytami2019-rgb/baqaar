@@ -225,7 +225,6 @@
         </div>
         <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
             <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="18"></span><span data-i18n="navProducts">Products</span></div>
-            <div class="nav-item" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="18"></span><span data-i18n="navOrders">Orders</span></div>
             <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
             <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span><span data-i18n="navLinks">Links</span></div>
             <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span><span data-i18n="navProfile">Profile</span></div>
@@ -248,7 +247,6 @@
 
     <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 justify-around items-center py-2 px-1">
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProducts">Products</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="orders"><span class="iconify" data-icon="lucide:receipt-text" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navOrders">Orders</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navLinks">Links</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProfile">Profile</span></div>
@@ -1297,6 +1295,7 @@
                     }).join('') + '</div>';
                 }
             } else { socialsEl.innerHTML = ''; }
+            if (window.Iconify) Iconify.scan(socialsEl);
 
             var grid = document.getElementById('storeGrid');
             grid.style.gridTemplateColumns = '';
@@ -1341,10 +1340,20 @@
 
         document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; });
         document.getElementById('cancelLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.remove('active'); });
+        function normalizeLinkUrl(platform, raw) {
+            var url = (raw || '').trim();
+            if (!url) return '';
+            var bases = { instagram:'https://instagram.com/', tiktok:'https://tiktok.com/@', twitter:'https://x.com/', youtube:'https://youtube.com/@', facebook:'https://facebook.com/', linkedin:'https://linkedin.com/in/' };
+            if (url.charAt(0) === '@') { var b = bases[platform]; return b ? b + url.slice(1) : 'https://' + url.slice(1); }
+            if (!/^https?:\/\//i.test(url)) return 'https://' + url;
+            return url;
+        }
+
         document.getElementById('confirmLinkBtn').addEventListener('click', async function() {
-            var url = document.getElementById('linkUrl').value.trim();
+            var platform = document.getElementById('linkPlatform').value;
+            var url = normalizeLinkUrl(platform, document.getElementById('linkUrl').value);
             if (!url) return;
-            links.push({ platform: document.getElementById('linkPlatform').value, url: url });
+            links.push({ platform: platform, url: url });
             document.getElementById('linkModal').classList.remove('active');
             try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkAdded')); } catch(e) { links.pop(); toast(s('errorAddingLink')); }
         });
