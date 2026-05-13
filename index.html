@@ -467,8 +467,8 @@
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
             <h3 class="font-semibold text-lg mb-4" data-i18n="linkModalTitle">Add a Link</h3>
             <div class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
-                <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">URL or Handle</label><input id="linkUrl" type="text" placeholder="https://… or @handle" data-i18n-ph="urlPh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                <div><label class="block text-sm font-medium mb-2" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="snapchat">Snapchat</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
+                <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">Username or Link</label><input id="linkUrl" type="text" placeholder="myusername" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"><p id="linkUrlHint" class="text-xs text-gray-400 mt-1.5"></p></div>
                 <div class="flex gap-3"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors" data-i18n="addBtn">Add</button></div>
             </div>
         </div>
@@ -715,6 +715,7 @@
         var platformMeta = {
             instagram: { icon: 'mdi:instagram', color: '#E4405F', label: 'Instagram' },
             tiktok: { icon: 'ic:baseline-tiktok', color: '#000000', label: 'TikTok' },
+            snapchat: { icon: 'mdi:snapchat', color: '#FFBD00', label: 'Snapchat' },
             twitter: { icon: 'ri:twitter-x-fill', color: '#000000', label: 'Twitter / X' },
             youtube: { icon: 'mdi:youtube', color: '#FF0000', label: 'YouTube' },
             facebook: { icon: 'mdi:facebook', color: '#1877F2', label: 'Facebook' },
@@ -1356,15 +1357,47 @@
             });
         }
 
-        document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; });
+        document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; updateLinkHint(); });
+        document.getElementById('linkPlatform').addEventListener('change', updateLinkHint);
         document.getElementById('cancelLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.remove('active'); });
+        var PLATFORM_BASES = {
+            instagram: 'https://instagram.com/',
+            tiktok: 'https://tiktok.com/@',
+            snapchat: 'https://snapchat.com/add/',
+            twitter: 'https://x.com/',
+            youtube: 'https://youtube.com/@',
+            facebook: 'https://facebook.com/',
+            linkedin: 'https://linkedin.com/in/'
+        };
+        var PLATFORM_HINTS = {
+            instagram: 'e.g. mystore — becomes instagram.com/mystore',
+            tiktok: 'e.g. mystore — becomes tiktok.com/@mystore',
+            snapchat: 'e.g. mystore — becomes snapchat.com/add/mystore',
+            twitter: 'e.g. mystore — becomes x.com/mystore',
+            youtube: 'e.g. mychannel — becomes youtube.com/@mychannel',
+            facebook: 'e.g. mypage — becomes facebook.com/mypage',
+            linkedin: 'e.g. myname — becomes linkedin.com/in/myname',
+            website: 'e.g. https://mysite.com',
+            other: 'e.g. https://…'
+        };
+
         function normalizeLinkUrl(platform, raw) {
             var url = (raw || '').trim();
             if (!url) return '';
-            var bases = { instagram:'https://instagram.com/', tiktok:'https://tiktok.com/@', twitter:'https://x.com/', youtube:'https://youtube.com/@', facebook:'https://facebook.com/', linkedin:'https://linkedin.com/in/' };
-            if (url.charAt(0) === '@') { var b = bases[platform]; return b ? b + url.slice(1) : 'https://' + url.slice(1); }
+            if (/^https?:\/\//i.test(url)) return url;
+            var base = PLATFORM_BASES[platform];
+            if (base) {
+                var username = url.charAt(0) === '@' ? url.slice(1) : url;
+                return base + username;
+            }
             if (!/^https?:\/\//i.test(url)) return 'https://' + url;
             return url;
+        }
+
+        function updateLinkHint() {
+            var platform = document.getElementById('linkPlatform').value;
+            var hintEl = document.getElementById('linkUrlHint');
+            if (hintEl) hintEl.textContent = PLATFORM_HINTS[platform] || '';
         }
 
         document.getElementById('confirmLinkBtn').addEventListener('click', async function() {
