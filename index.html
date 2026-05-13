@@ -44,6 +44,9 @@
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 10px; cursor: pointer; transition: all 0.15s; color: #6b7280; font-size: 14px; font-weight: 500; user-select: none; }
         .nav-item:hover { background: #f3f4f6; color: #111827; }
         .nav-item.active { background: #eef2ff; color: #6366f1; }
+        .nav-store-item { background: rgba(37,211,102,0.09) !important; color: #16a34a !important; }
+        .nav-store-item:hover { background: rgba(37,211,102,0.16) !important; }
+        .nav-store-item.active { background: rgba(37,211,102,0.22) !important; color: #15803d !important; }
         .product-card { transition: box-shadow 0.2s; }
         .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
         .bento-card { transition: all 0.2s; cursor: pointer; }
@@ -225,7 +228,7 @@
         </div>
         <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
             <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="18"></span><span data-i18n="navProducts">Products</span></div>
-            <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
+            <div class="nav-item nav-store-item" data-view="storefront"><span class="iconify" data-icon="lucide:store" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
             <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span><span data-i18n="navLinks">Links</span></div>
             <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span><span data-i18n="navProfile">Profile</span></div>
             <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span><span data-i18n="navSettings">Settings</span></div>
@@ -247,7 +250,7 @@
 
     <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 justify-around items-center py-2 px-1">
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProducts">Products</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:eye" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="storefront" style="color:#25D366"><span class="iconify" data-icon="lucide:store" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navLinks">Links</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProfile">Profile</span></div>
     </nav>
@@ -584,10 +587,10 @@
                 ob2Bullet2:'Si aad ula wadaagt lifaaqaaga macaamiishu oo eey wax kaga dalbadaan WhatsApp.',
                 ob2Bullet3:'Si aad ula soco inta wax ka iibsatay ganacsigaaga.',
                 ob2StartBtn:'Bilow Ku Darida Alaabada',
-                productsTitle:'Alaabada', productsDesc:'Maamul waxaad iibiso. Ku dar, wax ka beddel, ama beddel helitaanka.',
-                addProductBtn:'Ku Dar Alaabo', statTotal:'Alaabada Guud', statAvailable:'La Heli Karo', statUnavailable:'Lama Heli Karo',
+                productsTitle:'Alaabada', productsDesc:'Maamul waxaad iibiso. Ku dar, wax ka beddel, ama xaqiiqi helitaankooda.',
+                addProductBtn:'Ku Dar Alaabo', statTotal:'Alaabada Guud', statAvailable:'La Heli Karo', statUnavailable:'Aan la heli karin',
                 searchProductsPh:'Raadi alaabada…', showUnavailableLabel:'Muuji kuwa aan la heli karin',
-                noProducts:'Wali alaabo ma jirto. Ku dar kii ugu horreeya kore.',
+                noProducts:'Wax alaab ah kuma jirto. Kusoo dar alaab si macaamiishu kaaga iibsato.',
                 backToProducts:'Ku laabo Alaabada', addProductTitle:'Ku Dar Alaabo', editProductTitle:'Wax Ka Beddel Alaabta',
                 addProductDesc:'Buuxi faahfaahinta hoose. Weligaa waxaad wax ka beddelaysaa dambe.',
                 productImageLabel:'Sawirka Alaabta', uploadClick:'Guji si aad u soo geliso sawir', uploadHint:'JPG, PNG ilaa 500KB',
@@ -612,7 +615,7 @@
                 urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
                 profileTitle:'Profaylka', profileDesc:'Sida aad macaamiishaada ugu muuqato.',
                 profilePhotoLabel:'Sawirka Profaylka', profilePhotoHint:'Sawirka afar-geeska ah ayaa ugu fiican',
-                displayNameLabel:'Magaca La Muujinayo', usernameLabel:'Magaca Isticmaalaha', bioLabel:'Taariikh Nololeed',
+                displayNameLabel:'Magaca La Muujinayo', usernameLabel:'Magaca Isticmaalaha', bioLabel:'Kugu saabsan',
                 saveProfileBtn:'Kaydi Profaylka',
                 settingsTitle:'Dejinta', settingsDesc:'Hagaaji dukaankaaga.',
                 gridLayoutLabel:'Qaabeynta Shabakada Dukaanka', gridLayoutHint:'Sida alaabada loogu habeeyo dukaankaaga',
@@ -639,7 +642,7 @@
                 productDeleted:'Alaabta waa la tirtiray', errorDeleting:'Khalad tirtiridda',
                 markedAvailable:'Waxaa lagu calaamadeeyay la heli karo', markedUnavailable:'Waxaa lagu calaamadeeyay lama heli karo',
                 errorSaving:'Khalad kaydinta', noDesc:'Faahfaahin lama bixin.',
-                badgeAvailable:'La Heli Karo', badgeUnavailable:'Lama Heli Karo',
+                badgeAvailable:'La Heli Karo', badgeUnavailable:'Aan la heli karin',
                 editProductBtn:'Wax Ka Beddel Alaabta', orderMarked:'Dalabka waxaa lagu calaamadeeyay',
                 errorUpdatingOrder:'Khalad cusboonaysiinta dalabka', catAll:'Dhammaan',
                 linkRemoved:'Xiriirka waa la tirtiray', errorRemovingLink:'Khalad tirtiridda xiriirka',
@@ -965,7 +968,7 @@
             var el = document.getElementById('view-' + name);
             if (el) { el.classList.add('active'); el.classList.add('fade-up'); setTimeout(function() { el.classList.remove('fade-up'); }, 300); }
             document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.toggle('active', i.dataset.view === name); });
-            document.querySelectorAll('.nav-item-m').forEach(function(i) { i.style.color = i.dataset.view === name ? '#6366f1' : '#9ca3af'; });
+            document.querySelectorAll('.nav-item-m').forEach(function(i) { var isStore = i.dataset.view === 'storefront'; i.style.color = isStore ? '#25D366' : (i.dataset.view === name ? '#6366f1' : '#9ca3af'); });
             if (name === 'products') renderProducts();
             if (name === 'orders') renderOrders();
             if (name === 'storefront') renderStorefront();
