@@ -217,8 +217,8 @@
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-lg flex items-center justify-center text-base" style="background:#25D366">🛍️</div>
-                <div>
-                    <div class="font-semibold text-sm">Lifaaq</div>
+                <div class="min-w-0">
+                    <div id="sidebarStoreName" class="font-semibold text-sm truncate">Lifaaq</div>
                     <div class="text-xs text-gray-400" data-i18n="appTagline">Digital Storefront</div>
                 </div>
             </div>
@@ -231,13 +231,17 @@
             <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span><span data-i18n="navProfile">Profile</span></div>
             <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span><span data-i18n="navSettings">Settings</span></div>
         </nav>
-        <div class="p-4 border-t border-gray-100">
+        <div class="p-4 border-t border-gray-100 space-y-3">
             <div class="flex items-center gap-3">
                 <img id="sidebarAvatar" src="" class="w-9 h-9 rounded-full object-cover" alt="">
                 <div class="min-w-0">
                     <div id="sidebarName" class="text-sm font-medium truncate"></div>
                     <div id="sidebarUsername" class="text-xs text-gray-400 truncate"></div>
                 </div>
+            </div>
+            <div class="flex items-center bg-gray-100 rounded-xl p-1 gap-1">
+                <button onclick="setLang('en')" class="lang-btn flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all text-gray-500">EN</button>
+                <button onclick="setLang('so')" class="lang-btn flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all text-gray-500">SO</button>
             </div>
         </div>
     </aside>
@@ -401,6 +405,13 @@
                         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="showUnavailMobile">Show unavailable</p></div><div id="mobSetShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
                         <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveSettingsBtn">Save Settings</span></button></div>
                     </form>
+                    <div class="mt-8 border-t border-gray-200 pt-6">
+                        <p class="text-sm font-medium mb-3">Language / Luqadda</p>
+                        <div class="flex items-center bg-gray-100 rounded-xl p-1 gap-1 max-w-[140px]">
+                            <button onclick="setLang('en')" class="lang-btn flex-1 py-1.5 rounded-lg text-sm font-semibold transition-all text-gray-500">EN</button>
+                            <button onclick="setLang('so')" class="lang-btn flex-1 py-1.5 rounded-lg text-sm font-semibold transition-all text-gray-500">SO</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -569,11 +580,11 @@
                 ob1WaLabel:'Lambarka WhatsApp', ob1WaSub:'(ikhtiyaari)', ob1WaPh:'+252 61 000 0000',
                 ob1WaHint:'Macaamiishu waxay isticmaalaan si ay ugaga dalban dukaankaaga.',
                 ob1CreateBtn:'Samee Dukaankayga',
-                ob2Title:'Waxaad noqotay mid socda! 🎉', ob2Subtitle:'Dukaankaaga waa diyaar. La wadaag adduunka.',
+                ob2Title:'Waad dhawdahay! 🎉', ob2Subtitle:'Dukaankaaga waa diyaar. La wadaag adduunka.',
                 ob2StoreLinkLabel:'Xiriirkaaga dukaanka', ob2CopyBtn:'Koobiyee',
-                ob2Bullet1:'Ku dar alaabadaada oo dejiso qiimaha',
-                ob2Bullet2:'La wadaag xiriirkaaga si macaamiishu ugu dalban karaan WhatsApp',
-                ob2Bullet3:'Halkaan ku raac dalabada oo maamul dukaankaaga',
+                ob2Bullet1:'Si aad ugu darto alaabadaada iyo qiimahooda.',
+                ob2Bullet2:'Si aad ula wadaagt lifaaqaaga macaamiishu oo eey wax kaga dalbadaan WhatsApp.',
+                ob2Bullet3:'Si aad ula soco inta wax ka iibsatay ganacsigaaga.',
                 ob2StartBtn:'Bilow Ku Darida Alaabada',
                 productsTitle:'Alaabada', productsDesc:'Maamul waxaad iibiso. Ku dar, wax ka beddel, ama beddel helitaanka.',
                 addProductBtn:'Ku Dar Alaabo', statTotal:'Alaabada Guud', statAvailable:'La Heli Karo', statUnavailable:'Lama Heli Karo',
@@ -667,9 +678,9 @@
             });
             // Sync lang toggle button styles
             document.querySelectorAll('.lang-btn').forEach(function(btn) {
-                var active = btn.id === 'lang' + currentLang.charAt(0).toUpperCase() + currentLang.slice(1) + 'Btn';
-                btn.className = 'lang-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ' +
-                    (active ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500');
+                var active = btn.textContent.trim().toLowerCase() === currentLang;
+                var base = btn.className.replace(/bg-white|shadow-sm|text-gray-900|text-gray-500/g, '').trim();
+                btn.className = base + ' ' + (active ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500');
             });
         }
 
@@ -990,6 +1001,7 @@
             document.getElementById('sidebarAvatar').src = profile.avatar;
             document.getElementById('sidebarName').textContent = profile.name;
             document.getElementById('sidebarUsername').textContent = '@' + profile.username;
+            document.getElementById('sidebarStoreName').textContent = profile.name;
         }
 
         function syncMobileSettings() {
