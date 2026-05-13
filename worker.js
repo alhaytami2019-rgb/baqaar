@@ -17,6 +17,17 @@ async function verifyTurnstile(token, secret, ip) {
   return data.success === true;
 }
 
+const SOMALI_PREFIXES = ['61','77','63','90','70','62','65','66'];
+function isValidWhatsapp(wa) {
+  if (!wa) return true;
+  if (!/^\+\d{7,15}$/.test(wa)) return false;
+  if (wa.startsWith('+252')) {
+    const local = wa.slice(4);
+    return local.length === 8 && SOMALI_PREFIXES.some(p => local.startsWith(p));
+  }
+  return true;
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -88,7 +99,7 @@ async function handleAPI(request, env, url) {
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
     if (existing) return err('Username taken', 409);
     const waRaw = (body.whatsapp || '').trim();
-    if (waRaw && !/^\+\d{7,15}$/.test(waRaw)) return err('Invalid WhatsApp number format', 400);
+    if (!isValidWhatsapp(waRaw)) return err('Invalid WhatsApp number format', 400);
     const id = crypto.randomUUID();
     await env.DB.prepare(
       'INSERT INTO users (id, username, display_name, whatsapp) VALUES (?, ?, ?, ?)'
@@ -158,7 +169,7 @@ async function handleAPI(request, env, url) {
   if (path === '/me/settings' && method === 'PUT') {
     const b = await request.json();
     const waRaw = (b.whatsapp || '').trim();
-    if (waRaw && !/^\+\d{7,15}$/.test(waRaw)) return err('Invalid WhatsApp number format', 400);
+    if (!isValidWhatsapp(waRaw)) return err('Invalid WhatsApp number format', 400);
     await env.DB.prepare(
       'UPDATE users SET whatsapp = ?, currency = ?, grid_cols = ?, show_unavailable = ?, social_bento = ? WHERE id = ?'
     ).bind(waRaw, b.currency || 'USD', b.grid_cols || 2, b.show_unavailable ? 1 : 0, b.social_bento ? 1 : 0, userId).run();

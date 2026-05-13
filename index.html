@@ -549,6 +549,7 @@
                 errEnterDisplayName:'Please enter a display name.',
                 errCompleteCheck:'Please complete the security check.',
                 errInvalidWa:'Please enter a valid WhatsApp number (at least 4 digits after the country code).',
+                errInvalidSomaliWa:'Somalia numbers must be 8 digits starting with 61 or 77 (Hormuud), 63 (Telesom), 90 or 70 (Golis), or 62, 65 or 66 (Somtel).',
                 somethingWrong:'Something went wrong. Please try again.',
                 imageSizeError:'Image must be under 500KB',
                 productUpdated:'Product updated', productAdded:'Product added',
@@ -636,6 +637,7 @@
                 errEnterDisplayName:'Fadlan geli magaca la muujinayo.',
                 errCompleteCheck:'Fadlan dhami hubinta amniga.',
                 errInvalidWa:'Fadlan geli lambarka WhatsApp oo sax ah (ugu yaraan 4 lambar ka dib koodka dalka).',
+                errInvalidSomaliWa:'Lambarka Soomaaliya waa 8 lambar oo bilaabma: 61/77 (Hormuud), 63 (Telesom), 90/70 (Golis), ama 62/65/66 (Somtel).',
                 somethingWrong:'Wax khaldanaaday. Fadlan isku day mar kale.',
                 imageSizeError:'Sawirku waa inuu ka yar yahay 500KB',
                 productUpdated:'Alaabta waa la cusboonaysiiyay', productAdded:'Alaabta waa lagu daray',
@@ -770,12 +772,18 @@
             else { inp.value = digits; }
         }
 
-        function validateWaInput(inputId) {
+        var SOMALI_PREFIXES = ['61','77','63','90','70','62','65','66'];
+        function validateWaInput(inputId, selectId) {
             var inp = document.getElementById(inputId);
-            if (!inp) return true;
+            if (!inp) return null;
             var digits = inp.value.replace(/[^0-9]/g, '');
-            if (!digits) return true; // empty is OK (field is optional)
-            return digits.length >= 4 && digits.length <= 12;
+            if (!digits) return null; // empty is OK (field is optional)
+            var sel = selectId ? document.getElementById(selectId) : null;
+            if (sel && sel.value === '252') {
+                var ok = digits.length === 8 && SOMALI_PREFIXES.indexOf(digits.slice(0, 2)) !== -1;
+                return ok ? null : 'errInvalidSomaliWa';
+            }
+            return (digits.length >= 4 && digits.length <= 12) ? null : 'errInvalidWa';
         }
 
         // ===== API =====
@@ -886,7 +894,8 @@
             if (!username) { errorEl.textContent = s('errEnterUsername'); errorEl.classList.remove('hidden'); return; }
             if (!obUsernameValid) { errorEl.textContent = s('errChooseUsername'); errorEl.classList.remove('hidden'); return; }
             if (!displayName) { errorEl.textContent = s('errEnterDisplayName'); errorEl.classList.remove('hidden'); return; }
-            if (whatsapp && !validateWaInput('obWhatsapp')) { errorEl.textContent = s('errInvalidWa'); errorEl.classList.remove('hidden'); return; }
+            var waErr = validateWaInput('obWhatsapp', 'obWaCountry');
+            if (waErr) { errorEl.textContent = s(waErr); errorEl.classList.remove('hidden'); return; }
 
             var turnstileToken = document.querySelector('[name="cf-turnstile-response"]');
             if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = s('errCompleteCheck'); errorEl.classList.remove('hidden'); return; }
@@ -1415,7 +1424,7 @@
 
         document.getElementById('settingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (!validateWaInput('setWhatsapp')) { toast(s('errInvalidWa')); return; }
+            var waErr = validateWaInput('setWhatsapp', 'setWaCountry'); if (waErr) { toast(s(waErr)); return; }
             settings.whatsapp = getWaValue('setWaCountry', 'setWhatsapp');
             settings.currency = document.getElementById('setCurrency').value;
             settings.showUnavailable = document.getElementById('setShowUnavailable').classList.contains('on');
@@ -1425,7 +1434,7 @@
 
         document.getElementById('mobileSettingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (!validateWaInput('mobSetWhatsapp')) { toast(s('errInvalidWa')); return; }
+            var waErr = validateWaInput('mobSetWhatsapp', 'mobWaCountry'); if (waErr) { toast(s(waErr)); return; }
             settings.whatsapp = getWaValue('mobWaCountry', 'mobSetWhatsapp');
             settings.currency = document.getElementById('mobSetCurrency').value;
             settings.showUnavailable = document.getElementById('mobSetShowUnavailable').classList.contains('on');
