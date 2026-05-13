@@ -139,12 +139,14 @@
                             </div>
                         </div>
                         <p id="obUsernameHint" class="text-xs text-gray-400 mt-1.5" data-i18n="usernameHint">Letters, numbers, underscores. 3–30 chars.</p>
+                        <p id="obUsernameError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2" data-i18n="ob1DisplayNameLabel">Display Name</label>
                         <input id="obDisplayName" type="text" placeholder="e.g. Sarah's Boutique"
                             data-i18n-ph="ob1DisplayNamePh"
                             class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm">
+                        <p id="obDisplayNameError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2"><span data-i18n="ob1WaLabel">WhatsApp Number</span> <span class="text-gray-400 font-normal" data-i18n="ob1WaSub">(optional)</span></label>
@@ -154,6 +156,7 @@
                             <input id="obWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-3 border-0 text-sm focus:outline-none min-w-0 bg-transparent">
                         </div>
                         <p class="text-xs text-gray-400 mt-1.5" data-i18n="ob1WaHint">Customers will use this to order from your store.</p>
+                        <p id="obWhatsappError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible"></div>
                     <button id="obCreateBtn"
@@ -889,13 +892,16 @@
             var displayName = document.getElementById('obDisplayName').value.trim();
             var whatsapp = getWaValue('obWaCountry', 'obWhatsapp');
             var errorEl = document.getElementById('obCreateError');
-            errorEl.classList.add('hidden');
+            var usernameErrEl = document.getElementById('obUsernameError');
+            var displayNameErrEl = document.getElementById('obDisplayNameError');
+            var waErrEl = document.getElementById('obWhatsappError');
+            [errorEl, usernameErrEl, displayNameErrEl, waErrEl].forEach(function(el) { el.textContent = ''; el.classList.add('hidden'); });
 
-            if (!username) { errorEl.textContent = s('errEnterUsername'); errorEl.classList.remove('hidden'); return; }
-            if (!obUsernameValid) { errorEl.textContent = s('errChooseUsername'); errorEl.classList.remove('hidden'); return; }
-            if (!displayName) { errorEl.textContent = s('errEnterDisplayName'); errorEl.classList.remove('hidden'); return; }
+            if (!username) { usernameErrEl.textContent = s('errEnterUsername'); usernameErrEl.classList.remove('hidden'); return; }
+            if (!obUsernameValid) { usernameErrEl.textContent = s('errChooseUsername'); usernameErrEl.classList.remove('hidden'); return; }
+            if (!displayName) { displayNameErrEl.textContent = s('errEnterDisplayName'); displayNameErrEl.classList.remove('hidden'); return; }
             var waErr = validateWaInput('obWhatsapp', 'obWaCountry');
-            if (waErr) { errorEl.textContent = s(waErr); errorEl.classList.remove('hidden'); return; }
+            if (waErr) { waErrEl.textContent = s(waErr); waErrEl.classList.remove('hidden'); return; }
 
             var turnstileToken = document.querySelector('[name="cf-turnstile-response"]');
             if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = s('errCompleteCheck'); errorEl.classList.remove('hidden'); return; }
