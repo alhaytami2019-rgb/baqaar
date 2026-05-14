@@ -37,16 +37,13 @@
         ::-webkit-scrollbar { width: 5px; height: 0; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: transparent; }
-        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #111827; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 9999; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #111827; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 9999; transition: transform 0.2s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         .toast.show { transform: translateX(-50%) translateY(0); }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 16px; }
         .modal-overlay.active { display: flex; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 10px; cursor: pointer; transition: all 0.15s; color: #6b7280; font-size: 14px; font-weight: 500; user-select: none; }
         .nav-item:hover { background: #f3f4f6; color: #111827; }
         .nav-item.active { background: #eef2ff; color: #6366f1; }
-        .nav-store-item { background: rgba(37,211,102,0.09) !important; color: #16a34a !important; }
-        .nav-store-item:hover { background: rgba(37,211,102,0.16) !important; }
-        .nav-store-item.active { background: rgba(37,211,102,0.22) !important; color: #15803d !important; }
         .product-card { transition: box-shadow 0.2s; }
         .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
         .bento-card { transition: all 0.2s; cursor: pointer; }
@@ -54,8 +51,8 @@
         .upload-zone { border: 2px dashed #d1d5db; border-radius: 12px; transition: all 0.2s; cursor: pointer; }
         .upload-zone:hover { border-color: #6366f1; background: #eef2ff; }
         .save-bar { position: sticky; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-top: 1px solid #e5e7eb; padding: 16px 0; z-index: 10; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-up { animation: fadeUp 0.3s ease-out forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp 0.15s ease-out forwards; }
         .grid-opt { width: 56px; height: 56px; border: 2px solid #e5e7eb; border-radius: 10px; display: grid; gap: 3px; padding: 8px; cursor: pointer; transition: all 0.15s; }
         .grid-opt:hover { border-color: #a5b4fc; }
         .grid-opt.active { border-color: #6366f1; background: #eef2ff; }
@@ -66,6 +63,7 @@
             .mobile-nav { display: flex !important; }
             .main-wrap { margin-left: 0 !important; padding-bottom: 80px !important; }
             .store-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .save-bar { bottom: 64px !important; z-index: 60 !important; }
         }
         @media (min-width: 769px) {
             .mobile-nav { display: none !important; }
@@ -117,6 +115,12 @@
                 </div>
             </div>
 
+            <!-- Auth tabs -->
+            <div id="authTabsRow" class="flex bg-gray-100 rounded-xl p-1 mb-6">
+                <button id="tabSignup" onclick="showAuthTab('signup')" class="auth-tab flex-1 py-2 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-gray-900" data-i18n="tabCreateStore">Create Store</button>
+                <button id="tabLogin" onclick="showAuthTab('login')" class="auth-tab flex-1 py-2 rounded-lg text-sm font-semibold transition-all text-gray-500" data-i18n="tabLogIn">Log In</button>
+            </div>
+
             <!-- Step 1: Create store -->
             <div id="ob-step1" class="ob-step active">
                 <div class="text-center mb-8">
@@ -157,6 +161,13 @@
                         </div>
                         <p class="text-xs text-gray-400 mt-1.5" data-i18n="ob1WaHint">Customers will use this to order from your store.</p>
                         <p id="obWhatsappError" class="text-xs text-red-500 mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2" data-i18n="ob1PasswordLabel">Password</label>
+                        <input id="obPassword" type="password" placeholder="Min. 6 characters"
+                            data-i18n-ph="ob1PasswordPh"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm" autocomplete="new-password">
+                        <p id="obPasswordError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible"></div>
                     <button id="obCreateBtn"
@@ -214,6 +225,40 @@
                 </button>
             </div>
 
+            <!-- Login panel -->
+            <div id="ob-login" class="ob-step">
+                <div class="text-center mb-8">
+                    <div class="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="iconify text-white" data-icon="lucide:log-in" data-width="26"></span>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-1" data-i18n="loginTitle">Welcome back</h1>
+                    <p class="text-gray-500 text-sm" data-i18n="loginSubtitle">Log in to your store.</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2" data-i18n="ob1UsernameLabel">Username</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">@</span>
+                            <input id="loginUsername" type="text" placeholder="yourstore"
+                                class="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl text-sm"
+                                maxlength="30" autocomplete="username" spellcheck="false">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2" data-i18n="ob1PasswordLabel">Password</label>
+                        <input id="loginPassword" type="password" placeholder="••••••••"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm" autocomplete="current-password">
+                    </div>
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible" data-response-field-name="cf-turnstile-login"></div>
+                    <button id="loginBtn"
+                        class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
+                        <span class="iconify" data-icon="lucide:log-in" data-width="16"></span>
+                        <span data-i18n="loginBtnLabel">Log In</span>
+                    </button>
+                    <p id="loginError" class="text-xs text-red-500 text-center hidden"></p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -225,13 +270,13 @@
                 <div class="w-9 h-9 rounded-lg flex items-center justify-center text-base" style="background:#25D366">🛍️</div>
                 <div class="min-w-0">
                     <div id="sidebarStoreName" class="font-semibold text-sm truncate">Lifaaq</div>
-                    <div class="text-xs text-gray-400" data-i18n="appTagline">Digital Storefront</div>
+                    <div id="sidebarTagline" class="text-xs text-gray-400">@username</div>
                 </div>
             </div>
         </div>
         <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
             <div class="nav-item active" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="18"></span><span data-i18n="navProducts">Products</span></div>
-            <div class="nav-item nav-store-item" data-view="storefront"><span class="iconify" data-icon="lucide:store" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
+            <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:store" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
             <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span><span data-i18n="navLinks">Links</span></div>
             <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span><span data-i18n="navProfile">Profile</span></div>
             <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span><span data-i18n="navSettings">Settings</span></div>
@@ -248,12 +293,13 @@
                 <button onclick="setLang('en')" class="lang-btn flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all text-gray-500">EN</button>
                 <button onclick="setLang('so')" class="lang-btn flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all text-gray-500">SO</button>
             </div>
+            <button id="logoutBtn" class="w-full flex items-center gap-2 text-xs text-gray-400 hover:text-red-500 transition-colors py-1"><span class="iconify" data-icon="lucide:log-out" data-width="13"></span><span data-i18n="logoutBtn">Log out</span></button>
         </div>
     </aside>
 
     <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 justify-around items-center py-2 px-1">
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="products" style="color:#6366f1"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProducts">Products</span></div>
-        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer" data-view="storefront" style="color:#25D366"><span class="iconify" data-icon="lucide:store" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProducts">Products</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:store" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navLinks">Links</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProfile">Profile</span></div>
     </nav>
@@ -371,7 +417,7 @@
                 </div>
                 <div id="linksGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6"></div>
                 <button id="addLinkBtn" class="w-full border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span><span data-i18n="addLinkBtn">Add a Link</span></button>
-                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveLinksBtn">Save Links</span></button></div>
+                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" type="button" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveLinksBtn">Save Links</span></button></div>
             </div>
         </div>
 
@@ -404,7 +450,7 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="socialBentoMobile">Socials as bento cards</p></div><div id="mobSetSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
-                        <div><label class="block text-sm font-medium mb-2" data-i18n="waNumberLabel">WhatsApp Number</label><div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white"><span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span><select id="mobWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-2.5 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select><input id="mobSetWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-2.5 border-0 text-sm focus:outline-none min-w-0 bg-transparent"></div></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="waNumberLabel">WhatsApp Number</label><div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white"><span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span><select id="mobWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-2.5 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select><input id="mobSetWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-2.5 border-0 text-sm focus:outline-none min-w-0 bg-transparent"></div><p id="mobSetWaError" class="text-xs text-red-500 mt-1 hidden"></p></div>
                         <div><label class="block text-sm font-medium mb-2" data-i18n="currencyLabel">Currency</label><select id="mobSetCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="NGN">NGN</option><option value="KES">KES</option><option value="GHS">GHS</option></select></div>
                         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="showUnavailMobile">Show unavailable</p></div><div id="mobSetShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
                         <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveSettingsBtn">Save Settings</span></button></div>
@@ -435,7 +481,7 @@
                         <p class="text-xs text-gray-400 mt-2" data-i18n="gridLayoutHint">How products are arranged on your storefront</p>
                     </div>
                     <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="socialBentoLabel">Show socials as bento cards</p><p class="text-xs text-gray-400 mt-0.5" data-i18n="socialBentoDesc">Display your social links as cards instead of small icons</p></div><div id="setSocialBento" class="toggle" onclick="this.classList.toggle('on')"></div></div>
-                    <div><label class="block text-sm font-medium mb-2" data-i18n="waNumberLabel">WhatsApp Number</label><div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white"><span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span><select id="setWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-2.5 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select><input id="setWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-2.5 border-0 text-sm focus:outline-none min-w-0 bg-transparent"></div><p class="text-xs text-gray-400 mt-1.5" data-i18n="waNumberHint">Used for the contact button on your storefront</p></div>
+                    <div><label class="block text-sm font-medium mb-2" data-i18n="waNumberLabel">WhatsApp Number</label><div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white"><span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span><select id="setWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-2.5 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select><input id="setWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-2.5 border-0 text-sm focus:outline-none min-w-0 bg-transparent"></div><p id="setWaError" class="text-xs text-red-500 mt-1 hidden"></p><p id="setWaHint" class="text-xs text-gray-400 mt-1.5" data-i18n="waNumberHint">Used for the contact button on your storefront</p></div>
                     <div><label class="block text-sm font-medium mb-2" data-i18n="currencyLabel">Currency</label><select id="setCurrency" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="USD">USD — US Dollar ($)</option><option value="EUR">EUR — Euro (€)</option><option value="GBP">GBP — British Pound (£)</option><option value="NGN">NGN — Nigerian Naira (₦)</option><option value="KES">KES — Kenyan Shilling (KSh)</option><option value="GHS">GHS — Ghanaian Cedi (₵)</option></select></div>
                     <div class="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4"><div><p class="text-sm font-medium" data-i18n="showUnavailProdLabel">Show unavailable products</p><p class="text-xs text-gray-400 mt-0.5" data-i18n="showUnavailProdDesc">Visitors will see out-of-stock items marked as unavailable</p></div><div id="setShowUnavailable" class="toggle" onclick="this.classList.toggle('on')"></div></div>
                     <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveSettingsBtn">Save Settings</span></button></div>
@@ -496,6 +542,12 @@
                 ob1DisplayNameLabel:'Display Name', ob1DisplayNamePh:"e.g. Sarah's Boutique",
                 ob1WaLabel:'WhatsApp Number', ob1WaSub:'(optional)', ob1WaPh:'+1 555 000 0000',
                 ob1WaHint:'Customers will use this to order from your store.',
+                ob1PasswordLabel:'Password', ob1PasswordPh:'Min. 6 characters',
+                errPasswordTooShort:'Password must be at least 6 characters.',
+                errEnterPassword:'Please enter your password.',
+                tabCreateStore:'Create Store', tabLogIn:'Log In',
+                loginTitle:'Welcome back', loginSubtitle:'Log in to your store.',
+                loginBtnLabel:'Log In', loginInvalidCreds:'Invalid username or password.',
                 ob1CreateBtn:'Create My Store',
                 ob2Title:"You're live! 🎉", ob2Subtitle:'Your storefront is ready. Share it with the world.',
                 ob2StoreLinkLabel:'Your store link', ob2CopyBtn:'Copy',
@@ -552,7 +604,10 @@
                 errEnterDisplayName:'Please enter a display name.',
                 errCompleteCheck:'Please complete the security check.',
                 errInvalidWa:'Please enter a valid WhatsApp number (at least 4 digits after the country code).',
-                errInvalidSomaliWa:'Somalia numbers must be 8 digits starting with 61 or 77 (Hormuud), 63 (Telesom), 90 or 70 (Golis), or 62, 65 or 66 (Somtel).',
+                errInvalidSomaliWa:'Please correct your number.',
+                errSomaliWaLength:'Somalia numbers must be exactly 9 digits after +252.',
+                errSomaliWaPrefix:'Number must start with 61, 77, 63, 90, 70, 62, 65, or 66.',
+                logoutBtn:'Log out',
                 somethingWrong:'Something went wrong. Please try again.',
                 imageSizeError:'Image must be under 500KB',
                 productUpdated:'Product updated', productAdded:'Product added',
@@ -584,6 +639,12 @@
                 ob1DisplayNameLabel:'Magaca La Muujinayo', ob1DisplayNamePh:'tusaale. Dukaanka Faadumo',
                 ob1WaLabel:'Lambarka WhatsApp', ob1WaSub:'(ikhtiyaari)', ob1WaPh:'+252 61 000 0000',
                 ob1WaHint:'Macaamiishu waxay isticmaalaan si ay ugaga dalban dukaankaaga.',
+                ob1PasswordLabel:'Furaha Sirta', ob1PasswordPh:'Ugu yaraan 6 xaraf',
+                errPasswordTooShort:'Furaha sirtu waa inuu ahaadaa ugu yaraan 6 xaraf.',
+                errEnterPassword:'Fadlan geli furaha sirta.',
+                tabCreateStore:'Samee Dukaanka', tabLogIn:'Gal',
+                loginTitle:'Ku soo dhawoow', loginSubtitle:'Gal dukaankaaga.',
+                loginBtnLabel:'Gal', loginInvalidCreds:'Magaca isticmaalaha ama furaha sirtu waa khalad.',
                 ob1CreateBtn:'Samee Dukaankayga',
                 ob2Title:'Waad dhawdahay! 🎉', ob2Subtitle:'Dukaankaaga waa diyaar. La wadaag adduunka.',
                 ob2StoreLinkLabel:'Xiriirkaaga dukaanka', ob2CopyBtn:'Koobiyee',
@@ -640,7 +701,10 @@
                 errEnterDisplayName:'Fadlan geli magaca la muujinayo.',
                 errCompleteCheck:'Fadlan dhami hubinta amniga.',
                 errInvalidWa:'Fadlan geli lambarka WhatsApp oo sax ah (ugu yaraan 4 lambar ka dib koodka dalka).',
-                errInvalidSomaliWa:'Lambarka Soomaaliya waa 8 lambar oo bilaabma: 61/77 (Hormuud), 63 (Telesom), 90/70 (Golis), ama 62/65/66 (Somtel).',
+                errInvalidSomaliWa:'Fadlan iska sax number ka.',
+                errSomaliWaLength:'Lambarka Soomaaliya waa in uu leeyahay sagaal (9) lambar ka dib +252.',
+                errSomaliWaPrefix:'Lambarka waa in uu ku bilaabmaa 61, 77, 63, 90, 70, 62, 65, ama 66.',
+                logoutBtn:'Ka bax',
                 somethingWrong:'Wax khaldanaaday. Fadlan isku day mar kale.',
                 imageSizeError:'Sawirku waa inuu ka yar yahay 500KB',
                 productUpdated:'Alaabta waa la cusboonaysiiyay', productAdded:'Alaabta waa lagu daray',
@@ -652,13 +716,13 @@
                 errorUpdatingOrder:'Khalad cusboonaysiinta dalabka', catAll:'Dhammaan',
                 linkRemoved:'Xiriirka waa la tirtiray', errorRemovingLink:'Khalad tirtiridda xiriirka',
                 linkAdded:'Xiriirka waa lagu daray', errorAddingLink:'Khalad ku darista xiriirka',
-                linksSaved:'Xiriirrada waa la keydsaday', errorSavingLinks:'Khalad kaydinta xiriirrada',
+                linksSaved:'Isbedelka waa la keydiyay', errorSavingLinks:'Khalad kaydinta xiriirrada',
                 profileSaved:'Profaylka waa la keydsaday', settingsSaved:'Dejinta waa la keydsaday',
                 errorSavingSettings:'Khalad kaydinta dejinta',
                 storeNotFound:'Dukaanka lama helin.', goToLifaaq:'Aad Lifaaq',
                 linkCopied:'Xiriirka lagu koobiyeeyay!',
                 waOrderMsg:"Salaan! Waxaan jeclaan lahaa inaan dalbo *{name}* ({price}). Ma heli karaa?",
-                waContactMsg:"Salaan! Waxaan ka helay dukaankaaga waxaana jeclaan lahaa inaan wax badan ka ogaado alaabadaada.",
+                waContactMsg:"Salaan! Waxaan ka lifaaqaaga, waxaana jeclaan lahaa inaan wax badan ka ogaado alaabadaada aad iibiso.",
                 waOrderUpdateMsg:"Salaan {customer}! Tani waa wariye ku saabsan dalabkaaga *{orderId}*. ",
                 storeFooter:'Abuur Dukaankaaga →',
                 statusPending:'Sugaya', statusConfirmed:'La Xaqiijiyay', statusDelivered:'La Gadhsiiyay',
@@ -781,11 +845,12 @@
             var inp = document.getElementById(inputId);
             if (!inp) return null;
             var digits = inp.value.replace(/[^0-9]/g, '');
-            if (!digits) return null; // empty is OK (field is optional)
+            if (!digits) return null;
             var sel = selectId ? document.getElementById(selectId) : null;
             if (sel && sel.value === '252') {
-                var ok = digits.length === 8 && SOMALI_PREFIXES.indexOf(digits.slice(0, 2)) !== -1;
-                return ok ? null : 'errInvalidSomaliWa';
+                if (digits.length !== 9) return 'errSomaliWaLength';
+                if (SOMALI_PREFIXES.indexOf(digits.slice(0, 2)) === -1) return 'errSomaliWaPrefix';
+                return null;
             }
             return (digits.length >= 4 && digits.length <= 12) ? null : 'errInvalidWa';
         }
@@ -841,6 +906,8 @@
                 renderProducts();
                 renderOrders();
                 renderLinks();
+                var hashView = window.location.hash.replace('#', '');
+                showView(VALID_VIEWS.indexOf(hashView) !== -1 ? hashView : 'products');
             } catch (e) {
                 localStorage.removeItem('lifaaq_sid');
                 userId = null;
@@ -850,7 +917,17 @@
         }
 
         function hideLoader() { document.getElementById('appLoader').classList.add('hidden'); }
-        function showOnboarding() { hideLoader(); document.getElementById('onboardingOverlay').classList.remove('hidden'); }
+        function showOnboarding() { hideLoader(); document.getElementById('onboardingOverlay').classList.remove('hidden'); showAuthTab('signup'); }
+
+        function showAuthTab(tab) {
+            var isSignup = tab === 'signup';
+            document.getElementById('tabSignup').className = 'auth-tab flex-1 py-2 rounded-lg text-sm font-semibold transition-all ' + (isSignup ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500');
+            document.getElementById('tabLogin').className = 'auth-tab flex-1 py-2 rounded-lg text-sm font-semibold transition-all ' + (!isSignup ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500');
+            document.getElementById('ob-step1').classList.toggle('active', isSignup);
+            document.getElementById('ob-step2').classList.remove('active');
+            document.getElementById('ob-login').classList.toggle('active', !isSignup);
+            document.getElementById('authTabsRow').style.display = isSignup ? '' : 'flex';
+        }
 
         // ===== ONBOARDING =====
         var obUsernameTimer = null;
@@ -891,16 +968,19 @@
         document.getElementById('obCreateBtn').addEventListener('click', async function() {
             var username = document.getElementById('obUsername').value.trim();
             var displayName = document.getElementById('obDisplayName').value.trim();
+            var password = document.getElementById('obPassword').value;
             var whatsapp = getWaValue('obWaCountry', 'obWhatsapp');
             var errorEl = document.getElementById('obCreateError');
             var usernameErrEl = document.getElementById('obUsernameError');
             var displayNameErrEl = document.getElementById('obDisplayNameError');
+            var passwordErrEl = document.getElementById('obPasswordError');
             var waErrEl = document.getElementById('obWhatsappError');
-            [errorEl, usernameErrEl, displayNameErrEl, waErrEl].forEach(function(el) { el.textContent = ''; el.classList.add('hidden'); });
+            [errorEl, usernameErrEl, displayNameErrEl, passwordErrEl, waErrEl].forEach(function(el) { el.textContent = ''; el.classList.add('hidden'); });
 
             if (!username) { usernameErrEl.textContent = s('errEnterUsername'); usernameErrEl.classList.remove('hidden'); return; }
             if (!obUsernameValid) { usernameErrEl.textContent = s('errChooseUsername'); usernameErrEl.classList.remove('hidden'); return; }
             if (!displayName) { displayNameErrEl.textContent = s('errEnterDisplayName'); displayNameErrEl.classList.remove('hidden'); return; }
+            if (!password || password.length < 6) { passwordErrEl.textContent = s('errPasswordTooShort'); passwordErrEl.classList.remove('hidden'); return; }
             var waErr = validateWaInput('obWhatsapp', 'obWaCountry');
             if (waErr) { waErrEl.textContent = s(waErr); waErrEl.classList.remove('hidden'); return; }
 
@@ -910,13 +990,14 @@
             this.disabled = true;
             this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
             try {
-                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp, turnstile_token: turnstileToken.value }) }).then(function(r) { return r.json(); });
+                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp, password: password, turnstile_token: turnstileToken.value }) }).then(function(r) { return r.json(); });
                 if (data.error) throw new Error(data.error);
                 userId = data.session_id;
                 localStorage.setItem('lifaaq_sid', userId);
                 profile = { name: data.user.display_name, username: data.user.username, bio: '', avatar: AVATAR_BLANK };
                 settings.whatsapp = whatsapp;
                 document.getElementById('obStoreUrl').textContent = window.location.host + '/@' + username;
+                document.getElementById('authTabsRow').style.display = 'none';
                 document.getElementById('ob-step1').classList.remove('active');
                 document.getElementById('ob-step2').classList.add('active');
             } catch(e) {
@@ -924,6 +1005,40 @@
                 errorEl.classList.remove('hidden');
                 this.disabled = false;
                 this.innerHTML = '<span class="iconify" data-icon="lucide:sparkles" data-width="16"></span> ' + s('ob1CreateBtn');
+                if (window.turnstile) turnstile.reset();
+            }
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', async function() {
+            var username = document.getElementById('loginUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+            var password = document.getElementById('loginPassword').value;
+            var errorEl = document.getElementById('loginError');
+            errorEl.textContent = ''; errorEl.classList.add('hidden');
+
+            if (!username) { errorEl.textContent = s('errEnterUsername'); errorEl.classList.remove('hidden'); return; }
+            if (!password) { errorEl.textContent = s('errEnterPassword'); errorEl.classList.remove('hidden'); return; }
+
+            var turnstileToken = document.querySelector('[name="cf-turnstile-login"]');
+            if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = s('errCompleteCheck'); errorEl.classList.remove('hidden'); return; }
+
+            this.disabled = true;
+            this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
+            try {
+                var data = await fetch('/api/sessions/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username, password: password, turnstile_token: turnstileToken.value })
+                }).then(function(r) { return r.json(); });
+                if (data.error) throw new Error(data.error);
+                userId = data.session_id;
+                localStorage.setItem('lifaaq_sid', userId);
+                window.location.reload();
+            } catch(e) {
+                var msg = (e.message === 'Invalid username or password') ? s('loginInvalidCreds') : (e.message || s('somethingWrong'));
+                errorEl.textContent = msg;
+                errorEl.classList.remove('hidden');
+                this.disabled = false;
+                this.innerHTML = '<span class="iconify" data-icon="lucide:log-in" data-width="16"></span> ' + s('loginBtnLabel');
                 if (window.turnstile) turnstile.reset();
             }
         });
@@ -940,7 +1055,8 @@
             renderProducts();
             renderOrders();
             renderLinks();
-            showView('products');
+            var hashView = window.location.hash.replace('#', '');
+            showView(VALID_VIEWS.indexOf(hashView) !== -1 ? hashView : 'products');
         });
 
         // ===== HELPERS =====
@@ -978,20 +1094,30 @@
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
+        // ===== DIRTY STATE =====
+        var isDirty = false;
+        function markDirty() { isDirty = true; }
+        function markClean() { isDirty = false; }
+        window.addEventListener('beforeunload', function(e) {
+            if (isDirty) { e.preventDefault(); e.returnValue = ''; }
+        });
+
         // ===== NAV =====
+        var VALID_VIEWS = ['products','storefront','links','profile','settings','add-product'];
         function showView(name) {
             document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
             var el = document.getElementById('view-' + name);
-            if (el) { el.classList.add('active'); el.classList.add('fade-up'); setTimeout(function() { el.classList.remove('fade-up'); }, 300); }
+            if (el) { el.classList.add('active'); el.classList.add('fade-up'); setTimeout(function() { el.classList.remove('fade-up'); }, 150); }
             document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.toggle('active', i.dataset.view === name); });
-            document.querySelectorAll('.nav-item-m').forEach(function(i) { var isStore = i.dataset.view === 'storefront'; i.style.color = isStore ? '#25D366' : (i.dataset.view === name ? '#6366f1' : '#9ca3af'); });
+            document.querySelectorAll('.nav-item-m').forEach(function(i) { i.style.color = i.dataset.view === name ? '#6366f1' : '#9ca3af'; });
+            window.location.hash = name;
             if (name === 'products') renderProducts();
             if (name === 'orders') renderOrders();
             if (name === 'storefront') renderStorefront();
             if (name === 'links') renderLinks();
             if (name === 'add-product') resetProductForm();
-            if (name === 'profile') { syncProfileForm(); syncMobileSettings(); }
-            if (name === 'settings') syncSettingsUI();
+            if (name === 'profile' && !isDirty) { syncProfileForm(); syncMobileSettings(); }
+            if (name === 'settings' && !isDirty) syncSettingsUI();
         }
 
         document.querySelectorAll('.nav-item').forEach(function(el) { el.addEventListener('click', function() { showView(this.dataset.view); }); });
@@ -1019,6 +1145,7 @@
             document.getElementById('sidebarName').textContent = profile.name;
             document.getElementById('sidebarUsername').textContent = '@' + profile.username;
             document.getElementById('sidebarStoreName').textContent = profile.name;
+            document.getElementById('sidebarTagline').textContent = '@' + profile.username;
         }
 
         function syncMobileSettings() {
@@ -1032,8 +1159,11 @@
         }
 
         // ===== ADD PRODUCT =====
-        document.getElementById('addProductBtn').addEventListener('click', function() { showView('add-product'); });
-        document.getElementById('backToProductsBtn').addEventListener('click', function() { showView('products'); });
+        document.getElementById('addProductBtn').addEventListener('click', function() { markClean(); showView('add-product'); });
+        document.getElementById('backToProductsBtn').addEventListener('click', function() { markClean(); showView('products'); });
+        ['pName','pPrice','pDesc','pStock'].forEach(function(id) {
+            document.getElementById(id).addEventListener('input', markDirty);
+        });
 
         document.getElementById('uploadZone').addEventListener('click', function() { document.getElementById('imgInput').click(); });
         document.getElementById('imgInput').addEventListener('change', function(e) {
@@ -1068,11 +1198,11 @@
                     var res = await api('PUT', '/products/' + editId, data);
                     var idx = products.findIndex(function(x) { return x.id === parseInt(editId); });
                     if (idx > -1) products[idx] = { id: parseInt(editId), name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || PRODUCT_BLANK };
-                    toast(s('productUpdated'));
+                    markClean(); toast(s('productUpdated'));
                 } else {
                     var res = await api('POST', '/products', data);
                     products.unshift({ id: res.product.id, name: res.product.name, price: res.product.price, category: res.product.category, desc: res.product.description, stock: res.product.stock, available: !!res.product.available, img: res.product.image_url || PRODUCT_BLANK });
-                    toast(s('productAdded'));
+                    markClean(); toast(s('productAdded'));
                 }
                 showView('products');
             } catch(e) { toast('Error: ' + e.message); }
@@ -1216,13 +1346,13 @@
 
         // ===== ORDERS =====
         async function updateOrderStatus(orderId, status) {
-            try {
-                await api('PUT', '/orders/' + orderId, { status: status });
-                var o = orders.find(function(x) { return x.id === orderId; });
-                if (o) o.status = status;
-                renderOrders();
-                toast(s('orderMarked') + ' ' + status);
-            } catch(e) { toast(s('errorUpdatingOrder')); }
+            var o = orders.find(function(x) { return x.id === orderId; });
+            var prev = o ? o.status : null;
+            if (o) o.status = status;
+            renderOrders();
+            toast(s('orderMarked') + ' ' + status);
+            try { await api('PUT', '/orders/' + orderId, { status: status }); }
+            catch(e) { if (o) o.status = prev; renderOrders(); toast(s('errorUpdatingOrder')); }
         }
 
         function renderOrders() {
@@ -1409,8 +1539,15 @@
             try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkAdded')); } catch(e) { links.pop(); toast(s('errorAddingLink')); }
         });
         document.getElementById('linkModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            try { await api('DELETE', '/sessions/me'); } catch(e) {}
+            localStorage.removeItem('lifaaq_sid');
+            window.location.hash = '';
+            window.location.reload();
+        });
+
         document.getElementById('saveLinksBtn').addEventListener('click', async function() {
-            try { await api('PUT', '/links', { links: links }); toast(s('linksSaved')); } catch(e) { toast(s('errorSavingLinks')); }
+            toast(s('linksSaved')); try { await api('PUT', '/links', { links: links }); } catch(e) { toast(s('errorSavingLinks')); }
         });
         document.getElementById('dismissOnboarding').addEventListener('click', async function() {
             onboardingDismissed = true;
@@ -1419,8 +1556,9 @@
         });
 
         // ===== PROFILE =====
-        document.getElementById('profUsername').addEventListener('input', function() { document.getElementById('usernamePreview').textContent = this.value || ''; });
-        document.getElementById('profBio').addEventListener('input', function() { document.getElementById('bioCount').textContent = this.value.length; });
+        document.getElementById('profUsername').addEventListener('input', function() { document.getElementById('usernamePreview').textContent = this.value || ''; markDirty(); });
+        document.getElementById('profBio').addEventListener('input', function() { document.getElementById('bioCount').textContent = this.value.length; markDirty(); });
+        document.getElementById('profName').addEventListener('input', markDirty);
         document.getElementById('avatarBtn').addEventListener('click', function() { document.getElementById('avatarInput').click(); });
         document.getElementById('avatarInput').addEventListener('change', function(e) {
             var file = e.target.files[0]; if (!file) return;
@@ -1439,11 +1577,14 @@
             profile.name = document.getElementById('profName').value.trim();
             profile.username = document.getElementById('profUsername').value.trim();
             profile.bio = document.getElementById('profBio').value.trim();
+            document.getElementById('sidebarName').textContent = profile.name;
+            document.getElementById('sidebarUsername').textContent = '@' + profile.username;
+            document.getElementById('sidebarStoreName').textContent = profile.name;
+            document.getElementById('sidebarTagline').textContent = '@' + profile.username;
+            toast(s('profileSaved'));
             try {
                 await api('PUT', '/me/profile', { display_name: profile.name, username: profile.username, bio: profile.bio, avatar_url: profile.avatar });
-                document.getElementById('sidebarName').textContent = profile.name;
-                document.getElementById('sidebarUsername').textContent = '@' + profile.username;
-                toast(s('profileSaved'));
+                markClean();
             } catch(e) { toast('Error: ' + e.message); }
         });
 
@@ -1452,33 +1593,70 @@
             g.addEventListener('click', function() {
                 settings.gridCols = parseInt(this.dataset.cols);
                 document.querySelectorAll('.desktop-grid-opt').forEach(function(x) { x.classList.toggle('active', parseInt(x.dataset.cols) === settings.gridCols); });
+                markDirty();
             });
         });
         document.querySelectorAll('.mobile-grid-opt').forEach(function(g) {
             g.addEventListener('click', function() {
                 settings.gridCols = parseInt(this.dataset.cols);
                 document.querySelectorAll('.mobile-grid-opt').forEach(function(x) { x.classList.toggle('active', parseInt(x.dataset.cols) === settings.gridCols); });
+                markDirty();
             });
         });
+        ['setCurrency','mobSetCurrency'].forEach(function(id) {
+            document.getElementById(id).addEventListener('change', markDirty);
+        });
+        document.getElementById('setWhatsapp').addEventListener('input', function() { markDirty(); setWaFieldError('setWaError', 'setWaHint', null); });
+        document.getElementById('mobSetWhatsapp').addEventListener('input', function() { markDirty(); setWaFieldError('mobSetWaError', null, null); });
+        document.getElementById('setWaCountry').addEventListener('change', function() { markDirty(); setWaFieldError('setWaError', 'setWaHint', null); });
+        document.getElementById('mobWaCountry').addEventListener('change', function() { markDirty(); setWaFieldError('mobSetWaError', null, null); });
+        ['setShowUnavailable','setSocialBento','mobSetShowUnavailable','mobSetSocialBento'].forEach(function(id) {
+            var el = document.getElementById(id);
+            el.addEventListener('click', markDirty);
+        });
+
+        function setWaFieldError(errElId, hintElId, msg) {
+            var errEl = document.getElementById(errElId);
+            var hintEl = hintElId ? document.getElementById(hintElId) : null;
+            if (msg) {
+                errEl.textContent = msg; errEl.classList.remove('hidden');
+                if (hintEl) hintEl.classList.add('hidden');
+            } else {
+                errEl.textContent = ''; errEl.classList.add('hidden');
+                if (hintEl) hintEl.classList.remove('hidden');
+            }
+        }
 
         document.getElementById('settingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            var waErr = validateWaInput('setWhatsapp', 'setWaCountry'); if (waErr) { toast(s(waErr)); return; }
-            settings.whatsapp = getWaValue('setWaCountry', 'setWhatsapp');
+            setWaFieldError('setWaError', 'setWaHint', null);
+            var newWa = getWaValue('setWaCountry', 'setWhatsapp');
+            if (newWa !== (settings.whatsapp || '')) {
+                var waErr = validateWaInput('setWhatsapp', 'setWaCountry');
+                if (waErr) { setWaFieldError('setWaError', 'setWaHint', s(waErr)); return; }
+            }
+            settings.whatsapp = newWa;
             settings.currency = document.getElementById('setCurrency').value;
             settings.showUnavailable = document.getElementById('setShowUnavailable').classList.contains('on');
             settings.socialBento = document.getElementById('setSocialBento').classList.contains('on');
-            try { await api('PUT', '/me/settings', settings); toast(s('settingsSaved')); } catch(e) { toast(s('errorSavingSettings')); }
+            toast(s('settingsSaved'));
+            try { await api('PUT', '/me/settings', { whatsapp: settings.whatsapp, currency: settings.currency, grid_cols: settings.gridCols, show_unavailable: settings.showUnavailable, social_bento: settings.socialBento }); markClean(); } catch(e) { toast(s('errorSavingSettings')); }
         });
 
         document.getElementById('mobileSettingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            var waErr = validateWaInput('mobSetWhatsapp', 'mobWaCountry'); if (waErr) { toast(s(waErr)); return; }
-            settings.whatsapp = getWaValue('mobWaCountry', 'mobSetWhatsapp');
+            setWaFieldError('mobSetWaError', null, null);
+            var newWa = getWaValue('mobWaCountry', 'mobSetWhatsapp');
+            if (newWa !== (settings.whatsapp || '')) {
+                var waErr = validateWaInput('mobSetWhatsapp', 'mobWaCountry');
+                if (waErr) { setWaFieldError('mobSetWaError', null, s(waErr)); return; }
+            }
+            settings.whatsapp = newWa;
             settings.currency = document.getElementById('mobSetCurrency').value;
             settings.showUnavailable = document.getElementById('mobSetShowUnavailable').classList.contains('on');
             settings.socialBento = document.getElementById('mobSetSocialBento').classList.contains('on');
-            try { await api('PUT', '/me/settings', settings); toast(s('settingsSaved')); } catch(e) { toast(s('errorSavingSettings')); }
+            toast(s('settingsSaved'));
+            try { await api('PUT', '/me/settings', { whatsapp: settings.whatsapp, currency: settings.currency, grid_cols: settings.gridCols, show_unavailable: settings.showUnavailable, social_bento: settings.socialBento }); markClean(); } catch(e) { toast(s('errorSavingSettings')); }
         });
 
         // ===== PUBLIC STORE =====

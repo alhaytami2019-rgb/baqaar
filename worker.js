@@ -5,6 +5,32 @@ const CORS = {
   'Vary': 'Origin',
 };
 
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+  const saltHex = Array.from(saltBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  const key = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: 'SHA-256', salt: saltBytes, iterations: 100000 }, key, 256
+  );
+  const hashHex = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return saltHex + ':' + hashHex;
+}
+
+async function verifyPassword(password, stored) {
+  if (!stored) return false;
+  const parts = stored.split(':');
+  if (parts.length !== 2) return false;
+  const saltBytes = new Uint8Array(parts[0].match(/.{2}/g).map(b => parseInt(b, 16)));
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: 'SHA-256', salt: saltBytes, iterations: 100000 }, key, 256
+  );
+  const checkHex = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return checkHex === parts[1];
+}
+
 async function verifyTurnstile(token, secret, ip) {
   const fd = new FormData();
   fd.append('secret', secret);
@@ -23,7 +49,7 @@ function isValidWhatsapp(wa) {
   if (!/^\+\d{7,15}$/.test(wa)) return false;
   if (wa.startsWith('+252')) {
     const local = wa.slice(4);
-    return local.length === 8 && SOMALI_PREFIXES.some(p => local.startsWith(p));
+    return local.length === 9 && SOMALI_PREFIXES.some(p => local.startsWith(p));
   }
   return true;
 }
@@ -45,10 +71,19 @@ async function createSession(userId, env) {
   return sid;
 }
 
+const SESSION_TTL_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
+
 async function resolveSession(sid, env) {
   if (!sid) return null;
-  const row = await env.DB.prepare('SELECT user_id FROM sessions WHERE id = ?').bind(sid).first();
-  return row ? row.user_id : null;
+  const row = await env.DB.prepare(
+    'SELECT user_id, created_at FROM sessions WHERE id = ?'
+  ).bind(sid).first();
+  if (!row) return null;
+  if (row.created_at && Date.now() - new Date(row.created_at).getTime() > SESSION_TTL_MS) {
+    await env.DB.prepare('DELETE FROM sessions WHERE id = ?').bind(sid).run();
+    return null;
+  }
+  return row.user_id;
 }
 
 async function checkRateLimit(key, max, windowSecs, env) {
@@ -69,6 +104,9 @@ async function checkRateLimit(key, max, windowSecs, env) {
   ).bind(key).run();
   return false;
 }
+
+const VALID_CURRENCIES = ['USD','EUR','GBP','NGN','KES','GHS','SOS'];
+const VALID_STATUSES   = ['pending','confirmed','delivered','cancelled'];
 
 async function handleAPI(request, env, url) {
   const method = request.method;
@@ -91,9 +129,11 @@ async function handleAPI(request, env, url) {
   if (path === '/users' && method === 'POST') {
     const body = await request.json();
     const username = (body.username || '').toLowerCase().trim();
-    const display_name = (body.display_name || '').trim();
+    const display_name = (body.display_name || '').trim().slice(0, 100);
+    const password = (body.password || '').trim();
     if (!username || !display_name) return err('username and display_name required');
     if (!/^[a-z0-9_]{3,30}$/.test(username)) return err('Invalid username');
+    if (!password || password.length < 6) return err('Password must be at least 6 characters');
     const turnstileOk = await verifyTurnstile(body.turnstile_token || '', env.TURNSTILE_SECRET, ip);
     if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
@@ -101,12 +141,30 @@ async function handleAPI(request, env, url) {
     const waRaw = (body.whatsapp || '').trim();
     if (!isValidWhatsapp(waRaw)) return err('Invalid WhatsApp number format', 400);
     const id = crypto.randomUUID();
+    const passwordHash = await hashPassword(password);
     await env.DB.prepare(
-      'INSERT INTO users (id, username, display_name, whatsapp) VALUES (?, ?, ?, ?)'
-    ).bind(id, username, display_name, waRaw).run();
+      'INSERT INTO users (id, username, display_name, whatsapp, password_hash) VALUES (?, ?, ?, ?, ?)'
+    ).bind(id, username, display_name, waRaw, passwordHash).run();
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
     const session_id = await createSession(id, env);
     return json({ user, session_id });
+  }
+
+  // Login
+  if (path === '/sessions/login' && method === 'POST') {
+    if (await checkRateLimit(`login:${ip}`, 10, 60, env)) return err('Too many requests', 429);
+    const body = await request.json();
+    const username = (body.username || '').toLowerCase().trim();
+    const password = body.password || '';
+    if (!username || !password) return err('username and password required');
+    const turnstileOk = await verifyTurnstile(body.turnstile_token || '', env.TURNSTILE_SECRET, ip);
+    if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
+    const user = await env.DB.prepare('SELECT id, password_hash FROM users WHERE username = ?').bind(username).first();
+    if (!user || !user.password_hash) return err('Invalid username or password', 401);
+    const ok = await verifyPassword(password, user.password_hash);
+    if (!ok) return err('Invalid username or password', 401);
+    const session_id = await createSession(user.id, env);
+    return json({ session_id });
   }
 
   // One-time migration: exchange a legacy user_id UUID for a proper session token
@@ -119,6 +177,13 @@ async function handleAPI(request, env, url) {
     if (!user) return err('Not found', 404);
     const session_id = await createSession(legacyUserId, env);
     return json({ session_id });
+  }
+
+  // Logout — delete current session
+  if (path === '/sessions/me' && method === 'DELETE') {
+    const sid = request.headers.get('X-Session-Id');
+    if (sid) await env.DB.prepare('DELETE FROM sessions WHERE id = ?').bind(sid).run();
+    return json({ ok: true });
   }
 
   // Public store — no auth required
@@ -158,21 +223,37 @@ async function handleAPI(request, env, url) {
 
   // Update profile
   if (path === '/me/profile' && method === 'PUT') {
+    if (await checkRateLimit(`profile:${userId}`, 10, 60, env)) return err('Too many requests', 429);
     const b = await request.json();
+    const newUsername = (b.username || '').toLowerCase().trim();
+    const displayName = (b.display_name || '').trim().slice(0, 100);
+    const bio = (b.bio || '').slice(0, 150);
+    const avatarUrl = (b.avatar_url || '').slice(0, 800000); // base64 images can be large
+    if (!displayName) return err('Display name required');
+    if (newUsername && !/^[a-z0-9_]{3,30}$/.test(newUsername)) return err('Invalid username');
+    if (newUsername) {
+      const taken = await env.DB.prepare(
+        'SELECT id FROM users WHERE username = ? AND id != ?'
+      ).bind(newUsername, userId).first();
+      if (taken) return err('Username already taken', 409);
+    }
     await env.DB.prepare(
       'UPDATE users SET display_name = ?, bio = ?, avatar_url = ?, username = ? WHERE id = ?'
-    ).bind(b.display_name || '', b.bio || '', b.avatar_url || '', (b.username || '').toLowerCase(), userId).run();
+    ).bind(displayName, bio, avatarUrl, newUsername, userId).run();
     return json({ ok: true });
   }
 
   // Update settings
   if (path === '/me/settings' && method === 'PUT') {
+    if (await checkRateLimit(`settings:${userId}`, 10, 60, env)) return err('Too many requests', 429);
     const b = await request.json();
     const waRaw = (b.whatsapp || '').trim();
     if (!isValidWhatsapp(waRaw)) return err('Invalid WhatsApp number format', 400);
+    const currency = VALID_CURRENCIES.includes(b.currency) ? b.currency : 'USD';
+    const gridCols = [2, 3, 4].includes(b.grid_cols) ? b.grid_cols : 2;
     await env.DB.prepare(
       'UPDATE users SET whatsapp = ?, currency = ?, grid_cols = ?, show_unavailable = ?, social_bento = ? WHERE id = ?'
-    ).bind(waRaw, b.currency || 'USD', b.grid_cols || 2, b.show_unavailable ? 1 : 0, b.social_bento ? 1 : 0, userId).run();
+    ).bind(waRaw, currency, gridCols, b.show_unavailable ? 1 : 0, b.social_bento ? 1 : 0, userId).run();
     return json({ ok: true });
   }
 
@@ -191,11 +272,18 @@ async function handleAPI(request, env, url) {
       return json({ products: results });
     }
     if (method === 'POST') {
+      if (await checkRateLimit(`products:${userId}`, 30, 60, env)) return err('Too many requests', 429);
       const b = await request.json();
-      if (!b.name) return err('name required');
+      const name = (b.name || '').trim().slice(0, 200);
+      if (!name) return err('name required');
+      const price = Math.max(0, parseFloat(b.price) || 0);
+      const stock = Math.max(0, parseInt(b.stock) || 0);
+      const category = (b.category || 'Other').slice(0, 50);
+      const description = (b.description || '').slice(0, 1000);
+      const imageUrl = (b.image_url || '').slice(0, 800000);
       const result = await env.DB.prepare(
         'INSERT INTO products (user_id, name, price, category, description, stock, available, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-      ).bind(userId, b.name, b.price || 0, b.category || 'Other', b.description || '', b.stock || 0, b.available !== false ? 1 : 0, b.image_url || '').run();
+      ).bind(userId, name, price, category, description, stock, b.available !== false ? 1 : 0, imageUrl).run();
       const product = await env.DB.prepare('SELECT * FROM products WHERE rowid = ?').bind(result.meta.last_row_id).first();
       return json({ product });
     }
@@ -206,9 +294,16 @@ async function handleAPI(request, env, url) {
     const pid = parseInt(pm[1]);
     if (method === 'PUT') {
       const b = await request.json();
+      const name = (b.name || '').trim().slice(0, 200);
+      if (!name) return err('name required');
+      const price = Math.max(0, parseFloat(b.price) || 0);
+      const stock = Math.max(0, parseInt(b.stock) || 0);
+      const category = (b.category || 'Other').slice(0, 50);
+      const description = (b.description || '').slice(0, 1000);
+      const imageUrl = (b.image_url || '').slice(0, 800000);
       await env.DB.prepare(
         'UPDATE products SET name = ?, price = ?, category = ?, description = ?, stock = ?, available = ?, image_url = ? WHERE id = ? AND user_id = ?'
-      ).bind(b.name, b.price || 0, b.category || 'Other', b.description || '', b.stock || 0, b.available !== false ? 1 : 0, b.image_url || '', pid, userId).run();
+      ).bind(name, price, category, description, stock, b.available !== false ? 1 : 0, imageUrl, pid, userId).run();
       const product = await env.DB.prepare('SELECT * FROM products WHERE id = ? AND user_id = ?').bind(pid, userId).first();
       return json({ product });
     }
@@ -229,9 +324,13 @@ async function handleAPI(request, env, url) {
     if (method === 'POST') {
       const b = await request.json();
       const id = 'ORD-' + Date.now();
+      const customerName = (b.customer_name || 'Customer').slice(0, 100);
+      const customerPhone = (b.customer_phone || '').slice(0, 30);
+      const total = Math.max(0, parseFloat(b.total) || 0);
+      const items = JSON.stringify((b.items || []).slice(0, 100));
       await env.DB.prepare(
         'INSERT INTO orders (id, user_id, customer_name, customer_phone, items, total, status) VALUES (?, ?, ?, ?, ?, ?, ?)'
-      ).bind(id, userId, b.customer_name || 'Customer', b.customer_phone || '', JSON.stringify(b.items || []), b.total || 0, 'pending').run();
+      ).bind(id, userId, customerName, customerPhone, items, total, 'pending').run();
       const order = await env.DB.prepare('SELECT * FROM orders WHERE id = ?').bind(id).first();
       return json({ order: { ...order, items: JSON.parse(order.items) } });
     }
@@ -239,7 +338,9 @@ async function handleAPI(request, env, url) {
 
   const om = path.match(/^\/orders\/([^/]+)$/);
   if (om && method === 'PUT') {
+    if (await checkRateLimit(`orders:${userId}`, 60, 60, env)) return err('Too many requests', 429);
     const b = await request.json();
+    if (!VALID_STATUSES.includes(b.status)) return err('Invalid status');
     await env.DB.prepare('UPDATE orders SET status = ? WHERE id = ? AND user_id = ?').bind(b.status, om[1], userId).run();
     return json({ ok: true });
   }
@@ -253,16 +354,19 @@ async function handleAPI(request, env, url) {
       return json({ links: results });
     }
     if (method === 'PUT') {
+      if (await checkRateLimit(`links:${userId}`, 20, 60, env)) return err('Too many requests', 429);
       const b = await request.json();
-      await env.DB.prepare('DELETE FROM links WHERE user_id = ?').bind(userId).run();
-      const items = b.links || [];
+      const items = (b.links || []).slice(0, 20);
+      const statements = [env.DB.prepare('DELETE FROM links WHERE user_id = ?').bind(userId)];
       for (let i = 0; i < items.length; i++) {
-        const rawUrl = (items[i].url || '').trim();
+        const rawUrl = (items[i].url || '').trim().slice(0, 500);
         if (!/^https?:\/\//i.test(rawUrl)) continue;
-        await env.DB.prepare(
-          'INSERT INTO links (user_id, platform, url, sort_order) VALUES (?, ?, ?, ?)'
-        ).bind(userId, items[i].platform, rawUrl, i).run();
+        const platform = (items[i].platform || 'other').slice(0, 30);
+        statements.push(
+          env.DB.prepare('INSERT INTO links (user_id, platform, url, sort_order) VALUES (?, ?, ?, ?)').bind(userId, platform, rawUrl, i)
+        );
       }
+      await env.DB.batch(statements);
       return json({ ok: true });
     }
   }
