@@ -5,32 +5,6 @@ const CORS = {
   'Vary': 'Origin',
 };
 
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const saltBytes = crypto.getRandomValues(new Uint8Array(16));
-  const saltHex = Array.from(saltBytes).map(b => b.toString(16).padStart(2, '0')).join('');
-  const key = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
-  const bits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', hash: 'SHA-256', salt: saltBytes, iterations: 100000 }, key, 256
-  );
-  const hashHex = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
-  return saltHex + ':' + hashHex;
-}
-
-async function verifyPassword(password, stored) {
-  if (!stored) return false;
-  const parts = stored.split(':');
-  if (parts.length !== 2) return false;
-  const saltBytes = new Uint8Array(parts[0].match(/.{2}/g).map(b => parseInt(b, 16)));
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
-  const bits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', hash: 'SHA-256', salt: saltBytes, iterations: 100000 }, key, 256
-  );
-  const checkHex = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
-  return checkHex === parts[1];
-}
-
 async function verifyTurnstile(token, secret, ip) {
   const fd = new FormData();
   fd.append('secret', secret);
@@ -130,10 +104,8 @@ async function handleAPI(request, env, url) {
     const body = await request.json();
     const username = (body.username || '').toLowerCase().trim();
     const display_name = (body.display_name || '').trim().slice(0, 100);
-    const password = (body.password || '').trim();
     if (!username || !display_name) return err('username and display_name required');
     if (!/^[a-z0-9_]{3,30}$/.test(username)) return err('Invalid username');
-    if (!password || password.length < 6) return err('Password must be at least 6 characters');
     const turnstileOk = await verifyTurnstile(body.turnstile_token || '', env.TURNSTILE_SECRET, ip);
     if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
@@ -141,28 +113,27 @@ async function handleAPI(request, env, url) {
     const waRaw = (body.whatsapp || '').trim();
     if (!isValidWhatsapp(waRaw)) return err('Invalid WhatsApp number format', 400);
     const id = crypto.randomUUID();
-    const passwordHash = await hashPassword(password);
     await env.DB.prepare(
-      'INSERT INTO users (id, username, display_name, whatsapp, password_hash) VALUES (?, ?, ?, ?, ?)'
-    ).bind(id, username, display_name, waRaw, passwordHash).run();
+      'INSERT INTO users (id, username, display_name, whatsapp) VALUES (?, ?, ?, ?)'
+    ).bind(id, username, display_name, waRaw).run();
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
     const session_id = await createSession(id, env);
     return json({ user, session_id });
   }
 
-  // Login
+  // Login with username + WhatsApp number
   if (path === '/sessions/login' && method === 'POST') {
     if (await checkRateLimit(`login:${ip}`, 10, 60, env)) return err('Too many requests', 429);
     const body = await request.json();
     const username = (body.username || '').toLowerCase().trim();
-    const password = body.password || '';
-    if (!username || !password) return err('username and password required');
+    const whatsapp = (body.whatsapp || '').trim();
+    if (!username || !whatsapp) return err('username and WhatsApp number required');
     const turnstileOk = await verifyTurnstile(body.turnstile_token || '', env.TURNSTILE_SECRET, ip);
     if (!turnstileOk) return err('Bot check failed. Please try again.', 403);
-    const user = await env.DB.prepare('SELECT id, password_hash FROM users WHERE username = ?').bind(username).first();
-    if (!user || !user.password_hash) return err('Invalid username or password', 401);
-    const ok = await verifyPassword(password, user.password_hash);
-    if (!ok) return err('Invalid username or password', 401);
+    const user = await env.DB.prepare('SELECT id, whatsapp FROM users WHERE username = ?').bind(username).first();
+    if (!user || !user.whatsapp) return err('Invalid username or phone number', 401);
+    const norm = (p) => p.replace(/[\s\-().]/g, '');
+    if (norm(user.whatsapp) !== norm(whatsapp)) return err('Invalid username or phone number', 401);
     const session_id = await createSession(user.id, env);
     return json({ session_id });
   }

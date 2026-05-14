@@ -80,7 +80,7 @@
         .modal-img { aspect-ratio: 4/3; object-fit: cover; width: 100%; border-radius: 1rem 1rem 0 0; }
 
         /* Onboarding */
-        #onboardingOverlay { position: fixed; inset: 0; background: #fff; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+        #onboardingOverlay { position: fixed; inset: 0; background: #fff; z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; }
         #onboardingOverlay.hidden { display: none; }
         .ob-step { display: none; }
         .ob-step.active { display: block; }
@@ -162,13 +162,6 @@
                         <p class="text-xs text-gray-400 mt-1.5" data-i18n="ob1WaHint">Customers will use this to order from your store.</p>
                         <p id="obWhatsappError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-2" data-i18n="ob1PasswordLabel">Password</label>
-                        <input id="obPassword" type="password" placeholder="Min. 6 characters"
-                            data-i18n-ph="ob1PasswordPh"
-                            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm" autocomplete="new-password">
-                        <p id="obPasswordError" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible"></div>
                     <button id="obCreateBtn"
                         class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2">
@@ -245,9 +238,13 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2" data-i18n="ob1PasswordLabel">Password</label>
-                        <input id="loginPassword" type="password" placeholder="••••••••"
-                            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm" autocomplete="current-password">
+                        <label class="block text-sm font-medium mb-2"><span data-i18n="ob1WaLabel">WhatsApp Number</span></label>
+                        <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white">
+                            <span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span>
+                            <select id="loginWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-3 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select>
+                            <input id="loginWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-3 border-0 text-sm focus:outline-none min-w-0 bg-transparent">
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1.5" data-i18n="loginWaHint">Enter the number registered with your store.</p>
                     </div>
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible" data-response-field-name="cf-turnstile-login"></div>
                     <button id="loginBtn"
@@ -542,12 +539,10 @@
                 ob1DisplayNameLabel:'Display Name', ob1DisplayNamePh:"e.g. Sarah's Boutique",
                 ob1WaLabel:'WhatsApp Number', ob1WaSub:'(optional)', ob1WaPh:'+1 555 000 0000',
                 ob1WaHint:'Customers will use this to order from your store.',
-                ob1PasswordLabel:'Password', ob1PasswordPh:'Min. 6 characters',
-                errPasswordTooShort:'Password must be at least 6 characters.',
-                errEnterPassword:'Please enter your password.',
                 tabCreateStore:'Create Store', tabLogIn:'Log In',
                 loginTitle:'Welcome back', loginSubtitle:'Log in to your store.',
-                loginBtnLabel:'Log In', loginInvalidCreds:'Invalid username or password.',
+                loginBtnLabel:'Log In', loginInvalidCreds:'Invalid username or phone number.',
+                loginWaHint:'Enter the number registered with your store.',
                 ob1CreateBtn:'Create My Store',
                 ob2Title:"You're live! 🎉", ob2Subtitle:'Your storefront is ready. Share it with the world.',
                 ob2StoreLinkLabel:'Your store link', ob2CopyBtn:'Copy',
@@ -639,12 +634,10 @@
                 ob1DisplayNameLabel:'Magaca La Muujinayo', ob1DisplayNamePh:'tusaale. Dukaanka Faadumo',
                 ob1WaLabel:'Lambarka WhatsApp', ob1WaSub:'(ikhtiyaari)', ob1WaPh:'+252 61 000 0000',
                 ob1WaHint:'Macaamiishu waxay isticmaalaan si ay ugaga dalban dukaankaaga.',
-                ob1PasswordLabel:'Furaha Sirta', ob1PasswordPh:'Ugu yaraan 6 xaraf',
-                errPasswordTooShort:'Furaha sirtu waa inuu ahaadaa ugu yaraan 6 xaraf.',
-                errEnterPassword:'Fadlan geli furaha sirta.',
                 tabCreateStore:'Samee Dukaanka', tabLogIn:'Gal',
                 loginTitle:'Ku soo dhawoow', loginSubtitle:'Gal dukaankaaga.',
-                loginBtnLabel:'Gal', loginInvalidCreds:'Magaca isticmaalaha ama furaha sirtu waa khalad.',
+                loginBtnLabel:'Gal', loginInvalidCreds:'Magaca isticmaalaha ama lambarka telefoonku waa khalad.',
+                loginWaHint:'Geli lambarka WhatsApp ee aad dukaanka kula diiwaan gashan.',
                 ob1CreateBtn:'Samee Dukaankayga',
                 ob2Title:'Waad dhawdahay! 🎉', ob2Subtitle:'Dukaankaaga waa diyaar. La wadaag adduunka.',
                 ob2StoreLinkLabel:'Xiriirkaaga dukaanka', ob2CopyBtn:'Koobiyee',
@@ -968,19 +961,16 @@
         document.getElementById('obCreateBtn').addEventListener('click', async function() {
             var username = document.getElementById('obUsername').value.trim();
             var displayName = document.getElementById('obDisplayName').value.trim();
-            var password = document.getElementById('obPassword').value;
             var whatsapp = getWaValue('obWaCountry', 'obWhatsapp');
             var errorEl = document.getElementById('obCreateError');
             var usernameErrEl = document.getElementById('obUsernameError');
             var displayNameErrEl = document.getElementById('obDisplayNameError');
-            var passwordErrEl = document.getElementById('obPasswordError');
             var waErrEl = document.getElementById('obWhatsappError');
-            [errorEl, usernameErrEl, displayNameErrEl, passwordErrEl, waErrEl].forEach(function(el) { el.textContent = ''; el.classList.add('hidden'); });
+            [errorEl, usernameErrEl, displayNameErrEl, waErrEl].forEach(function(el) { el.textContent = ''; el.classList.add('hidden'); });
 
             if (!username) { usernameErrEl.textContent = s('errEnterUsername'); usernameErrEl.classList.remove('hidden'); return; }
             if (!obUsernameValid) { usernameErrEl.textContent = s('errChooseUsername'); usernameErrEl.classList.remove('hidden'); return; }
             if (!displayName) { displayNameErrEl.textContent = s('errEnterDisplayName'); displayNameErrEl.classList.remove('hidden'); return; }
-            if (!password || password.length < 6) { passwordErrEl.textContent = s('errPasswordTooShort'); passwordErrEl.classList.remove('hidden'); return; }
             var waErr = validateWaInput('obWhatsapp', 'obWaCountry');
             if (waErr) { waErrEl.textContent = s(waErr); waErrEl.classList.remove('hidden'); return; }
 
@@ -990,7 +980,7 @@
             this.disabled = true;
             this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
             try {
-                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp, password: password, turnstile_token: turnstileToken.value }) }).then(function(r) { return r.json(); });
+                var data = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, display_name: displayName, whatsapp: whatsapp, turnstile_token: turnstileToken.value }) }).then(function(r) { return r.json(); });
                 if (data.error) throw new Error(data.error);
                 userId = data.session_id;
                 localStorage.setItem('lifaaq_sid', userId);
@@ -1011,12 +1001,13 @@
 
         document.getElementById('loginBtn').addEventListener('click', async function() {
             var username = document.getElementById('loginUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
-            var password = document.getElementById('loginPassword').value;
+            var whatsapp = getWaValue('loginWaCountry', 'loginWhatsapp');
             var errorEl = document.getElementById('loginError');
             errorEl.textContent = ''; errorEl.classList.add('hidden');
 
             if (!username) { errorEl.textContent = s('errEnterUsername'); errorEl.classList.remove('hidden'); return; }
-            if (!password) { errorEl.textContent = s('errEnterPassword'); errorEl.classList.remove('hidden'); return; }
+            var waErr = validateWaInput('loginWhatsapp', 'loginWaCountry');
+            if (waErr) { errorEl.textContent = s(waErr); errorEl.classList.remove('hidden'); return; }
 
             var turnstileToken = document.querySelector('[name="cf-turnstile-login"]');
             if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = s('errCompleteCheck'); errorEl.classList.remove('hidden'); return; }
@@ -1027,14 +1018,14 @@
                 var data = await fetch('/api/sessions/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: username, password: password, turnstile_token: turnstileToken.value })
+                    body: JSON.stringify({ username: username, whatsapp: whatsapp, turnstile_token: turnstileToken.value })
                 }).then(function(r) { return r.json(); });
                 if (data.error) throw new Error(data.error);
                 userId = data.session_id;
                 localStorage.setItem('lifaaq_sid', userId);
                 window.location.reload();
             } catch(e) {
-                var msg = (e.message === 'Invalid username or password') ? s('loginInvalidCreds') : (e.message || s('somethingWrong'));
+                var msg = (e.message === 'Invalid username or phone number') ? s('loginInvalidCreds') : (e.message || s('somethingWrong'));
                 errorEl.textContent = msg;
                 errorEl.classList.remove('hidden');
                 this.disabled = false;
