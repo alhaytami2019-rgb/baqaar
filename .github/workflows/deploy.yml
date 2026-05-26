@@ -11,8 +11,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 535d83461cde23dfdcc02609d2460c69
-          command: deploy

@@ -1,0 +1,13 @@
+name = "baqaar"
+account_id = "535d83461cde23dfdcc02609d2460c69"
+compatibility_date = "2025-06-05"
+main = "worker.js"
+
+[assets]
+directory = "."
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "baqaar-db"
+database_id = "e269735a-5925-4a8a-8783-bfc2600184b0"
