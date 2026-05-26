@@ -333,8 +333,9 @@ async function handleAPI(request, env, url) {
         const rawUrl = (items[i].url || '').trim().slice(0, 500);
         if (!/^https?:\/\//i.test(rawUrl)) continue;
         const platform = (items[i].platform || 'other').slice(0, 30);
+        const title = (items[i].title || '').trim().slice(0, 100);
         statements.push(
-          env.DB.prepare('INSERT INTO links (user_id, platform, url, sort_order) VALUES (?, ?, ?, ?)').bind(userId, platform, rawUrl, i)
+          env.DB.prepare('INSERT INTO links (user_id, platform, url, title, sort_order) VALUES (?, ?, ?, ?, ?)').bind(userId, platform, rawUrl, title, i)
         );
       }
       await env.DB.batch(statements);

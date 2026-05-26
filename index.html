@@ -512,6 +512,7 @@
             <div class="space-y-4">
                 <div><label class="block text-sm font-medium mb-2" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="snapchat">Snapchat</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
                 <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">Username or Link</label><input id="linkUrl" type="text" placeholder="myusername" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"><p id="linkUrlHint" class="text-xs text-gray-400 mt-1.5"></p></div>
+                <div><label class="block text-sm font-medium mb-2"><span data-i18n="linkTitleLabel">Display Name</span> <span class="text-gray-400 font-normal" data-i18n="linkTitleSub">(optional)</span></label><input id="linkTitle" type="text" placeholder="e.g. Follow me on Instagram" data-i18n-ph="linkTitlePh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"><p class="text-xs text-gray-400 mt-1.5" data-i18n="linkTitleHint">Leave blank to use the platform name</p></div>
                 <div class="flex gap-3"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors" data-i18n="addBtn">Add</button></div>
             </div>
         </div>
@@ -534,7 +535,7 @@
                 appTagline:'Digital Storefront',
                 navProducts:'Products', navOrders:'Orders', navStorefront:'Storefront',
                 navLinks:'Links', navProfile:'Profile', navSettings:'Settings', navStore:'Store',
-                ob1Title:'Create your store', ob1Subtitle:'Set up your Lifaaq storefront in seconds.',
+                ob1Title:'Create your store', ob1Subtitle:'Share your store with the world.',
                 ob1UsernameLabel:'Username', ob1UsernameSub:'(your store link)',
                 ob1DisplayNameLabel:'Display Name', ob1DisplayNamePh:"e.g. Sarah's Boutique",
                 ob1WaLabel:'WhatsApp Number', ob1WaSub:'(optional)', ob1WaPh:'+1 555 000 0000',
@@ -576,6 +577,7 @@
                 addLinkBtn:'Add a Link', saveLinksBtn:'Save Links',
                 linkModalTitle:'Add a Link', platformLabel:'Platform', urlLabel:'URL or Handle',
                 urlPh:'https://… or @handle', cancelBtn:'Cancel', addBtn:'Add',
+                linkTitleLabel:'Display Name', linkTitleSub:'(optional)', linkTitlePh:'e.g. Follow me on Instagram', linkTitleHint:'Leave blank to use the platform name',
                 profileTitle:'Profile', profileDesc:'How you appear to your customers.',
                 profilePhotoLabel:'Profile Photo', profilePhotoHint:'Square image works best',
                 displayNameLabel:'Display Name', usernameLabel:'Username', bioLabel:'Bio',
@@ -628,8 +630,8 @@
             so: {
                 appTagline:'Dukaanka Dijital',
                 navProducts:'Alaabada', navOrders:'Dalabada', navStorefront:'Dukaanka',
-                navLinks:'Xiriirrada', navProfile:'Profaylka', navSettings:'Dejinta', navStore:'Dukaanka',
-                ob1Title:'Samee Dukaankaaga', ob1Subtitle:'Diyaari dukaankaaga Lifaaq daqiiqo gudahood.',
+                navLinks:'Links', navProfile:'Profaylka', navSettings:'Dejinta', navStore:'Dukaanka',
+                ob1Title:'Samee Dukaankaaga', ob1Subtitle:'Dunida Lawadaag dukaankaaga.',
                 ob1UsernameLabel:'Magaca Isticmaalaha', ob1UsernameSub:'(xiriirkaaga dukaanka)',
                 ob1DisplayNameLabel:'Magaca La Muujinayo', ob1DisplayNamePh:'tusaale. Dukaanka Faadumo',
                 ob1WaLabel:'Lambarka WhatsApp', ob1WaSub:'(ikhtiyaari)', ob1WaPh:'+252 61 000 0000',
@@ -665,12 +667,13 @@
                 markConfirmed:'Xaqiiji', markDelivered:'Gadhsi', message:'Fariin',
                 searchStorePh:'Raadi dukaanka…', noStoreProducts:'Hadda wax alaabo ah lama heli karo.',
                 contactBtn:'Xiriir', orderNow:'Dalbo Hada', orderOnWa:'WhatsApp ku Dalbo',
-                linksTitle:'Xiriirrada', linksDesc:'Goobaha bulshada, dhammaantood meel kaliya.',
+                linksTitle:'Links', linksDesc:'Goobaha bulshada, dhammaantood meel kaliya.',
                 linksOnboardTitle:'Si sahlan u helidda',
                 linksOnboardDesc:'Ku dar xiriirradaada baraha bulshada hoose. Waxay ka soo muuqan doonaan dukaankaaga si macaamiishu wax kula xiriiri karaan dibadda dukaanka.',
                 addLinkBtn:'Ku Dar Xiriir', saveLinksBtn:'Kaydi Xiriirrada',
                 linkModalTitle:'Ku Dar Xiriir', platformLabel:'Goobta', urlLabel:'URL ama Handle',
                 urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
+                linkTitleLabel:'Magaca La Muujinayo', linkTitleSub:'(ikhtiyaari)', linkTitlePh:'tusaale. I follow-garee Instagram-ka', linkTitleHint:'Uga tag madhan si loo isticmaalo magaca baraha',
                 profileTitle:'Profaylka', profileDesc:'Sida aad macaamiishaada ugu muuqato.',
                 profilePhotoLabel:'Sawirka Profaylka', profilePhotoHint:'Sawirka afar-geeska ah ayaa ugu fiican',
                 displayNameLabel:'Magaca La Muujinayo', usernameLabel:'Magaca Isticmaalaha', bioLabel:'Kugu saabsan',
@@ -889,7 +892,7 @@
                 orders = results[1].orders.map(function(o) {
                     return { id: o.id, customer: o.customer_name, phone: o.customer_phone, items: o.items, total: o.total, status: o.status, date: new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
                 });
-                links = results[2].links.map(function(l) { return { platform: l.platform, url: l.url }; });
+                links = results[2].links.map(function(l) { return { platform: l.platform, url: l.url, title: l.title || '' }; });
 
                 hideLoader();
                 syncSettingsUI();
@@ -955,7 +958,7 @@
                     }
                     if (window.Iconify) Iconify.scan();
                 } catch(e) {}
-            }, 500);
+            }, 100);
         });
 
         document.getElementById('obCreateBtn').addEventListener('click', async function() {
@@ -1414,26 +1417,30 @@
             var cats = ['all'];
             products.forEach(function(p) { if (cats.indexOf(p.category) === -1) cats.push(p.category); });
             var tabsEl = document.getElementById('storeTabs');
-            tabsEl.innerHTML = cats.map(function(c) {
-                return '<button class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ' + (c === storeCat ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600') + '" data-cat="' + escAttr(c) + '">' + escAttr(c === 'all' ? s('catAll') : c) + '</button>';
-            }).join('');
-            tabsEl.querySelectorAll('.store-cat-tab').forEach(function(btn) {
-                btn.addEventListener('click', function() { storeCat = this.dataset.cat; renderStorefront(); });
-            });
+            if (products.length === 0) {
+                tabsEl.innerHTML = '';
+                tabsEl.style.display = 'none';
+            } else {
+                tabsEl.style.display = '';
+                tabsEl.innerHTML = cats.map(function(c) {
+                    return '<button class="store-cat-tab px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ' + (c === storeCat ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600') + '" data-cat="' + escAttr(c) + '">' + escAttr(c === 'all' ? s('catAll') : c) + '</button>';
+                }).join('');
+                tabsEl.querySelectorAll('.store-cat-tab').forEach(function(btn) {
+                    btn.addEventListener('click', function() { storeCat = this.dataset.cat; renderStorefront(); });
+                });
+            }
 
             var socialsEl = document.getElementById('storeSocials');
             if (links.length) {
-                if (settings.socialBento) {
-                    socialsEl.innerHTML = '<div class="grid grid-cols-3 gap-2">' + links.map(function(l) {
-                        var m = platformMeta[l.platform] || platformMeta.other;
-                        return '<a href="' + escAttr(l.url) + '" target="_blank" class="social-bento-store bg-white border border-gray-200 rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2"><div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + m.color + '"></span></div><span class="text-[11px] font-medium text-gray-700 leading-tight">' + m.label + '</span></a>';
-                    }).join('') + '</div>';
-                } else {
-                    socialsEl.innerHTML = '<div class="flex items-center gap-2.5">' + links.map(function(l) {
-                        var m = platformMeta[l.platform] || platformMeta.other;
-                        return '<a href="' + escAttr(l.url) + '" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform" style="background:' + m.color + '15" title="' + m.label + '"><span class="iconify" data-icon="' + m.icon + '" data-width="16" style="color:' + m.color + '"></span></a>';
-                    }).join('') + '</div>';
-                }
+                socialsEl.innerHTML = '<div class="space-y-2">' + links.map(function(l) {
+                    var m = platformMeta[l.platform] || platformMeta.other;
+                    var label = l.title || m.label;
+                    return '<a href="' + escAttr(l.url) + '" target="_blank" class="flex items-center gap-3 w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm hover:border-accent hover:shadow-sm transition-all group">' +
+                        '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + m.color + '"></span></div>' +
+                        '<span class="flex-1 font-medium text-gray-800 text-center">' + escAttr(label) + '</span>' +
+                        '<span class="iconify text-gray-300 group-hover:text-accent transition-colors" data-icon="lucide:chevron-right" data-width="16"></span>' +
+                        '</a>';
+                }).join('') + '</div>';
             } else { socialsEl.innerHTML = ''; }
             if (window.Iconify) Iconify.scan(socialsEl);
 
@@ -1467,7 +1474,7 @@
                 return '<div class="bento-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col items-center justify-center text-center gap-3 relative group">' +
                     '<button class="remove-link-btn absolute top-2 right-2 w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>' +
                     '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>' +
-                    '<div><p class="text-sm font-medium">' + m.label + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p></div></div>';
+                    '<div><p class="text-sm font-medium">' + escAttr(l.title || m.label) + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p></div></div>';
             }).join('');
             grid.querySelectorAll('.remove-link-btn').forEach(function(btn) {
                 btn.addEventListener('click', async function(e) {
@@ -1478,7 +1485,7 @@
             });
         }
 
-        document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; updateLinkHint(); });
+        document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; document.getElementById('linkTitle').value = ''; updateLinkHint(); });
         document.getElementById('linkPlatform').addEventListener('change', updateLinkHint);
         document.getElementById('cancelLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.remove('active'); });
         var PLATFORM_BASES = {
@@ -1525,7 +1532,8 @@
             var platform = document.getElementById('linkPlatform').value;
             var url = normalizeLinkUrl(platform, document.getElementById('linkUrl').value);
             if (!url) return;
-            links.push({ platform: platform, url: url });
+            var title = (document.getElementById('linkTitle').value || '').trim();
+            links.push({ platform: platform, url: url, title: title });
             document.getElementById('linkModal').classList.remove('active');
             try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkAdded')); } catch(e) { links.pop(); toast(s('errorAddingLink')); }
         });
@@ -1664,7 +1672,7 @@
                 products = (data.products || []).map(function(p) {
                     return { id: p.id, name: p.name, price: p.price, category: p.category, desc: p.description, stock: p.stock, available: !!p.available, img: p.image_url || PRODUCT_BLANK };
                 });
-                links = (data.links || []).map(function(l) { return { platform: l.platform, url: l.url }; });
+                links = (data.links || []).map(function(l) { return { platform: l.platform, url: l.url, title: l.title || '' }; });
 
                 // Update page title and meta for this store
                 document.title = profile.name + ' - Lifaaq';
