@@ -121,6 +121,7 @@ async function handleAPI(request, env, url, ctx) {
     const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
     if (existing) return err('Username taken', 409);
     const waRaw = (body.whatsapp || '').trim();
+    if (!waRaw) return err('WhatsApp number required', 400);
     if (!isValidWhatsapp(waRaw)) return err('Invalid WhatsApp number format', 400);
     const id = crypto.randomUUID();
     await env.DB.prepare(

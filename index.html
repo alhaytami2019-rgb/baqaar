@@ -153,7 +153,7 @@
                         <p id="obDisplayNameError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2"><span data-i18n="ob1WaLabel">WhatsApp Number</span> <span class="text-gray-400 font-normal" data-i18n="ob1WaSub">(optional)</span></label>
+                        <label class="block text-sm font-medium mb-2" data-i18n="ob1WaLabel">WhatsApp Number</label>
                         <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white">
                             <span class="iconify text-wa flex-shrink-0 ml-3" data-icon="mdi:whatsapp" data-width="18"></span>
                             <select id="obWaCountry" class="wa-country-select border-0 border-r border-gray-200 py-3 pl-2 pr-1 text-sm bg-white focus:outline-none cursor-pointer text-gray-700 max-w-[96px]"></select>
@@ -561,7 +561,7 @@
                 navProducts:'Products', navOrders:'Orders', navStorefront:'Storefront',
                 navLinks:'Links', navProfile:'Profile', navSettings:'Settings', navStore:'Store',
                 ob1Title:'Create your store', ob1Subtitle:'Share your store with the world.',
-                ob1UsernameLabel:'Username', ob1UsernameSub:'(your store link)',
+                ob1UsernameLabel:'Username', ob1UsernameSub:'(Handle/Username)',
                 ob1DisplayNameLabel:'Display Name', ob1DisplayNamePh:"e.g. Sarah's Boutique",
                 ob1WaLabel:'WhatsApp Number', ob1WaSub:'(optional)', ob1WaPh:'+1 555 000 0000',
                 ob1WaHint:'Customers will use this to order from your store.',
@@ -628,6 +628,7 @@
                 errEnterUsername:'Please enter a username.',
                 errChooseUsername:'Please choose a valid, available username.',
                 errEnterDisplayName:'Please enter a display name.',
+                errEnterWa:'Please enter your WhatsApp number.',
                 errCompleteCheck:'Please complete the security check.',
                 errInvalidWa:'Please enter a valid WhatsApp number (at least 4 digits after the country code).',
                 errInvalidSomaliWa:'Please correct your number.',
@@ -661,7 +662,7 @@
                 navProducts:'Alaabada', navOrders:'Dalabada', navStorefront:'Dukaanka',
                 navLinks:'Links', navProfile:'Profaylka', navSettings:'Dejinta', navStore:'Dukaanka',
                 ob1Title:'Sameeso Lifaaqaaga', ob1Subtitle:'Dunida Lawadaag dukaankaaga.',
-                ob1UsernameLabel:'Magaca Isticmaalaha', ob1UsernameSub:'(xiriirkaaga dukaanka)',
+                ob1UsernameLabel:'Magaca Isticmaalaha', ob1UsernameSub:'(Handle/Username)',
                 ob1DisplayNameLabel:'Magaca La Muujinayo', ob1DisplayNamePh:'tusaale. Dukaanka Faadumo',
                 ob1WaLabel:'Lambarka WhatsApp', ob1WaSub:'(ikhtiyaari)', ob1WaPh:'+252 61 000 0000',
                 ob1WaHint:'Macaamiishu waxay isticmaalaan si ay ugaga dalban dukaankaaga.',
@@ -728,6 +729,7 @@
                 errEnterUsername:'Fadlan geli magaca isticmaalaha.',
                 errChooseUsername:'Fadlan dooro magac isticmaale oo sax ah, oo furan.',
                 errEnterDisplayName:'Fadlan geli magaca la muujinayo.',
+                errEnterWa:'Fadlan geli lambarka WhatsApp-kaaga.',
                 errCompleteCheck:'Fadlan dhami hubinta amniga.',
                 errInvalidWa:'Fadlan geli lambarka WhatsApp oo sax ah (ugu yaraan 4 lambar ka dib koodka dalka).',
                 errInvalidSomaliWa:'Fadlan iska sax number ka.',
@@ -1007,6 +1009,7 @@
             if (!username) { usernameErrEl.textContent = s('errEnterUsername'); usernameErrEl.classList.remove('hidden'); return; }
             if (!obUsernameValid) { usernameErrEl.textContent = s('errChooseUsername'); usernameErrEl.classList.remove('hidden'); return; }
             if (!displayName) { displayNameErrEl.textContent = s('errEnterDisplayName'); displayNameErrEl.classList.remove('hidden'); return; }
+            if (!whatsapp) { waErrEl.textContent = s('errEnterWa'); waErrEl.classList.remove('hidden'); return; }
             var waErr = validateWaInput('obWhatsapp', 'obWaCountry');
             if (waErr) { waErrEl.textContent = s(waErr); waErrEl.classList.remove('hidden'); return; }
 
