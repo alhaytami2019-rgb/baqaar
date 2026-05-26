@@ -603,7 +603,7 @@
                 linkModalTitle:'Add a Link', platformLabel:'Platform', urlLabel:'URL or Handle',
                 urlPh:'https://… or @handle', cancelBtn:'Cancel', addBtn:'Add',
                 addSocialBtn:'Add Social', addLinkBtn:'Add Link',
-                addSocialTitle:'Add Social', addLinkTitle:'Add Link',
+                addSocialTitle:'Add Social', addLinkTitle:'Add Link', editLinkTitle:'Edit Link',
                 linkOtherNameLabel:'Social Name', linkOtherNamePh:'e.g. Telegram',
                 linkLabelLabel:'Label', linkLabelPh:'e.g. My Portfolio',
                 saveLinkBtn:'Save', linkHighlightLabel:'Make this a highlighted link',
@@ -644,7 +644,7 @@
                 editProductBtn:'Edit Product', orderMarked:'Order marked as',
                 errorUpdatingOrder:'Error updating order', catAll:'All',
                 linkRemoved:'Link removed', errorRemovingLink:'Error removing link',
-                linkAdded:'Link added', errorAddingLink:'Error adding link',
+                linkAdded:'Link added', errorAddingLink:'Error adding link', linkUpdated:'Link updated',
                 linksSaved:'Links saved', errorSavingLinks:'Error saving links',
                 profileSaved:'Profile saved', settingsSaved:'Settings saved',
                 errorSavingSettings:'Error saving settings',
@@ -699,11 +699,11 @@
                 linksTitle:'Links', linksDesc:'Goobaha bulshada, dhammaantood meel kaliya.',
                 linksOnboardTitle:'Si sahlan u helidda',
                 linksOnboardDesc:'Ku dar xiriirradaada baraha bulshada hoose. Waxay ka soo muuqan doonaan dukaankaaga si macaamiishu wax kula xiriiri karaan dibadda dukaanka.',
-                addLinkBtn:'Ku Dar Xiriir', saveLinksBtn:'Kaydi Xiriirrada',
+                addLinkBtn:'Ku links kale', saveLinksBtn:'Kaydi Xiriirrada',
                 linkModalTitle:'Ku Dar Xiriir', platformLabel:'Goobta', urlLabel:'URL ama Handle',
                 urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
-                addSocialBtn:'Ku dar social media links', addLinkBtn:'Ku Dar Xiriir',
-                addSocialTitle:'Ku dar social media links', addLinkTitle:'Ku Dar Xiriir',
+                addSocialBtn:'Ku dar social media links', addLinkBtn:'Ku links kale',
+                addSocialTitle:'Ku dar social media links', addLinkTitle:'Ku links kale', editLinkTitle:'Wax ka beddel xiriirka',
                 linkOtherNameLabel:'Magaca Baraha', linkOtherNamePh:'tusaale. Telegram',
                 linkLabelLabel:'Cinwaan', linkLabelPh:'tusaale. Portfolio-kayga',
                 saveLinkBtn:'Keydi', linkHighlightLabel:'Tan ka dhig xiriir muuqda',
@@ -744,7 +744,7 @@
                 editProductBtn:'Wax Ka Beddel Alaabta', orderMarked:'Dalabka waxaa lagu calaamadeeyay',
                 errorUpdatingOrder:'Khalad cusboonaysiinta dalabka', catAll:'Dhammaan',
                 linkRemoved:'Xiriirka waa la tirtiray', errorRemovingLink:'Khalad tirtiridda xiriirka',
-                linkAdded:'Xiriirka waa lagu daray', errorAddingLink:'Khalad ku darista xiriirka',
+                linkAdded:'Xiriirka waa lagu daray', errorAddingLink:'Khalad ku darista xiriirka', linkUpdated:'Xiriirka waa la cusboonaysiiay',
                 linksSaved:'Isbedelka waa la keydiyay', errorSavingLinks:'Khalad kaydinta xiriirrada',
                 profileSaved:'Profaylka waa la keydsaday', settingsSaved:'Dejinta waa la keydsaday',
                 errorSavingSettings:'Khalad kaydinta dejinta',
@@ -1514,10 +1514,19 @@
                     ? '<img src="' + escAttr(l.image_url) + '" class="w-12 h-12 rounded-xl object-cover">'
                     : '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>';
                 return '<div class="bento-card bg-white rounded-xl border p-4 flex flex-col items-center justify-center text-center gap-3 relative group' + (l.highlight ? ' border-accent ring-2 ring-accent/20' : ' border-gray-200') + '">' +
-                    '<button class="remove-link-btn absolute top-2 right-2 w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>' +
+                    '<div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">' +
+                    '<button class="edit-link-btn w-6 h-6 rounded-md hover:bg-blue-50 flex items-center justify-center text-gray-300 hover:text-blue-500" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:pencil" data-width="11"></span></button>' +
+                    '<button class="remove-link-btn w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>' +
+                    '</div>' +
                     imgHtml +
                     '<div><p class="text-sm font-medium">' + escAttr(l.title || m.label) + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p>' + (l.highlight ? '<p class="text-[10px] text-accent font-semibold mt-0.5 uppercase tracking-wide">Highlighted</p>' : '') + '</div></div>';
             }).join('');
+            grid.querySelectorAll('.edit-link-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditLinkModal(parseInt(this.dataset.linkIdx));
+                });
+            });
             grid.querySelectorAll('.remove-link-btn').forEach(function(btn) {
                 btn.addEventListener('click', async function(e) {
                     e.stopPropagation();
@@ -1529,6 +1538,37 @@
 
         var linkModalMode = 'social';
         var linkImgData = '';
+        var linkEditIdx = -1;
+        function openEditLinkModal(idx) {
+            var l = links[idx];
+            linkEditIdx = idx;
+            var isSocial = l.platform !== 'link';
+            openLinkModal(isSocial ? 'social' : 'link');
+            document.getElementById('linkModalHeading').textContent = s('editLinkTitle');
+            if (isSocial) {
+                document.getElementById('linkPlatform').value = l.platform;
+                var raw = l.url;
+                var base = PLATFORM_BASES[l.platform];
+                if (base && raw.startsWith(base)) raw = raw.slice(base.length);
+                document.getElementById('linkUrl').value = raw;
+                if (l.platform === 'other') {
+                    document.getElementById('linkOtherNameWrap').classList.remove('hidden');
+                    document.getElementById('linkOtherName').value = l.title || '';
+                }
+                updateLinkHint();
+            } else {
+                document.getElementById('linkCustomLabel').value = l.title || '';
+                document.getElementById('linkCustomUrl').value = l.url || '';
+                var hlToggle = document.getElementById('linkHighlightToggle');
+                if (l.highlight) hlToggle.classList.add('on'); else hlToggle.classList.remove('on');
+                if (l.image_url) {
+                    linkImgData = l.image_url;
+                    document.getElementById('linkImgPreview').src = l.image_url;
+                    document.getElementById('linkImgPreview').classList.remove('hidden');
+                    document.getElementById('linkImgPlaceholder').classList.add('hidden');
+                }
+            }
+        }
         function openLinkModal(mode) {
             linkModalMode = mode;
             var heading = document.getElementById('linkModalHeading');
@@ -1570,13 +1610,13 @@
             };
             reader.readAsDataURL(file);
         });
-        document.getElementById('addSocialBtn').addEventListener('click', function() { openLinkModal('social'); });
-        document.getElementById('addLinkBtn').addEventListener('click', function() { openLinkModal('link'); });
+        document.getElementById('addSocialBtn').addEventListener('click', function() { linkEditIdx = -1; openLinkModal('social'); });
+        document.getElementById('addLinkBtn').addEventListener('click', function() { linkEditIdx = -1; openLinkModal('link'); });
         document.getElementById('linkPlatform').addEventListener('change', function() {
             updateLinkHint();
             document.getElementById('linkOtherNameWrap').classList.toggle('hidden', this.value !== 'other');
         });
-        document.getElementById('cancelLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.remove('active'); });
+        document.getElementById('cancelLinkBtn').addEventListener('click', function() { linkEditIdx = -1; document.getElementById('linkModal').classList.remove('active'); });
         var PLATFORM_BASES = {
             instagram: 'https://instagram.com/',
             tiktok: 'https://tiktok.com/@',
@@ -1633,9 +1673,18 @@
                 var highlighted = document.getElementById('linkHighlightToggle').classList.contains('on');
                 newLink = { platform: 'link', url: rawUrl, title: label, highlight: highlighted, image_url: linkImgData };
             }
-            links.push(newLink);
+            var isEdit = linkEditIdx >= 0;
+            var prev = isEdit ? links[linkEditIdx] : null;
+            if (isEdit) { links[linkEditIdx] = newLink; } else { links.push(newLink); }
             document.getElementById('linkModal').classList.remove('active');
-            try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkAdded')); } catch(e) { links.pop(); toast(s('errorAddingLink')); }
+            try {
+                await api('PUT', '/links', { links: links });
+                renderLinks();
+                toast(s(isEdit ? 'linkUpdated' : 'linkAdded'));
+            } catch(e) {
+                if (isEdit) { links[linkEditIdx] = prev; } else { links.pop(); }
+                toast(s('errorAddingLink'));
+            }
         });
         document.getElementById('linkModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
         document.getElementById('logoutBtn').addEventListener('click', async function() {
