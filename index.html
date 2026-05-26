@@ -349,7 +349,7 @@
                     <div><label class="block text-sm font-medium mb-2" data-i18n="productNameLabel">Product Name</label><input id="pName" type="text" placeholder="e.g. Classic White Tee" data-i18n-ph="productNamePh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div>
                     <div class="grid grid-cols-2 gap-4">
                         <div><label class="block text-sm font-medium mb-2" data-i18n="priceLabel">Price</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span><input id="pPrice" type="number" step="0.01" placeholder="0.00" class="w-full pl-7 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm" required></div></div>
-                        <div><label class="block text-sm font-medium mb-2" data-i18n="categoryLabel">Category</label><select id="pCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="Clothes" data-i18n-opt="catClothes">Clothes</option><option value="Food" data-i18n-opt="catCunto">Food</option><option value="Groceries" data-i18n-opt="catQudaar">Groceries</option><option value="Milk" data-i18n-opt="catMilk">Milk</option><option value="Peanuts" data-i18n-opt="catPeanuts">Peanuts</option><option value="Sweets" data-i18n-opt="catSweets">Sweets</option><option value="Pharmacy" data-i18n-opt="catPharmacy">Pharmacy</option><option value="Beauty" data-i18n-opt="catBeauty">Beauty</option><option value="Perfumes" data-i18n-opt="catPerfumes">Perfumes</option><option value="Electronics" data-i18n-opt="catElectronics">Electronics</option><option value="Furniture" data-i18n-opt="catFurniture">Furniture</option><option value="Home" data-i18n-opt="catHome">Home</option><option value="Auto Parts" data-i18n-opt="catAutoParts">Auto Parts</option><option value="Building Materials" data-i18n-opt="catBuilding">Building Materials</option><option value="Other" data-i18n-opt="catOther">Other</option></select></div>
+                        <div><label class="block text-sm font-medium mb-2" data-i18n="categoryLabel">Category</label><select id="pCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="Clothes" data-i18n-opt="catClothes">Clothes</option><option value="Food" data-i18n-opt="catCunto">Food</option><option value="Groceries" data-i18n-opt="catQudaar">Groceries</option><option value="Milk" data-i18n-opt="catMilk">Milk</option><option value="Peanuts" data-i18n-opt="catPeanuts">Peanuts</option><option value="Sweets" data-i18n-opt="catSweets">Sweets</option><option value="Pharmacy" data-i18n-opt="catPharmacy">Pharmacy</option><option value="Beauty" data-i18n-opt="catBeauty">Beauty</option><option value="Perfumes" data-i18n-opt="catPerfumes">Perfumes</option><option value="Electronics" data-i18n-opt="catElectronics">Electronics</option><option value="Furniture" data-i18n-opt="catFurniture">Furniture</option><option value="Home" data-i18n-opt="catHome">Home</option><option value="Auto Parts" data-i18n-opt="catAutoParts">Auto Parts</option><option value="Building Materials" data-i18n-opt="catBuilding">Building Materials</option><option value="Other" data-i18n-opt="catOther">Other</option></select><input id="pCategoryCustom" type="text" data-i18n-ph="catCustomPh" placeholder="Write your category…" class="hidden w-full mt-2 px-4 py-2.5 border border-gray-200 rounded-xl text-sm" maxlength="40"></div>
                     </div>
                     <div><label class="block text-sm font-medium mb-2" data-i18n="descLabel">Description</label><textarea id="pDesc" rows="3" placeholder="A short description of your product…" data-i18n-ph="descPh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea></div>
                     <div class="grid grid-cols-2 gap-4">
@@ -591,7 +591,7 @@
                 catPharmacy:'Pharmacy', catBeauty:'Beauty', catPerfumes:'Perfumes',
                 catElectronics:'Electronics', catFurniture:'Furniture',
                 catHome:'Home', catAutoParts:'Auto Parts', catBuilding:'Building Materials',
-                catOther:'Other',
+                catOther:'Other', catCustomPh:'Write your category…',
                 descLabel:'Description', descPh:'A short description of your product…',
                 stockLabel:'Stock Quantity', availableLabel:'Available',
                 saveProductBtn:'Save Product', updateProductBtn:'Update Product',
@@ -696,7 +696,7 @@
                 catPharmacy:'Daawooyin', catBeauty:'Kosmaatikis', catPerfumes:'Barafuuno',
                 catElectronics:'Elektaroonigga', catFurniture:'Alaab Guriga',
                 catHome:'Guriga', catAutoParts:'Qaybaha Baabuurta', catBuilding:'Agab Dhisme',
-                catOther:'Waxkale',
+                catOther:'Waxkale', catCustomPh:'Nooca alaabada ku qor…',
                 descLabel:'Faahfaahinta', descPh:'Faahfaahin kooban oo alaabadaada…',
                 stockLabel:'Tirada Kaydka', availableLabel:'La Heli Karo',
                 saveProductBtn:'Kaydi Alaabta', updateProductBtn:'Cusboonaysii Alaabta',
@@ -1209,6 +1209,11 @@
         ['pName','pPrice','pDesc','pStock'].forEach(function(id) {
             document.getElementById(id).addEventListener('input', markDirty);
         });
+        document.getElementById('pCategory').addEventListener('change', function() {
+            var custom = document.getElementById('pCategoryCustom');
+            if (this.value === 'Other') { custom.classList.remove('hidden'); custom.focus(); }
+            else { custom.classList.add('hidden'); custom.value = ''; }
+        });
 
         document.getElementById('uploadZone').addEventListener('click', function() { document.getElementById('imgInput').click(); });
         document.getElementById('imgInput').addEventListener('change', function(e) {
@@ -1231,7 +1236,7 @@
             var data = {
                 name: document.getElementById('pName').value.trim(),
                 price: parseFloat(document.getElementById('pPrice').value) || 0,
-                category: document.getElementById('pCategory').value,
+                category: (document.getElementById('pCategory').value === 'Other' ? (document.getElementById('pCategoryCustom').value.trim() || 'Other') : document.getElementById('pCategory').value),
                 description: document.getElementById('pDesc').value.trim(),
                 stock: parseInt(document.getElementById('pStock').value) || 0,
                 available: document.getElementById('pAvailable').classList.contains('on'),
@@ -1260,6 +1265,8 @@
             document.getElementById('pName').value = '';
             document.getElementById('pPrice').value = '';
             document.getElementById('pCategory').value = 'Clothes';
+            document.getElementById('pCategoryCustom').classList.add('hidden');
+            document.getElementById('pCategoryCustom').value = '';
             document.getElementById('pDesc').value = '';
             document.getElementById('pStock').value = '';
             document.getElementById('pAvailable').classList.add('on');
@@ -1278,7 +1285,15 @@
             document.getElementById('editProductId').value = p.id;
             document.getElementById('pName').value = p.name;
             document.getElementById('pPrice').value = p.price;
-            document.getElementById('pCategory').value = p.category;
+            var knownCats = ['Clothes','Food','Groceries','Milk','Peanuts','Sweets','Pharmacy','Beauty','Perfumes','Electronics','Furniture','Home','Auto Parts','Building Materials','Other'];
+            var catCustomEl = document.getElementById('pCategoryCustom');
+            if (knownCats.indexOf(p.category) > -1) {
+                document.getElementById('pCategory').value = p.category;
+                catCustomEl.classList.add('hidden'); catCustomEl.value = '';
+            } else {
+                document.getElementById('pCategory').value = 'Other';
+                catCustomEl.classList.remove('hidden'); catCustomEl.value = p.category;
+            }
             document.getElementById('pDesc').value = p.desc;
             document.getElementById('pStock').value = p.stock;
             p.available ? document.getElementById('pAvailable').classList.add('on') : document.getElementById('pAvailable').classList.remove('on');
