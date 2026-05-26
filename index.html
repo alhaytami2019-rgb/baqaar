@@ -236,6 +236,7 @@
                                 class="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl text-sm"
                                 maxlength="30" autocomplete="username" spellcheck="false">
                         </div>
+                        <p id="loginUsernameError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2"><span data-i18n="ob1WaLabel">WhatsApp Number</span></label>
@@ -245,6 +246,7 @@
                             <input id="loginWhatsapp" type="tel" placeholder="61 234 5678" class="flex-1 px-3 py-3 border-0 text-sm focus:outline-none min-w-0 bg-transparent">
                         </div>
                         <p class="text-xs text-gray-400 mt-1.5" data-i18n="loginWaHint">Enter the number registered with your store.</p>
+                        <p id="loginWaError" class="text-xs text-red-500 mt-1 hidden"></p>
                     </div>
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAADAuZRuR_6rmuzU_" data-theme="light" data-size="flexible" data-response-field-name="cf-turnstile-login"></div>
                     <button id="loginBtn"
@@ -252,7 +254,6 @@
                         <span class="iconify" data-icon="lucide:log-in" data-width="16"></span>
                         <span data-i18n="loginBtnLabel">Log In</span>
                     </button>
-                    <p id="loginError" class="text-xs text-red-500 text-center hidden"></p>
                 </div>
             </div>
 
@@ -1041,15 +1042,17 @@
         document.getElementById('loginBtn').addEventListener('click', async function() {
             var username = document.getElementById('loginUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
             var whatsapp = getWaValue('loginWaCountry', 'loginWhatsapp');
-            var errorEl = document.getElementById('loginError');
-            errorEl.textContent = ''; errorEl.classList.add('hidden');
+            var usernameErrEl = document.getElementById('loginUsernameError');
+            var waErrEl = document.getElementById('loginWaError');
+            usernameErrEl.textContent = ''; usernameErrEl.classList.add('hidden');
+            waErrEl.textContent = ''; waErrEl.classList.add('hidden');
 
-            if (!username) { errorEl.textContent = s('errEnterUsername'); errorEl.classList.remove('hidden'); return; }
+            if (!username) { usernameErrEl.textContent = s('errEnterUsername'); usernameErrEl.classList.remove('hidden'); return; }
             var waErr = validateWaInput('loginWhatsapp', 'loginWaCountry');
-            if (waErr) { errorEl.textContent = s(waErr); errorEl.classList.remove('hidden'); return; }
+            if (waErr) { waErrEl.textContent = s(waErr); waErrEl.classList.remove('hidden'); return; }
 
             var turnstileToken = document.querySelector('[name="cf-turnstile-login"]');
-            if (!turnstileToken || !turnstileToken.value) { errorEl.textContent = s('errCompleteCheck'); errorEl.classList.remove('hidden'); return; }
+            if (!turnstileToken || !turnstileToken.value) { usernameErrEl.textContent = s('errCompleteCheck'); usernameErrEl.classList.remove('hidden'); return; }
 
             this.disabled = true;
             this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full spin"></div>';
@@ -1064,9 +1067,15 @@
                 localStorage.setItem('lifaaq_sid', userId);
                 window.location.reload();
             } catch(e) {
-                var msg = (e.message === 'Invalid username or phone number') ? s('loginInvalidCreds') : (e.message || s('somethingWrong'));
-                errorEl.textContent = msg;
-                errorEl.classList.remove('hidden');
+                if (e.message === 'Invalid username or phone number') {
+                    usernameErrEl.textContent = s('loginInvalidCreds');
+                    usernameErrEl.classList.remove('hidden');
+                    waErrEl.textContent = s('loginInvalidCreds');
+                    waErrEl.classList.remove('hidden');
+                } else {
+                    usernameErrEl.textContent = e.message || s('somethingWrong');
+                    usernameErrEl.classList.remove('hidden');
+                }
                 this.disabled = false;
                 this.innerHTML = '<span class="iconify" data-icon="lucide:log-in" data-width="16"></span> ' + s('loginBtnLabel');
                 if (window.turnstile) turnstile.reset();
