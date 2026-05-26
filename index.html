@@ -1068,8 +1068,6 @@
                 window.location.reload();
             } catch(e) {
                 if (e.message === 'Invalid username or phone number') {
-                    usernameErrEl.textContent = s('loginInvalidCreds');
-                    usernameErrEl.classList.remove('hidden');
                     waErrEl.textContent = s('loginInvalidCreds');
                     waErrEl.classList.remove('hidden');
                 } else {
