@@ -17,6 +17,16 @@ async function verifyTurnstile(token, secret, ip) {
   return data.success === true;
 }
 
+async function notifySignup(token, username, displayName, whatsapp) {
+  if (!token) return;
+  const text = `🆕 New signup on Lifaaq!\n👤 @${username}\n🏪 ${displayName}\n📞 ${whatsapp}`;
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: '5883220929', text }),
+  }).catch(() => {});
+}
+
 const SOMALI_PREFIXES = ['61','77','63','90','70','62','65','66'];
 function isValidWhatsapp(wa) {
   if (!wa) return true;
@@ -118,6 +128,7 @@ async function handleAPI(request, env, url) {
     ).bind(id, username, display_name, waRaw).run();
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
     const session_id = await createSession(id, env);
+    notifySignup(env.TELEGRAM_BOT_TOKEN, username, display_name, waRaw);
     return json({ user, session_id });
   }
 
