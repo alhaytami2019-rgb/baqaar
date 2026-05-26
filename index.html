@@ -409,10 +409,10 @@
                 <p class="text-sm text-gray-500 mt-1 mb-6" data-i18n="linksDesc">Your social hubs, all in one place.</p>
                 <div id="linksGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6"></div>
                 <div class="flex gap-3">
-                    <button id="addSocialBtn" class="flex-1 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:at-sign" data-width="16"></span><span data-i18n="addSocialBtn">Add Social</span></button>
-                    <button id="addLinkBtn" class="flex-1 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:link-2" data-width="16"></span><span data-i18n="addLinkBtn">Add Link</span></button>
+                    <button id="addSocialBtn" class="flex-1 border-2 border-dashed border-emerald-300 bg-emerald-50 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-emerald-600 hover:bg-emerald-100 hover:border-emerald-400 transition-colors"><span class="iconify" data-icon="lucide:at-sign" data-width="16"></span><span data-i18n="addSocialBtn">Add Social</span></button>
+                    <button id="addLinkBtn" class="flex-1 border-2 border-dashed border-pink-300 bg-pink-50 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-pink-500 hover:bg-pink-100 hover:border-pink-400 transition-colors"><span class="iconify" data-icon="lucide:link-2" data-width="16"></span><span data-i18n="addLinkBtn">Add Link</span></button>
                 </div>
-                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" type="button" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveLinksBtn">Save Links</span></button></div>
+                <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" type="button" class="w-full bg-gray-200 text-gray-400 py-3 rounded-xl font-medium transition-colors cursor-not-allowed" disabled><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveLinksBtn">Save Links</span></button></div>
             </div>
         </div>
 
@@ -699,11 +699,11 @@
                 linksTitle:'Links', linksDesc:'Goobaha bulshada, dhammaantood meel kaliya.',
                 linksOnboardTitle:'Si sahlan u helidda',
                 linksOnboardDesc:'Ku dar xiriirradaada baraha bulshada hoose. Waxay ka soo muuqan doonaan dukaankaaga si macaamiishu wax kula xiriiri karaan dibadda dukaanka.',
-                addLinkBtn:'Ku links kale', saveLinksBtn:'Kaydi Xiriirrada',
+                addLinkBtn:'Ku dar Links kale', saveLinksBtn:'Seefgareey',
                 linkModalTitle:'Ku Dar Xiriir', platformLabel:'Goobta', urlLabel:'URL ama Handle',
                 urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
-                addSocialBtn:'Ku dar social media links', addLinkBtn:'Ku links kale',
-                addSocialTitle:'Ku dar social media links', addLinkTitle:'Ku links kale', editLinkTitle:'Wax ka beddel xiriirka',
+                addSocialBtn:'Ku dar social media links', addLinkBtn:'Ku dar Links kale',
+                addSocialTitle:'Ku dar social media links', addLinkTitle:'Ku dar Links kale', editLinkTitle:'Wax ka beddel xiriirka',
                 linkOtherNameLabel:'Magaca Baraha', linkOtherNamePh:'tusaale. Telegram',
                 linkLabelLabel:'Cinwaan', linkLabelPh:'tusaale. Portfolio-kayga',
                 saveLinkBtn:'Keydi', linkHighlightLabel:'Tan ka dhig xiriir muuqda',
@@ -1534,6 +1534,14 @@
                     try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkRemoved')); } catch(e) { toast(s('errorRemovingLink')); }
                 });
             });
+            var saveBtn = document.getElementById('saveLinksBtn');
+            if (links.length) {
+                saveBtn.disabled = false;
+                saveBtn.className = 'w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors cursor-pointer';
+            } else {
+                saveBtn.disabled = true;
+                saveBtn.className = 'w-full bg-gray-200 text-gray-400 py-3 rounded-xl font-medium transition-colors cursor-not-allowed';
+            }
         }
 
         var linkModalMode = 'social';
