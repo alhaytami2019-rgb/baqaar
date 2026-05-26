@@ -408,7 +408,10 @@
                 <h1 class="text-2xl font-semibold mb-1" data-i18n="linksTitle">Links</h1>
                 <p class="text-sm text-gray-500 mt-1 mb-6" data-i18n="linksDesc">Your social hubs, all in one place.</p>
                 <div id="linksGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6"></div>
-                <button id="addLinkBtn" class="w-full border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:plus" data-width="16"></span><span data-i18n="addLinkBtn">Add a Link</span></button>
+                <div class="flex gap-3">
+                    <button id="addSocialBtn" class="flex-1 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:at-sign" data-width="16"></span><span data-i18n="addSocialBtn">Add Social</span></button>
+                    <button id="addLinkBtn" class="flex-1 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-gray-400 hover:border-accent hover:text-accent transition-colors"><span class="iconify" data-icon="lucide:link-2" data-width="16"></span><span data-i18n="addLinkBtn">Add Link</span></button>
+                </div>
                 <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button id="saveLinksBtn" type="button" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveLinksBtn">Save Links</span></button></div>
             </div>
         </div>
@@ -500,16 +503,22 @@
         </div>
     </div>
 
-    <!-- ADD LINK MODAL -->
+    <!-- ADD LINK / ADD SOCIAL MODAL -->
     <div id="linkModal" class="modal-overlay">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
-            <h3 class="font-semibold text-lg mb-4" data-i18n="linkModalTitle">Add a Link</h3>
-            <div class="space-y-4">
+            <h3 id="linkModalHeading" class="font-semibold text-lg mb-4">Add Social</h3>
+            <!-- Social fields -->
+            <div id="linkSocialFields" class="space-y-4">
                 <div><label class="block text-sm font-medium mb-2" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="snapchat">Snapchat</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
+                <div id="linkOtherNameWrap" class="hidden"><label class="block text-sm font-medium mb-2" data-i18n="linkOtherNameLabel">Social Name</label><input id="linkOtherName" type="text" data-i18n-ph="linkOtherNamePh" placeholder="e.g. Telegram" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
                 <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">Username or Link</label><input id="linkUrl" type="text" placeholder="myusername" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"><p id="linkUrlHint" class="text-xs text-gray-400 mt-1.5"></p></div>
-                <div><label class="block text-sm font-medium mb-2"><span data-i18n="linkTitleLabel">Display Name</span> <span class="text-gray-400 font-normal" data-i18n="linkTitleSub">(optional)</span></label><input id="linkTitle" type="text" placeholder="e.g. Follow me on Instagram" data-i18n-ph="linkTitlePh" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"><p class="text-xs text-gray-400 mt-1.5" data-i18n="linkTitleHint">Leave blank to use the platform name</p></div>
-                <div class="flex gap-3"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors" data-i18n="addBtn">Add</button></div>
             </div>
+            <!-- Custom link fields -->
+            <div id="linkCustomFields" class="hidden space-y-4">
+                <div><label class="block text-sm font-medium mb-2" data-i18n="linkLabelLabel">Label</label><input id="linkCustomLabel" type="text" data-i18n-ph="linkLabelPh" placeholder="e.g. My Portfolio" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+                <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">URL</label><input id="linkCustomUrl" type="text" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+            </div>
+            <div class="flex gap-3 mt-4"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors" data-i18n="addBtn">Add</button></div>
         </div>
     </div>
 
@@ -572,7 +581,10 @@
                 addLinkBtn:'Add a Link', saveLinksBtn:'Save Links',
                 linkModalTitle:'Add a Link', platformLabel:'Platform', urlLabel:'URL or Handle',
                 urlPh:'https://… or @handle', cancelBtn:'Cancel', addBtn:'Add',
-                linkTitleLabel:'Display Name', linkTitleSub:'(optional)', linkTitlePh:'e.g. Follow me on Instagram', linkTitleHint:'Leave blank to use the platform name',
+                addSocialBtn:'Add Social', addLinkBtn:'Add Link',
+                addSocialTitle:'Add Social', addLinkTitle:'Add Link',
+                linkOtherNameLabel:'Social Name', linkOtherNamePh:'e.g. Telegram',
+                linkLabelLabel:'Label', linkLabelPh:'e.g. My Portfolio',
                 profileTitle:'Profile', profileDesc:'How you appear to your customers.',
                 profilePhotoLabel:'Profile Photo', profilePhotoHint:'Square image works best',
                 displayNameLabel:'Display Name', usernameLabel:'Username', bioLabel:'Bio',
@@ -668,7 +680,10 @@
                 addLinkBtn:'Ku Dar Xiriir', saveLinksBtn:'Kaydi Xiriirrada',
                 linkModalTitle:'Ku Dar Xiriir', platformLabel:'Goobta', urlLabel:'URL ama Handle',
                 urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
-                linkTitleLabel:'Magaca La Muujinayo', linkTitleSub:'(ikhtiyaari)', linkTitlePh:'tusaale. I follow-garee Instagram-ka', linkTitleHint:'Uga tag madhan si loo isticmaalo magaca baraha',
+                addSocialBtn:'Ku Dar Baraha', addLinkBtn:'Ku Dar Xiriir',
+                addSocialTitle:'Ku Dar Baraha Bulshada', addLinkTitle:'Ku Dar Xiriir',
+                linkOtherNameLabel:'Magaca Baraha', linkOtherNamePh:'tusaale. Telegram',
+                linkLabelLabel:'Cinwaan', linkLabelPh:'tusaale. Portfolio-kayga',
                 profileTitle:'Profaylka', profileDesc:'Sida aad macaamiishaada ugu muuqato.',
                 profilePhotoLabel:'Sawirka Profaylka', profilePhotoHint:'Sawirka afar-geeska ah ayaa ugu fiican',
                 displayNameLabel:'Magaca La Muujinayo', usernameLabel:'Magaca Isticmaalaha', bioLabel:'Kugu saabsan',
@@ -776,7 +791,8 @@
             facebook: { icon: 'mdi:facebook', color: '#1877F2', label: 'Facebook' },
             linkedin: { icon: 'mdi:linkedin', color: '#0A66C2', label: 'LinkedIn' },
             website: { icon: 'lucide:globe', color: '#6366f1', label: 'Website' },
-            other: { icon: 'lucide:link', color: '#6b7280', label: 'Other' }
+            other: { icon: 'lucide:link', color: '#6b7280', label: 'Other' },
+            link: { icon: 'lucide:link-2', color: '#6366f1', label: 'Link' }
         };
         var currencySymbols = { USD: '$', EUR: '€', GBP: '£', NGN: '₦', KES: 'KSh', GHS: '₵' };
 
@@ -1478,8 +1494,36 @@
             });
         }
 
-        document.getElementById('addLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.add('active'); document.getElementById('linkUrl').value = ''; document.getElementById('linkTitle').value = ''; updateLinkHint(); });
-        document.getElementById('linkPlatform').addEventListener('change', updateLinkHint);
+        var linkModalMode = 'social';
+        function openLinkModal(mode) {
+            linkModalMode = mode;
+            var heading = document.getElementById('linkModalHeading');
+            var socialFields = document.getElementById('linkSocialFields');
+            var customFields = document.getElementById('linkCustomFields');
+            if (mode === 'social') {
+                heading.textContent = s('addSocialTitle');
+                socialFields.classList.remove('hidden');
+                customFields.classList.add('hidden');
+                document.getElementById('linkUrl').value = '';
+                document.getElementById('linkOtherName').value = '';
+                document.getElementById('linkOtherNameWrap').classList.add('hidden');
+                document.getElementById('linkPlatform').value = 'instagram';
+                updateLinkHint();
+            } else {
+                heading.textContent = s('addLinkTitle');
+                socialFields.classList.add('hidden');
+                customFields.classList.remove('hidden');
+                document.getElementById('linkCustomLabel').value = '';
+                document.getElementById('linkCustomUrl').value = '';
+            }
+            document.getElementById('linkModal').classList.add('active');
+        }
+        document.getElementById('addSocialBtn').addEventListener('click', function() { openLinkModal('social'); });
+        document.getElementById('addLinkBtn').addEventListener('click', function() { openLinkModal('link'); });
+        document.getElementById('linkPlatform').addEventListener('change', function() {
+            updateLinkHint();
+            document.getElementById('linkOtherNameWrap').classList.toggle('hidden', this.value !== 'other');
+        });
         document.getElementById('cancelLinkBtn').addEventListener('click', function() { document.getElementById('linkModal').classList.remove('active'); });
         var PLATFORM_BASES = {
             instagram: 'https://instagram.com/',
@@ -1522,11 +1566,21 @@
         }
 
         document.getElementById('confirmLinkBtn').addEventListener('click', async function() {
-            var platform = document.getElementById('linkPlatform').value;
-            var url = normalizeLinkUrl(platform, document.getElementById('linkUrl').value);
-            if (!url) return;
-            var title = (document.getElementById('linkTitle').value || '').trim();
-            links.push({ platform: platform, url: url, title: title });
+            var newLink;
+            if (linkModalMode === 'social') {
+                var platform = document.getElementById('linkPlatform').value;
+                var url = normalizeLinkUrl(platform, document.getElementById('linkUrl').value);
+                if (!url) return;
+                var title = platform === 'other' ? (document.getElementById('linkOtherName').value.trim()) : '';
+                newLink = { platform: platform, url: url, title: title };
+            } else {
+                var label = (document.getElementById('linkCustomLabel').value || '').trim();
+                var rawUrl = (document.getElementById('linkCustomUrl').value || '').trim();
+                if (!label || !rawUrl) return;
+                if (!/^https?:\/\//i.test(rawUrl)) rawUrl = 'https://' + rawUrl;
+                newLink = { platform: 'link', url: rawUrl, title: label };
+            }
+            links.push(newLink);
             document.getElementById('linkModal').classList.remove('active');
             try { await api('PUT', '/links', { links: links }); renderLinks(); toast(s('linkAdded')); } catch(e) { links.pop(); toast(s('errorAddingLink')); }
         });
