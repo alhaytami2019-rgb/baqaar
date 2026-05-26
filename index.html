@@ -505,20 +505,41 @@
 
     <!-- ADD LINK / ADD SOCIAL MODAL -->
     <div id="linkModal" class="modal-overlay">
-        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
-            <h3 id="linkModalHeading" class="font-semibold text-lg mb-4">Add Social</h3>
-            <!-- Social fields -->
-            <div id="linkSocialFields" class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="snapchat">Snapchat</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
-                <div id="linkOtherNameWrap" class="hidden"><label class="block text-sm font-medium mb-2" data-i18n="linkOtherNameLabel">Social Name</label><input id="linkOtherName" type="text" data-i18n-ph="linkOtherNamePh" placeholder="e.g. Telegram" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">Username or Link</label><input id="linkUrl" type="text" placeholder="myusername" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"><p id="linkUrlHint" class="text-xs text-gray-400 mt-1.5"></p></div>
+        <div class="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
+                <h3 id="linkModalHeading" class="font-bold text-lg">Add</h3>
+                <button id="cancelLinkBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors"><span class="iconify" data-icon="lucide:x" data-width="20"></span></button>
             </div>
-            <!-- Custom link fields -->
-            <div id="linkCustomFields" class="hidden space-y-4">
-                <div><label class="block text-sm font-medium mb-2" data-i18n="linkLabelLabel">Label</label><input id="linkCustomLabel" type="text" data-i18n-ph="linkLabelPh" placeholder="e.g. My Portfolio" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                <div><label class="block text-sm font-medium mb-2" data-i18n="urlLabel">URL</label><input id="linkCustomUrl" type="text" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
+            <!-- Body -->
+            <div class="px-6 py-5">
+                <!-- Social mode -->
+                <div id="linkSocialFields" class="hidden space-y-3">
+                    <div><label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide" data-i18n="platformLabel">Platform</label><select id="linkPlatform" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="snapchat">Snapchat</option><option value="twitter">Twitter / X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="linkedin">LinkedIn</option><option value="website">Website</option><option value="other">Other</option></select></div>
+                    <div id="linkOtherNameWrap" class="hidden"><label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide" data-i18n="linkOtherNameLabel">Social Name</label><input id="linkOtherName" type="text" data-i18n-ph="linkOtherNamePh" placeholder="e.g. Telegram" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm"></div>
+                    <div><label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide" data-i18n="urlLabel">Username or Link</label><input id="linkUrl" type="text" placeholder="myusername" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm"><p id="linkUrlHint" class="text-xs text-gray-400 mt-1.5"></p></div>
+                </div>
+                <!-- Custom link mode -->
+                <div id="linkCustomFields" class="hidden">
+                    <div class="flex gap-3 mb-4">
+                        <div class="flex-1 space-y-3">
+                            <input id="linkCustomLabel" type="text" placeholder="Title" data-i18n-ph="linkLabelPh" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:bg-white transition-colors">
+                            <input id="linkCustomUrl" type="text" placeholder="URL" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:bg-white transition-colors">
+                        </div>
+                        <div id="linkImgZone" class="w-[88px] h-[94px] border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-accent transition-colors overflow-hidden flex-shrink-0">
+                            <img id="linkImgPreview" src="" class="hidden w-full h-full object-cover">
+                            <div id="linkImgPlaceholder" class="flex flex-col items-center gap-1 px-2 text-center pointer-events-none"><span class="iconify text-gray-300" data-icon="lucide:image" data-width="26"></span><span class="text-[10px] text-gray-400 mt-0.5">Picture</span></div>
+                        </div>
+                        <input id="linkImgInput" type="file" accept="image/*" class="hidden">
+                    </div>
+                    <div class="flex items-center justify-between py-2 border-t border-gray-100 pt-4">
+                        <span class="text-sm font-medium text-gray-700" data-i18n="linkHighlightLabel">Make this a highlighted link</span>
+                        <div id="linkHighlightToggle" class="toggle" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-3 mt-4"><button id="cancelLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 transition-colors" data-i18n="cancelBtn">Cancel</button><button id="confirmLinkBtn" type="button" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors" data-i18n="addBtn">Add</button></div>
+            <!-- Save -->
+            <div class="px-6 pb-5"><button id="confirmLinkBtn" type="button" class="w-full bg-accent text-white py-3.5 rounded-xl font-semibold hover:bg-accent-dark transition-colors" data-i18n="saveLinkBtn">Save</button></div>
         </div>
     </div>
 
@@ -585,6 +606,7 @@
                 addSocialTitle:'Add Social', addLinkTitle:'Add Link',
                 linkOtherNameLabel:'Social Name', linkOtherNamePh:'e.g. Telegram',
                 linkLabelLabel:'Label', linkLabelPh:'e.g. My Portfolio',
+                saveLinkBtn:'Save', linkHighlightLabel:'Make this a highlighted link',
                 profileTitle:'Profile', profileDesc:'How you appear to your customers.',
                 profilePhotoLabel:'Profile Photo', profilePhotoHint:'Square image works best',
                 displayNameLabel:'Display Name', usernameLabel:'Username', bioLabel:'Bio',
@@ -680,10 +702,11 @@
                 addLinkBtn:'Ku Dar Xiriir', saveLinksBtn:'Kaydi Xiriirrada',
                 linkModalTitle:'Ku Dar Xiriir', platformLabel:'Goobta', urlLabel:'URL ama Handle',
                 urlPh:'https://… ama @handle', cancelBtn:'Jooji', addBtn:'Ku Dar',
-                addSocialBtn:'Ku Dar Baraha', addLinkBtn:'Ku Dar Xiriir',
-                addSocialTitle:'Ku Dar Baraha Bulshada', addLinkTitle:'Ku Dar Xiriir',
+                addSocialBtn:'Ku dar social media links', addLinkBtn:'Ku Dar Xiriir',
+                addSocialTitle:'Ku dar social media links', addLinkTitle:'Ku Dar Xiriir',
                 linkOtherNameLabel:'Magaca Baraha', linkOtherNamePh:'tusaale. Telegram',
                 linkLabelLabel:'Cinwaan', linkLabelPh:'tusaale. Portfolio-kayga',
+                saveLinkBtn:'Keydi', linkHighlightLabel:'Tan ka dhig xiriir muuqda',
                 profileTitle:'Profaylka', profileDesc:'Sida aad macaamiishaada ugu muuqato.',
                 profilePhotoLabel:'Sawirka Profaylka', profilePhotoHint:'Sawirka afar-geeska ah ayaa ugu fiican',
                 displayNameLabel:'Magaca La Muujinayo', usernameLabel:'Magaca Isticmaalaha', bioLabel:'Kugu saabsan',
@@ -700,7 +723,7 @@
                 deleteTitle:'Ma tirtirtaa alaabtan?', deleteDesc:'Ficilkaan lama soo celin karo.', deleteConfirmBtn:'Tirtir',
                 usernameHint:'Xarfaha, tirooyinka, xariijinta. 3–30 xaraf.',
                 usernameTooShort:'Magaca isticmaalaha waa inuu ahaadaa ugu yaraan 3 xaraf.',
-                usernameAvailable:' waa furan yahay', usernameTaken:' hore ayaa la qaatay.',
+                usernameAvailable:' waad qaatan kartaa', usernameTaken:' hore ayaa la qaatay.',
                 usernameInvalid:'Qaabka magaca isticmaalaha waa khalad.',
                 errEnterUsername:'Fadlan geli magaca isticmaalaha.',
                 errChooseUsername:'Fadlan dooro magac isticmaale oo sax ah, oo furan.',
@@ -903,7 +926,7 @@
                 orders = results[1].orders.map(function(o) {
                     return { id: o.id, customer: o.customer_name, phone: o.customer_phone, items: o.items, total: o.total, status: o.status, date: new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
                 });
-                links = results[2].links.map(function(l) { return { platform: l.platform, url: l.url, title: l.title || '' }; });
+                links = results[2].links.map(function(l) { return { platform: l.platform, url: l.url, title: l.title || '', highlight: !!l.highlight, image_url: l.image_url || '' }; });
 
                 hideLoader();
                 syncSettingsUI();
@@ -1445,10 +1468,17 @@
                 socialsEl.innerHTML = '<div class="space-y-2">' + links.map(function(l) {
                     var m = platformMeta[l.platform] || platformMeta.other;
                     var label = l.title || m.label;
-                    return '<a href="' + escAttr(l.url) + '" target="_blank" class="flex items-center gap-3 w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm hover:border-accent hover:shadow-sm transition-all group">' +
-                        '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + m.color + '"></span></div>' +
-                        '<span class="flex-1 font-medium text-gray-800 text-center">' + escAttr(label) + '</span>' +
-                        '<span class="iconify text-gray-300 group-hover:text-accent transition-colors" data-icon="lucide:chevron-right" data-width="16"></span>' +
+                    var hi = l.highlight;
+                    var btnClass = hi
+                        ? 'flex items-center gap-3 w-full bg-accent text-white rounded-xl px-4 py-3 text-sm hover:bg-accent-dark transition-all group shadow-sm'
+                        : 'flex items-center gap-3 w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm hover:border-accent hover:shadow-sm transition-all group';
+                    var iconHtml = l.image_url
+                        ? '<img src="' + escAttr(l.image_url) + '" class="w-9 h-9 rounded-lg object-cover flex-shrink-0">'
+                        : '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + (hi ? 'rgba(255,255,255,0.2)' : m.color + '15') + '"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + (hi ? '#fff' : m.color) + '"></span></div>';
+                    return '<a href="' + escAttr(l.url) + '" target="_blank" class="' + btnClass + '">' +
+                        iconHtml +
+                        '<span class="flex-1 font-medium text-center ' + (hi ? 'text-white' : 'text-gray-800') + '">' + escAttr(label) + '</span>' +
+                        '<span class="iconify ' + (hi ? 'text-white/60' : 'text-gray-300 group-hover:text-accent') + ' transition-colors" data-icon="lucide:chevron-right" data-width="16"></span>' +
                         '</a>';
                 }).join('') + '</div>';
             } else { socialsEl.innerHTML = ''; }
@@ -1480,10 +1510,13 @@
             var grid = document.getElementById('linksGrid');
             grid.innerHTML = links.map(function(l, i) {
                 var m = platformMeta[l.platform] || platformMeta.other;
-                return '<div class="bento-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col items-center justify-center text-center gap-3 relative group">' +
+                var imgHtml = l.image_url
+                    ? '<img src="' + escAttr(l.image_url) + '" class="w-12 h-12 rounded-xl object-cover">'
+                    : '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>';
+                return '<div class="bento-card bg-white rounded-xl border p-4 flex flex-col items-center justify-center text-center gap-3 relative group' + (l.highlight ? ' border-accent ring-2 ring-accent/20' : ' border-gray-200') + '">' +
                     '<button class="remove-link-btn absolute top-2 right-2 w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>' +
-                    '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>' +
-                    '<div><p class="text-sm font-medium">' + escAttr(l.title || m.label) + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p></div></div>';
+                    imgHtml +
+                    '<div><p class="text-sm font-medium">' + escAttr(l.title || m.label) + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p>' + (l.highlight ? '<p class="text-[10px] text-accent font-semibold mt-0.5 uppercase tracking-wide">Highlighted</p>' : '') + '</div></div>';
             }).join('');
             grid.querySelectorAll('.remove-link-btn').forEach(function(btn) {
                 btn.addEventListener('click', async function(e) {
@@ -1495,6 +1528,7 @@
         }
 
         var linkModalMode = 'social';
+        var linkImgData = '';
         function openLinkModal(mode) {
             linkModalMode = mode;
             var heading = document.getElementById('linkModalHeading');
@@ -1515,9 +1549,27 @@
                 customFields.classList.remove('hidden');
                 document.getElementById('linkCustomLabel').value = '';
                 document.getElementById('linkCustomUrl').value = '';
+                document.getElementById('linkHighlightToggle').classList.remove('on');
+                document.getElementById('linkImgPreview').classList.add('hidden');
+                document.getElementById('linkImgPlaceholder').classList.remove('hidden');
+                document.getElementById('linkImgInput').value = '';
+                linkImgData = '';
             }
             document.getElementById('linkModal').classList.add('active');
         }
+        document.getElementById('linkImgZone').addEventListener('click', function() { document.getElementById('linkImgInput').click(); });
+        document.getElementById('linkImgInput').addEventListener('change', function(e) {
+            var file = e.target.files[0]; if (!file) return;
+            if (file.size > 500 * 1024) { toast(s('imageSizeError')); this.value = ''; return; }
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                linkImgData = ev.target.result;
+                document.getElementById('linkImgPreview').src = linkImgData;
+                document.getElementById('linkImgPreview').classList.remove('hidden');
+                document.getElementById('linkImgPlaceholder').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
         document.getElementById('addSocialBtn').addEventListener('click', function() { openLinkModal('social'); });
         document.getElementById('addLinkBtn').addEventListener('click', function() { openLinkModal('link'); });
         document.getElementById('linkPlatform').addEventListener('change', function() {
@@ -1572,13 +1624,14 @@
                 var url = normalizeLinkUrl(platform, document.getElementById('linkUrl').value);
                 if (!url) return;
                 var title = platform === 'other' ? (document.getElementById('linkOtherName').value.trim()) : '';
-                newLink = { platform: platform, url: url, title: title };
+                newLink = { platform: platform, url: url, title: title, highlight: false, image_url: '' };
             } else {
                 var label = (document.getElementById('linkCustomLabel').value || '').trim();
                 var rawUrl = (document.getElementById('linkCustomUrl').value || '').trim();
                 if (!label || !rawUrl) return;
                 if (!/^https?:\/\//i.test(rawUrl)) rawUrl = 'https://' + rawUrl;
-                newLink = { platform: 'link', url: rawUrl, title: label };
+                var highlighted = document.getElementById('linkHighlightToggle').classList.contains('on');
+                newLink = { platform: 'link', url: rawUrl, title: label, highlight: highlighted, image_url: linkImgData };
             }
             links.push(newLink);
             document.getElementById('linkModal').classList.remove('active');
@@ -1714,7 +1767,7 @@
                 products = (data.products || []).map(function(p) {
                     return { id: p.id, name: p.name, price: p.price, category: p.category, desc: p.description, stock: p.stock, available: !!p.available, img: p.image_url || PRODUCT_BLANK };
                 });
-                links = (data.links || []).map(function(l) { return { platform: l.platform, url: l.url, title: l.title || '' }; });
+                links = (data.links || []).map(function(l) { return { platform: l.platform, url: l.url, title: l.title || '', highlight: !!l.highlight, image_url: l.image_url || '' }; });
 
                 // Update page title and meta for this store
                 document.title = profile.name + ' - Lifaaq';

@@ -334,8 +334,10 @@ async function handleAPI(request, env, url) {
         if (!/^https?:\/\//i.test(rawUrl)) continue;
         const platform = (items[i].platform || 'other').slice(0, 30);
         const title = (items[i].title || '').trim().slice(0, 100);
+        const highlight = items[i].highlight ? 1 : 0;
+        const linkImageUrl = (items[i].image_url || '').slice(0, 800000);
         statements.push(
-          env.DB.prepare('INSERT INTO links (user_id, platform, url, title, sort_order) VALUES (?, ?, ?, ?, ?)').bind(userId, platform, rawUrl, title, i)
+          env.DB.prepare('INSERT INTO links (user_id, platform, url, title, highlight, image_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(userId, platform, rawUrl, title, highlight, linkImageUrl, i)
         );
       }
       await env.DB.batch(statements);
