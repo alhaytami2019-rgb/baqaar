@@ -92,7 +92,7 @@ async function checkRateLimit(key, max, windowSecs, env) {
 const VALID_CURRENCIES = ['USD','EUR','GBP','NGN','KES','GHS','SOS'];
 const VALID_STATUSES   = ['pending','confirmed','delivered','cancelled'];
 
-async function handleAPI(request, env, url) {
+async function handleAPI(request, env, url, ctx) {
   const method = request.method;
   const path = url.pathname.replace('/api', '');
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
@@ -128,7 +128,7 @@ async function handleAPI(request, env, url) {
     ).bind(id, username, display_name, waRaw).run();
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
     const session_id = await createSession(id, env);
-    notifySignup(env.TELEGRAM_BOT_TOKEN, username, display_name, waRaw);
+    if (ctx) ctx.waitUntil(notifySignup(env.TELEGRAM_BOT_TOKEN, username, display_name, waRaw));
     return json({ user, session_id });
   }
 
@@ -360,9 +360,9 @@ async function handleAPI(request, env, url) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (url.pathname.startsWith('/api/')) return handleAPI(request, env, url);
+    if (url.pathname.startsWith('/api/')) return handleAPI(request, env, url, ctx);
     // Serve index.html for public store routes (/@username or /username)
     if (/^\/?@?[a-z0-9_]{3,30}$/i.test(url.pathname) && !url.pathname.includes('.')) {
       return env.ASSETS.fetch(new Request(new URL('/', url).toString(), request));
