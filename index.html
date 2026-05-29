@@ -1541,22 +1541,41 @@
 
             var socialsEl = document.getElementById('storeSocials');
             if (links.length) {
-                socialsEl.innerHTML = '<div class="space-y-2">' + links.map(function(l) {
-                    var m = platformMeta[l.platform] || platformMeta.other;
-                    var label = l.title || m.label;
-                    var hi = l.highlight;
-                    var btnClass = hi
-                        ? 'flex items-center gap-3 w-full bg-accent text-white rounded-xl px-4 py-3 text-sm hover:bg-accent-dark transition-all group shadow-sm'
-                        : 'flex items-center gap-3 w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm hover:border-accent hover:shadow-sm transition-all group';
-                    var iconHtml = l.image_url
-                        ? '<img src="' + escAttr(l.image_url) + '" class="w-9 h-9 rounded-lg object-cover flex-shrink-0">'
-                        : '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + (hi ? 'rgba(255,255,255,0.2)' : m.color + '15') + '"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + (hi ? '#fff' : m.color) + '"></span></div>';
-                    return '<a href="' + escAttr(l.url) + '" target="_blank" class="' + btnClass + '">' +
-                        iconHtml +
-                        '<span class="flex-1 font-medium text-center ' + (hi ? 'text-white' : 'text-gray-800') + '">' + escAttr(label) + '</span>' +
-                        '<span class="iconify ' + (hi ? 'text-white/60' : 'text-gray-300 group-hover:text-accent') + ' transition-colors" data-icon="lucide:chevron-right" data-width="16"></span>' +
-                        '</a>';
-                }).join('') + '</div>';
+                if (settings.socialBento) {
+                    // Bento grid style
+                    socialsEl.innerHTML = '<div class="grid grid-cols-2 gap-3 px-1">' + links.map(function(l) {
+                        var m = platformMeta[l.platform] || platformMeta.other;
+                        var label = l.title || m.label;
+                        var hi = l.highlight;
+                        var cardClass = 'social-bento-store flex flex-col items-center justify-center gap-2 rounded-2xl p-4 text-center no-underline ' +
+                            (hi ? 'bg-accent text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-800');
+                        var iconHtml = l.image_url
+                            ? '<img src="' + escAttr(l.image_url) + '" class="w-12 h-12 rounded-xl object-cover">'
+                            : '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + (hi ? 'rgba(255,255,255,0.2)' : m.color + '15') + '"><span class="iconify" data-icon="' + m.icon + '" data-width="26" style="color:' + (hi ? '#fff' : m.color) + '"></span></div>';
+                        return '<a href="' + escAttr(l.url) + '" target="_blank" class="' + cardClass + '">' +
+                            iconHtml +
+                            '<span class="text-xs font-semibold leading-tight">' + escAttr(label) + '</span>' +
+                            '</a>';
+                    }).join('') + '</div>';
+                } else {
+                    // List / Linktree style
+                    socialsEl.innerHTML = '<div class="space-y-2">' + links.map(function(l) {
+                        var m = platformMeta[l.platform] || platformMeta.other;
+                        var label = l.title || m.label;
+                        var hi = l.highlight;
+                        var btnClass = hi
+                            ? 'flex items-center gap-3 w-full bg-accent text-white rounded-xl px-4 py-3 text-sm hover:bg-accent-dark transition-all group shadow-sm'
+                            : 'flex items-center gap-3 w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm hover:border-accent hover:shadow-sm transition-all group';
+                        var iconHtml = l.image_url
+                            ? '<img src="' + escAttr(l.image_url) + '" class="w-9 h-9 rounded-lg object-cover flex-shrink-0">'
+                            : '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + (hi ? 'rgba(255,255,255,0.2)' : m.color + '15') + '"><span class="iconify" data-icon="' + m.icon + '" data-width="18" style="color:' + (hi ? '#fff' : m.color) + '"></span></div>';
+                        return '<a href="' + escAttr(l.url) + '" target="_blank" class="' + btnClass + '">' +
+                            iconHtml +
+                            '<span class="flex-1 font-medium text-center ' + (hi ? 'text-white' : 'text-gray-800') + '">' + escAttr(label) + '</span>' +
+                            '<span class="iconify ' + (hi ? 'text-white/60' : 'text-gray-300 group-hover:text-accent') + ' transition-colors" data-icon="lucide:chevron-right" data-width="16"></span>' +
+                            '</a>';
+                    }).join('') + '</div>';
+                }
             } else { socialsEl.innerHTML = ''; }
             if (window.Iconify) Iconify.scan(socialsEl);
 
