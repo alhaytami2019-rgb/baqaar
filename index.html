@@ -1157,21 +1157,26 @@
             return sym + Number(price).toFixed(2);
         }
 
+        function waMsg(key, phone) {
+            var isSomali = (phone || settings.whatsapp || '').startsWith('+252');
+            return (isSomali ? strings.so[key] : strings.en[key]) || strings.en[key] || key;
+        }
+
         function waLink(name, price) {
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
-            var msg = s('waOrderMsg').replace('{name}', name).replace('{price}', formatPrice(price));
+            var msg = waMsg('waOrderMsg').replace('{name}', name).replace('{price}', formatPrice(price));
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
         function waContactLink() {
             var num = settings.whatsapp.replace(/[^0-9]/g, '');
-            var msg = s('waContactMsg');
+            var msg = waMsg('waContactMsg');
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
         function waOrderLink(phone, orderId, customerName) {
             var num = (phone || '').replace(/[^0-9]/g, '');
-            var msg = s('waOrderUpdateMsg').replace('{customer}', customerName).replace('{orderId}', orderId);
+            var msg = waMsg('waOrderUpdateMsg', phone).replace('{customer}', customerName).replace('{orderId}', orderId);
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
         }
 
