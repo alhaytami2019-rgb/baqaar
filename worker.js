@@ -192,10 +192,42 @@ async function handleAPI(request, env, url, ctx) {
     });
   }
 
+  // Record analytics event — no auth, fire-and-forget from public store
+  if (path === '/analytics/event' && method === 'POST') {
+    const body = await request.json();
+    const username = (body.username || '').toLowerCase().trim();
+    const eventType = body.event_type === 'product_click' ? 'product_click' : 'store_view';
+    const productId = body.product_id ? parseInt(body.product_id) : null;
+    if (!username) return err('username required');
+    // Soft rate-limit: 1 store_view per IP per store per 10 minutes
+    if (eventType === 'store_view') {
+      if (await checkRateLimit(`sv:${ip}:${username}`, 1, 600, env)) return json({ ok: true });
+    }
+    const user = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
+    if (!user) return json({ ok: true });
+    await env.DB.prepare('INSERT INTO analytics_events (user_id, event_type, product_id, ts) VALUES (?, ?, ?, ?)')
+      .bind(user.id, eventType, productId, Math.floor(Date.now() / 1000)).run();
+    return json({ ok: true });
+  }
+
   // All routes below require a valid session
   const sid = request.headers.get('X-Session-Id');
   const userId = await resolveSession(sid, env);
   if (!userId) return err('Unauthorized', 401);
+
+  // Get analytics for the authenticated user
+  if (path === '/analytics' && method === 'GET') {
+    const now = Math.floor(Date.now() / 1000);
+    const d30 = now - 30 * 24 * 3600;
+    const d7  = now -  7 * 24 * 3600;
+    const [v30, v7, c30, top] = await Promise.all([
+      env.DB.prepare("SELECT COUNT(*) as cnt FROM analytics_events WHERE user_id=? AND event_type='store_view' AND ts>?").bind(userId, d30).first(),
+      env.DB.prepare("SELECT COUNT(*) as cnt FROM analytics_events WHERE user_id=? AND event_type='store_view' AND ts>?").bind(userId, d7).first(),
+      env.DB.prepare("SELECT COUNT(*) as cnt FROM analytics_events WHERE user_id=? AND event_type='product_click' AND ts>?").bind(userId, d30).first(),
+      env.DB.prepare("SELECT ae.product_id, p.name, p.image_url, COUNT(*) as clicks FROM analytics_events ae LEFT JOIN products p ON p.id=ae.product_id WHERE ae.user_id=? AND ae.event_type='product_click' AND ae.ts>? GROUP BY ae.product_id ORDER BY clicks DESC LIMIT 5").bind(userId, d30).all(),
+    ]);
+    return json({ views_30d: v30?.cnt||0, views_7d: v7?.cnt||0, clicks_30d: c30?.cnt||0, top_products: top.results||[] });
+  }
 
   // Get current user
   if (path === '/me' && method === 'GET') {

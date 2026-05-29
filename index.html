@@ -277,6 +277,7 @@
             <div class="nav-item" data-view="storefront"><span class="iconify" data-icon="lucide:store" data-width="18"></span><span data-i18n="navStorefront">Storefront</span></div>
             <div class="nav-item" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="18"></span><span data-i18n="navLinks">Links</span></div>
             <div class="nav-item" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="18"></span><span data-i18n="navProfile">Profile</span></div>
+            <div class="nav-item" data-view="analytics"><span class="iconify" data-icon="lucide:bar-chart-2" data-width="18"></span><span data-i18n="navAnalytics">Analytics</span></div>
             <div class="nav-item" data-view="settings"><span class="iconify" data-icon="lucide:settings" data-width="18"></span><span data-i18n="navSettings">Settings</span></div>
         </nav>
         <div class="p-4 border-t border-gray-100 space-y-3">
@@ -299,6 +300,7 @@
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="products"><span class="iconify" data-icon="lucide:package" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProducts">Products</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="storefront"><span class="iconify" data-icon="lucide:store" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navStore">Store</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="links"><span class="iconify" data-icon="lucide:link" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navLinks">Links</span></div>
+        <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="analytics"><span class="iconify" data-icon="lucide:bar-chart-2" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navAnalytics">Analytics</span></div>
         <div class="nav-item-m flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg cursor-pointer text-gray-400" data-view="profile"><span class="iconify" data-icon="lucide:user-circle" data-width="20"></span><span class="text-[10px] font-medium" data-i18n="navProfile">Profile</span></div>
     </nav>
 
@@ -462,6 +464,32 @@
             </div>
         </div>
 
+        <!-- ANALYTICS -->
+        <div id="view-analytics" class="view">
+            <div class="p-6 md:p-8 max-w-2xl">
+                <h1 class="text-2xl font-semibold mb-1" data-i18n="analyticsTitle">Analytics</h1>
+                <p class="text-sm text-gray-400 mb-6" data-i18n="analyticsDesc">Last 30 days</p>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white rounded-2xl border border-gray-200 p-5">
+                        <p class="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide" data-i18n="analyticsVisits7">Visits (7 days)</p>
+                        <p id="statViews7" class="text-4xl font-bold text-gray-900">—</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-gray-200 p-5">
+                        <p class="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide" data-i18n="analyticsVisits30">Visits (30 days)</p>
+                        <p id="statViews30" class="text-4xl font-bold text-gray-900">—</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-gray-200 p-5 col-span-2">
+                        <p class="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide" data-i18n="analyticsClicks">Product clicks (30 days)</p>
+                        <p id="statClicks30" class="text-4xl font-bold text-accent">—</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-200 p-5">
+                    <h2 class="font-semibold mb-4" data-i18n="analyticsTopProducts">Most clicked products</h2>
+                    <div id="topProductsList"><p class="text-sm text-gray-400" data-i18n="analyticsNoData">No data yet — share your store link to start tracking.</p></div>
+                </div>
+            </div>
+        </div>
+
         <!-- SETTINGS (desktop) -->
         <div id="view-settings" class="view">
             <div class="p-6 md:p-8 max-w-2xl">
@@ -560,7 +588,11 @@
             en: {
                 appTagline:'Digital Storefront',
                 navProducts:'Products', navOrders:'Orders', navStorefront:'Storefront',
-                navLinks:'Links', navProfile:'Profile', navSettings:'Settings', navStore:'Store',
+                navLinks:'Links', navProfile:'Profile', navSettings:'Settings', navStore:'Store', navAnalytics:'Analytics',
+                analyticsTitle:'Analytics', analyticsDesc:'Last 30 days',
+                analyticsVisits7:'Visits (7 days)', analyticsVisits30:'Visits (30 days)',
+                analyticsClicks:'Product clicks (30 days)', analyticsTopProducts:'Most clicked products',
+                analyticsNoData:'No data yet — share your store link to start tracking.',
                 ob1Title:'Create your store', ob1Subtitle:'Share your store with the world.',
                 ob1UsernameLabel:'Username', ob1UsernameSub:'(Handle/Username)',
                 ob1DisplayNameLabel:'Display Name', ob1DisplayNamePh:"e.g. Sarah's Boutique",
@@ -665,7 +697,11 @@
             so: {
                 appTagline:'Dukaanka Dijital',
                 navProducts:'Alaabada', navOrders:'Dalabada', navStorefront:'Dukaanka',
-                navLinks:'Links', navProfile:'Profaylka', navSettings:'Dejinta', navStore:'Dukaanka',
+                navLinks:'Links', navProfile:'Profaylka', navSettings:'Dejinta', navStore:'Dukaanka', navAnalytics:'Xogta',
+                analyticsTitle:'Xogta Dukaanka', analyticsDesc:'30 maalmood ee la soo dhaafay',
+                analyticsVisits7:'Booqashooyinka (7 maalmood)', analyticsVisits30:'Booqashooyinka (30 maalmood)',
+                analyticsClicks:'Gujiyada alaabta (30 maalmood)', analyticsTopProducts:'Alaabta ugu badan la gujiyay',
+                analyticsNoData:'Xog ma jirto weli — faafi xiriirkaaga dukaanka si aad u bilowdo.',
                 ob1Title:'Sameeso Lifaaqaaga', ob1Subtitle:'Dunida Lawadaag dukaankaaga.',
                 ob1UsernameLabel:'Magaca Isticmaalaha', ob1UsernameSub:'(Handle/Username)',
                 ob1DisplayNameLabel:'Magaca La Muujinayo', ob1DisplayNamePh:'tusaale. Dukaanka Faadumo',
@@ -1148,7 +1184,7 @@
         });
 
         // ===== NAV =====
-        var VALID_VIEWS = ['products','storefront','links','profile','settings','add-product'];
+        var VALID_VIEWS = ['products','storefront','links','analytics','profile','settings','add-product'];
         function showView(name) {
             document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
             var el = document.getElementById('view-' + name);
@@ -1163,6 +1199,7 @@
             if (name === 'add-product') resetProductForm();
             if (name === 'profile' && !isDirty) { syncProfileForm(); syncMobileSettings(); }
             if (name === 'settings' && !isDirty) syncSettingsUI();
+            if (name === 'analytics') loadAnalytics();
         }
 
         document.querySelectorAll('.nav-item').forEach(function(el) { el.addEventListener('click', function() { showView(this.dataset.view); }); });
@@ -1843,6 +1880,29 @@
             try { await api('PUT', '/me/settings', { whatsapp: settings.whatsapp, currency: settings.currency, grid_cols: settings.gridCols, show_unavailable: settings.showUnavailable, social_bento: settings.socialBento }); markClean(); } catch(e) { toast(s('errorSavingSettings')); }
         });
 
+        // ===== ANALYTICS =====
+        async function loadAnalytics() {
+            try {
+                var data = await api('GET', '/analytics');
+                document.getElementById('statViews7').textContent = data.views_7d;
+                document.getElementById('statViews30').textContent = data.views_30d;
+                document.getElementById('statClicks30').textContent = data.clicks_30d;
+                var listEl = document.getElementById('topProductsList');
+                if (!data.top_products || !data.top_products.length) {
+                    listEl.innerHTML = '<p class="text-sm text-gray-400">' + s('analyticsNoData') + '</p>';
+                    return;
+                }
+                listEl.innerHTML = data.top_products.map(function(p, i) {
+                    var img = p.image_url ? '<img src="' + escAttr(p.image_url) + '" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">' : '<div class="w-10 h-10 rounded-lg bg-gray-100 flex-shrink-0"></div>';
+                    return '<div class="flex items-center gap-3 py-2' + (i > 0 ? ' border-t border-gray-100' : '') + '">' +
+                        img +
+                        '<div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">' + escAttr(p.name || '—') + '</p></div>' +
+                        '<span class="text-sm font-bold text-accent">' + p.clicks + ' clicks</span>' +
+                        '</div>';
+                }).join('');
+            } catch(e) {}
+        }
+
         // ===== PUBLIC STORE =====
         async function initPublicStore(username) {
             try {
@@ -1888,6 +1948,22 @@
                 hideLoader();
                 showView('storefront');
                 renderStorefront();
+
+                // Track store view (fire-and-forget)
+                fetch('/api/analytics/event', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username, event_type: 'store_view' })
+                }).catch(function() {});
+
+                // Track product clicks
+                document.getElementById('storeGrid').addEventListener('click', function(e) {
+                    var item = e.target.closest('[data-store-open]');
+                    if (!item) return;
+                    fetch('/api/analytics/event', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username, event_type: 'product_click', product_id: parseInt(item.dataset.storeOpen) })
+                    }).catch(function() {});
+                });
             } catch(e) {
                 document.getElementById('appLoader').innerHTML = '<p class="text-gray-400 text-sm">' + s('somethingWrong') + '</p>';
             }
