@@ -1588,10 +1588,10 @@
                 var imgHtml = l.image_url
                     ? '<img src="' + escAttr(l.image_url) + '" class="w-12 h-12 rounded-xl object-cover">'
                     : '<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:' + m.color + '15"><span class="iconify" data-icon="' + m.icon + '" data-width="24" style="color:' + m.color + '"></span></div>';
-                return '<div class="bento-card bg-white rounded-xl border p-4 flex flex-col items-center justify-center text-center gap-3 relative group' + (l.highlight ? ' border-accent ring-2 ring-accent/20' : ' border-gray-200') + '">' +
-                    '<div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">' +
-                    '<button class="edit-link-btn w-6 h-6 rounded-md hover:bg-blue-50 flex items-center justify-center text-gray-300 hover:text-blue-500" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:pencil" data-width="11"></span></button>' +
-                    '<button class="remove-link-btn w-6 h-6 rounded-md hover:bg-red-50 flex items-center justify-center text-gray-300 hover:text-red-500" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="12"></span></button>' +
+                return '<div class="bento-card bg-white rounded-xl border p-4 flex flex-col items-center justify-center text-center gap-3 relative' + (l.highlight ? ' border-accent ring-2 ring-accent/20' : ' border-gray-200') + '">' +
+                    '<div class="absolute top-2 right-2 flex gap-1">' +
+                    '<button class="edit-link-btn w-7 h-7 rounded-md bg-gray-50 hover:bg-blue-50 flex items-center justify-center text-gray-400 hover:text-blue-500 transition-colors" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:pencil" data-width="12"></span></button>' +
+                    '<button class="remove-link-btn w-7 h-7 rounded-md bg-gray-50 hover:bg-red-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors" data-link-idx="' + i + '"><span class="iconify" data-icon="lucide:x" data-width="13"></span></button>' +
                     '</div>' +
                     imgHtml +
                     '<div><p class="text-sm font-medium">' + escAttr(l.title || m.label) + '</p><p class="text-xs text-gray-400 truncate max-w-[120px]">' + escAttr(l.url.replace(/^https?:\/\//, '')) + '</p>' + (l.highlight ? '<p class="text-[10px] text-accent font-semibold mt-0.5 uppercase tracking-wide">Highlighted</p>' : '') + '</div></div>';
