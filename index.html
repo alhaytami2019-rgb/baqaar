@@ -431,8 +431,9 @@
                     </div>
                     <div><label class="block text-sm font-medium mb-2" data-i18n="displayNameLabel">Display Name</label><input id="profName" type="text" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
                     <div><label class="block text-sm font-medium mb-2" data-i18n="usernameLabel">Username</label>
-                        <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span><input id="profUsername" type="text" class="w-full pl-8 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm"></div>
-                        <p class="text-xs text-gray-400 mt-1.5">lifaaq.com/@<span id="usernamePreview">username</span></p>
+                        <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span><input id="profUsername" type="text" class="w-full pl-8 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm" maxlength="30">
+                        <div id="profUsernameStatus" class="username-status absolute right-3 top-1/2 -translate-y-1/2 items-center"><span id="profUsernameIcon"></span></div></div>
+                        <p id="profUsernameHint" class="text-xs text-gray-400 mt-1.5">lifaaq.com/@<span id="usernamePreview">username</span></p>
                     </div>
                     <div><label class="block text-sm font-medium mb-2" data-i18n="bioLabel">Bio</label><textarea id="profBio" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"></textarea><p class="text-xs text-gray-400 mt-1.5 text-right"><span id="bioCount">0</span>/150</p></div>
                     <div class="save-bar -mx-6 md:-mx-8 px-6 md:px-8"><button type="submit" class="w-full bg-accent text-white py-3 rounded-xl font-medium hover:bg-accent-dark transition-colors"><span class="iconify inline -mt-0.5 mr-1.5" data-icon="lucide:save" data-width="16"></span><span data-i18n="saveProfileBtn">Save Profile</span></button></div>
@@ -1783,7 +1784,48 @@
         });
 
         // ===== PROFILE =====
-        document.getElementById('profUsername').addEventListener('input', function() { document.getElementById('usernamePreview').textContent = this.value || ''; markDirty(); });
+        var profUsernameTimer = null;
+        var profUsernameValid = true;
+        document.getElementById('profUsername').addEventListener('input', function() {
+            var val = this.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+            this.value = val;
+            document.getElementById('usernamePreview').textContent = val || '';
+            markDirty();
+            var statusEl = document.getElementById('profUsernameStatus');
+            var iconEl = document.getElementById('profUsernameIcon');
+            var hintEl = document.getElementById('profUsernameHint');
+            statusEl.classList.remove('show');
+            clearTimeout(profUsernameTimer);
+            // Same as current username — always valid, no need to check
+            if (val === profile.username) {
+                profUsernameValid = true;
+                hintEl.textContent = 'lifaaq.com/@' + val;
+                hintEl.className = 'text-xs text-gray-400 mt-1.5';
+                return;
+            }
+            profUsernameValid = false;
+            if (val.length === 0) { hintEl.innerHTML = 'lifaaq.com/@<span id="usernamePreview">username</span>'; hintEl.className = 'text-xs text-gray-400 mt-1.5'; return; }
+            if (val.length < 3) { hintEl.textContent = s('usernameTooShort'); hintEl.className = 'text-xs text-orange-500 mt-1.5'; return; }
+            iconEl.innerHTML = '<div class="w-4 h-4 border-2 border-gray-300 border-t-accent rounded-full spin"></div>';
+            statusEl.classList.add('show');
+            profUsernameTimer = setTimeout(async function() {
+                try {
+                    var data = await fetch('/api/users/check?username=' + encodeURIComponent(val)).then(function(r) { return r.json(); });
+                    if (data.available) {
+                        iconEl.innerHTML = '<span class="iconify text-green-500" data-icon="lucide:check-circle" data-width="16"></span>';
+                        hintEl.textContent = '@' + val + s('usernameAvailable');
+                        hintEl.className = 'text-xs text-green-600 mt-1.5';
+                        profUsernameValid = true;
+                    } else {
+                        iconEl.innerHTML = '<span class="iconify text-red-400" data-icon="lucide:x-circle" data-width="16"></span>';
+                        hintEl.textContent = data.reason === 'invalid' ? s('usernameInvalid') : '@' + val + s('usernameTaken');
+                        hintEl.className = 'text-xs text-red-500 mt-1.5';
+                        profUsernameValid = false;
+                    }
+                    if (window.Iconify) Iconify.scan();
+                } catch(e) {}
+            }, 100);
+        });
         document.getElementById('profBio').addEventListener('input', function() { document.getElementById('bioCount').textContent = this.value.length; markDirty(); });
         document.getElementById('profName').addEventListener('input', markDirty);
         document.getElementById('avatarBtn').addEventListener('click', function() { document.getElementById('avatarInput').click(); });
@@ -1801,6 +1843,7 @@
 
         document.getElementById('profileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            if (!profUsernameValid) { toast(s('errChooseUsername')); return; }
             profile.name = document.getElementById('profName').value.trim();
             profile.username = document.getElementById('profUsername').value.trim();
             profile.bio = document.getElementById('profBio').value.trim();
