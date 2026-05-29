@@ -199,10 +199,6 @@ async function handleAPI(request, env, url, ctx) {
     const eventType = body.event_type === 'product_click' ? 'product_click' : 'store_view';
     const productId = body.product_id ? parseInt(body.product_id) : null;
     if (!username) return err('username required');
-    // Soft rate-limit: 1 store_view per IP per store per 10 minutes
-    if (eventType === 'store_view') {
-      if (await checkRateLimit(`sv:${ip}:${username}`, 1, 600, env)) return json({ ok: true });
-    }
     const user = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(username).first();
     if (!user) return json({ ok: true });
     await env.DB.prepare('INSERT INTO analytics_events (user_id, event_type, product_id, ts) VALUES (?, ?, ?, ?)')
