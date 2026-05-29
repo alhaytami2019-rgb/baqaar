@@ -396,7 +396,7 @@
                     <p id="storeBio" class="text-sm text-gray-600 leading-relaxed"></p>
                 </div>
                 <div id="storeSocials" class="bg-white px-5 pb-4"></div>
-                <div class="bg-white px-5 pb-4 border-b border-gray-100">
+                <div id="storeSearchWrap" class="hidden bg-white px-5 pb-4 border-b border-gray-100">
                     <div class="relative"><span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="lucide:search" data-width="16"></span><input id="storeSearch" type="text" placeholder="Search store…" data-i18n-ph="searchStorePh" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" oninput="renderStorefront()"></div>
                 </div>
                 <div class="store-cat-tabs flex gap-2 px-5 py-3 bg-gray-50" id="storeTabs"></div>
@@ -1562,6 +1562,7 @@
             var grid = document.getElementById('storeGrid');
             grid.style.gridTemplateColumns = '';
             if (window.innerWidth >= 769) grid.style.gridTemplateColumns = 'repeat(' + settings.gridCols + ', 1fr)';
+            document.getElementById('storeSearchWrap').classList.toggle('hidden', !products.length);
             if (!visible.length) { grid.innerHTML = ''; document.getElementById('noStoreProducts').classList.remove('hidden'); return; }
             document.getElementById('noStoreProducts').classList.add('hidden');
             grid.innerHTML = visible.map(function(p) {
